@@ -43,17 +43,17 @@ Working product that fullfills the needs and requirements of each of the 3 disti
 ### MVP Features
 
 User stories: 
-As a student, I want to review practice material on a subject so that I can prepare for class.
-As a student, I want to see which subjects I'm struggling with the most so that I know which subjects I should focus on.
-As a student, I want to select tags on questions so that the system can assign questions based on struggles.
-As a student, I want to create an account so I can use the software and join my teacher's class.
-As a student, I want to login to the site so that I can resume my progress.
-As a student, I want to search for practice materials so that I can easily find materials to study from.
-As a teacher, I want to view my students' progress so that I can determine how to help them.
-As a teacher, I want to create study materials for classes so that students can get better grades.
-As a teacher, I want to be able to invite students to my class via a code so that I can assign them questions and see their results.
-As a question creator, I want to create/add tags to subjects and questions I create so they're easier to find and filter.
-As a teacher, I want to be able to assign question sets to students so that I can test my students.
+- As a student, I want to review practice material on a subject so that I can prepare for class.
+- As a student, I want to see which subjects I'm struggling with the most so that I know which subjects I should focus on.
+- As a student, I want to select tags on questions so that the system can assign questions based on struggles.
+- As a student, I want to create an account so I can use the software and join my teacher's class.
+- As a student, I want to login to the site so that I can resume my progress.
+- As a student, I want to search for practice materials so that I can easily find materials to study from.
+- As a teacher, I want to view my students' progress so that I can determine how to help them.
+- As a teacher, I want to create study materials for classes so that students can get better grades.
+- As a teacher, I want to be able to invite students to my class via a code so that I can assign them questions and see their results.
+- As a question creator, I want to create/add tags to subjects and questions I create so they're easier to find and filter.
+- As a teacher, I want to be able to assign question sets to students so that I can test my students.
 
 
 ## Architecture and Design
