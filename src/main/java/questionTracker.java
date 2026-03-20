@@ -3,7 +3,7 @@ public class questionTracker {
         System.out.println("Hello World");
     }
 
-    static int genericAddTest(int a, int b){
+    public int genericAddTest(int a, int b){
         return a + b;
     }
 

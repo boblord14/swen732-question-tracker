@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="swen732-question-tracker" />
+        <module name="732-tracker" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="swen732-question-tracker" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
