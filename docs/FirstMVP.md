@@ -1,4 +1,6 @@
-(1) URL pointing to your test file. In addition to the test code, the test file must include enough comments to help the grader understand your code.
+## HW9 First MVP Feature and Tests
+
+### **(1) URL pointing to your test file. In addition to the test code, the test file must include enough comments to help the grader understand your code.**
 
 We did two MVP features rather than one, since both were relatively simple effort wise to 
 implement. This way we could have the whole team contributing on the project rather than 
@@ -16,15 +18,16 @@ in a week or two)
 Signup tests can be found here:
 https://github.com/boblord14/swen732-question-tracker/blob/main/src/test/java/test_signup.java
 
-(2) The name of the unit testing framework.
+### **(2) The name of the unit testing framework.**
 
 We used JUnit for our testing, along with mockito to mock a few objects where need be.
 
-(3) A screenshot of the test result.
+### **(3) A screenshot of the test result.**
 
 ![firstMVPTestPass.png](firstMVPTestPass.png)
 
-(4) One MVP feature related to your unit test.
+### **(4) One MVP feature related to your unit test.**
+
 Most of the code functionality related to each feature can be found either here:
 https://github.com/boblord14/swen732-question-tracker/blob/main/src/main/java/questionTracker.java
 or here: https://github.com/boblord14/swen732-question-tracker/blob/main/src/main/java/user/User.java
