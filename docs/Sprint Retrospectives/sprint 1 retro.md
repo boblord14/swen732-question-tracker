@@ -11,13 +11,20 @@
 ### Sprint Outcomes
 
 **Completed user stories:** 
-- As a student, I want to login to the site so that I can resume my progress.
-- As a student, I want to create an account so I can use the software and join my teacher's class.
+- As a user, I want to login to the site so that I can resume my progress.
+- As a user, I want to create an account so I can use the software.
 
 **Incomplete work:** N/A, all sprint goals accomplished
 
-**Tools used (e.g., Jira, GitHub, Trello):** Github projects page used to track user story progress, can be found 
+**Tools used (e.g., Jira, GitHub, Trello):** 
+
+Github repository used to store code and handle source control: 
+https://github.com/boblord14/swen732-question-tracker
+
+Github projects page used to track user story progress, can be found 
 here: https://github.com/users/boblord14/projects/1
+
+Discord server used for team communication and meetings
 
 ### Retrospective Analysis
 
@@ -31,3 +38,4 @@ here: https://github.com/users/boblord14/projects/1
 
 **Continue Doing:** 
 - Getting all work and features done with enough time left before the due date so everyone else can complete their parts on time
+- Meeting regularly to ensure everyone's up to speed on assignments and plan things together in a group 
