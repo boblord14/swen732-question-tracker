@@ -1,9 +1,6 @@
-import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import user.User;
 import user.Classroom;
-import user.Question;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +9,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class test_classroom {
+public class classroomTest {
     private final Path classFile = Paths.get("src/main/classes.json");
     private final Path usersFile = Paths.get("src/main/users.json");
 
