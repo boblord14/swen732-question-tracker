@@ -15,4 +15,9 @@ public class User {
     public void setUsername(String username) { this.username = username;}
     public void setPassword(String password) { this.password = password;}
     public void setIsTeacher(boolean isTeacher) { this.isTeacher = isTeacher;}
+
+    @Override
+    public boolean equals(Object o) {
+        return this.id == ((User) o).getId() && o.getClass().getName().equals(this.getClass().getName());
+    }
 }
