@@ -10,45 +10,59 @@ import java.util.stream.Collectors;
 
 public class SearchService {
 
-    private static final String QUESTIONS_PATH = "src/main/questions.json";
-    private static final String STUDYSET_FOLDER = "src/main/StudySets/";
+    private final String questionsPath;
+    private final String studySetFolder;
+    private final ObjectMapper objectMapper;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    public SearchService() {
+        this("src/main/resources/questions.json", "src/main/resources/studysets", new ObjectMapper());
+    }
 
     /**
-     * Load all questions from questions.json
+     * Constructor to allow a specific filepath
+     */
+    public SearchService(String questionsPath, String studySetFolder, ObjectMapper objectMapper) {
+        this.questionsPath = questionsPath;
+        this.studySetFolder = studySetFolder;
+        this.objectMapper = objectMapper;
+    }
+
+    /**
+     * Reads questions from the questions.json file
      */
     public List<Question> loadAllQuestions() {
         try {
             return objectMapper.readValue(
-                    new File(QUESTIONS_PATH),
+                    new File(questionsPath),
                     new TypeReference<List<Question>>() {}
             );
         } catch (IOException e) {
-            e.printStackTrace();
             return new ArrayList<>();
         }
     }
 
     /**
-     * Load all StudySets from folder
+     * Reads the StudySets from folder of jsons
      */
     public List<StudySet> loadAllStudySets() {
         List<StudySet> sets = new ArrayList<>();
+        File folder = new File(studySetFolder);
 
-        File folder = new File(STUDYSET_FOLDER);
         if (!folder.exists() || !folder.isDirectory()) {
             return sets;
         }
 
-        for (File file : Objects.requireNonNull(folder.listFiles())) {
-            if (file.getName().endsWith(".json")) {
-                try {
-                    StudySet set = objectMapper.readValue(file, StudySet.class);
-                    sets.add(set);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
+        if (files == null) {
+            return sets;
+        }
+
+        for (File file : files) {
+            try {
+                StudySet set = objectMapper.readValue(file, StudySet.class);
+                sets.add(set);
+            } catch (IOException e) {
+                // skip bad file
             }
         }
 
@@ -56,9 +70,14 @@ public class SearchService {
     }
 
     /**
-     * 🔍 Search StudySets by title (partial + case-insensitive)
+     * Searches the StudySet folder for each StudySet json file
+     * Works by partial match and is case-insensitive
      */
     public List<StudySet> searchStudySetsByTitle(String query) {
+        if (query == null || query.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         String lowerQuery = query.toLowerCase();
 
         return loadAllStudySets().stream()
@@ -68,18 +87,24 @@ public class SearchService {
     }
 
     /**
-     * 🔍 Search Questions by tags (ANY match, case-insensitive)
+     * Searches the questions.json file for all questions with the given tags
+     * Works if any tags match and is case-insensitive
      */
     public List<Question> searchQuestionsByTags(List<String> searchTags) {
-        List<Question> allQuestions = loadAllQuestions();
+        if (searchTags == null || searchTags.isEmpty()) {
+            return new ArrayList<>();
+        }
 
-        // Normalize search tags
         Set<String> normalizedTags = searchTags.stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());
 
-        return allQuestions.stream()
+        return loadAllQuestions().stream()
                 .filter(q -> q.getTags() != null && q.getTags().stream()
+                        .filter(Objects::nonNull)
+                        .map(String::trim)
                         .map(String::toLowerCase)
                         .anyMatch(normalizedTags::contains))
                 .collect(Collectors.toList());
