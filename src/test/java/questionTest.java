@@ -39,7 +39,7 @@ class QuestionTest {
     void testSetAndGetTags() {
         Question q = new Question();
         ArrayList<String> tags = new ArrayList<>(Arrays.asList("algebra", "equations"));
-        q.setTag(tags);
+        q.setTags(tags);
 
         assertEquals(tags, q.getTags());
         assertEquals(2, q.getTags().size());
@@ -78,7 +78,7 @@ class QuestionTest {
 
         q.setId(73);
         q.setSubject("Software Engineering");
-        q.setTag(tags);
+        q.setTags(tags);
         q.setQuestion("What does MVC stand for?");
         q.setAnswer("Model-View-Controller");
 

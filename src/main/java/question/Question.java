@@ -17,7 +17,7 @@ public class Question {
 
     public void setId(int id) { this.id = id;}
     public void setSubject(String subject) { this.subject = subject;}
-    public void setTag(ArrayList<String> tags) { 
+    public void setTags(ArrayList<String> tags) {
         this.tags = tags;
     }
     public void setQuestion(String question) { this.question = question;}
