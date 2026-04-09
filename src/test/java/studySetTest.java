@@ -253,30 +253,39 @@ public class studySetTest {
         user1.setIsTeacher(true);
 
         User[] mockUsers = { user1 };
-
         User user2;
+
         try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
-
             mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
-
             user2 = questionTracker.logIn("teacher7", "password7");
         }
 
         assertNotNull(user2);
+
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        studySetMaker.createSet(list, user2, "Math test Prep", "Math");
 
-        String answers = "four\n" + "seven\n";
-        ByteArrayInputStream testInput = new ByteArrayInputStream(answers.getBytes());
-        System.setIn(testInput);
+        StudySet mockSet = new StudySet();
+        mockSet.setTitle("Math test Prep");
+        mockSet.setSubject("Math");
+        mockSet.setQuestionSet(list);
 
-        double testScore = studySetMaker.studySetQuiz("phantom", "Math test Prep");
-        assertEquals(1.0, testScore);
+        String answers = "four\nseven\n";
+        System.setIn(new ByteArrayInputStream(answers.getBytes()));
+
+        try (MockedStatic<studySetMaker> mocked = mockStatic(studySetMaker.class, CALLS_REAL_METHODS)) {
+
+            mocked.when(() -> studySetMaker.getSet("teacher7", "Math test Prep"))
+                .thenReturn(mockSet);
+
+            double testScore = studySetMaker.studySetQuiz("teacher7", "Math test Prep");
+
+            assertEquals(1.0, testScore);
+        }
     }
 
     //Runs a test on the studySetQuiz function where all the answers given are incorrect.
