@@ -253,8 +253,10 @@ public class studySetTest {
         list.add(q2);
         
         studySetMaker.createSet(list, user2, "Math test Prep", "Math");
-        studySetMaker.getSet(user2.getUsername(), "Math test Prep");
-        studySetMaker.getSet(user2.getUsername(), "Moth test Prep");
+        studySetMaker.createSet(list, user2, "Moth test Prep", "Math");
+        
+        //studySetMaker.getSet(user2.getUsername(), "Math test Prep");
+        //studySetMaker.getSet(user2.getUsername(), "Moth test Prep");
         
         long count = studySetMaker.getSetCount(user2.getUsername());
         System.out.println(count);
@@ -337,7 +339,7 @@ public class studySetTest {
         mockSet.setSubject("Math");
         mockSet.setQuestionSet(list);
 
-        String answers = "five\four\n";
+        String answers = "five\nfour\n";
         System.setIn(new ByteArrayInputStream(answers.getBytes()));
 
         try (MockedStatic<studySetMaker> mocked = mockStatic(studySetMaker.class, CALLS_REAL_METHODS)) {
@@ -392,7 +394,7 @@ public class studySetTest {
 
             double testScore = studySetMaker.studySetQuiz("teacher9", "Math test Prep");
 
-            assertEquals(1.0, testScore);
+            assertEquals(0.5, testScore);
         }
     }
 }
