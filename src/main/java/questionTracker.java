@@ -179,12 +179,21 @@ public class questionTracker {
     public static QuestionSet[] getQuestionSets(){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            File f = new File("src/main/questionSets.json");
-            if (!f.exists()) {
-                return new QuestionSet[0];
+            File dir = new File("src/main/questionSets");
+            if (!dir.exists() || !dir.isDirectory()) return new QuestionSet[0];
+            File[] files = dir.listFiles((d, name) -> name.endsWith(".json"));
+            if (files == null || files.length == 0) return new QuestionSet[0];
+            List<QuestionSet> out = new java.util.ArrayList<>();
+            for (File f : files) {
+                try {
+                    QuestionSet s = mapper.readValue(f, QuestionSet.class);
+                    out.add(s);
+                } catch (Exception ex) {
+                    // skip malformed file but continue
+                    ex.printStackTrace();
+                }
             }
-            List<QuestionSet> list = mapper.readValue(f, new TypeReference<List<QuestionSet>>(){});
-            return list.toArray(new QuestionSet[0]);
+            return out.toArray(new QuestionSet[0]);
         } catch (Exception e) {
             e.printStackTrace();
             return new QuestionSet[0];
@@ -194,10 +203,44 @@ public class questionTracker {
     private static void saveQuestionSets(QuestionSet[] sets){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("src/main/questionSets.json"), sets);
+            File dir = new File("src/main/questionSets");
+            if (!dir.exists()) dir.mkdirs();
+            for (QuestionSet s : sets) {
+                if (s == null) continue;
+                File out = new File(dir, "set_" + s.getId() + ".json");
+                try {
+                    mapper.writerWithDefaultPrettyPrinter().writeValue(out, s);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Update a single user entry in users.json (by id).
+     */
+    public static void saveUser(User user) {
+        if (user == null) return;
+        User[] users = getUsers();
+        boolean found = false;
+        for (int i = 0; i < users.length; i++){
+            if (users[i] != null && users[i].getId() == user.getId()){
+                users[i] = user;
+                found = true;
+                break;
+            }
+        }
+        if (!found){
+            // append
+            User[] updated = new User[users.length + 1];
+            System.arraycopy(users, 0, updated, 0, users.length);
+            updated[users.length] = user;
+            users = updated;
+        }
+        saveUsers(users);
     }
 
     private static boolean userCanCreateQuestionSets(User user) {
@@ -296,6 +339,19 @@ public class questionTracker {
         }
         if (changed) saveQuestionSets(sets);
         return changed;
+    }
+
+    /**
+     * Create an interactive session for a question set so a user can go through it question-by-question.
+     */
+    public static QuestionSetSession createQuestionSetSession(int setId, User user) {
+        QuestionSet[] sets = getQuestionSets();
+        for (QuestionSet s : sets) {
+            if (s != null && s.getId() == setId) {
+                return new QuestionSetSession(s, user);
+            }
+        }
+        return null;
     }
 
 
