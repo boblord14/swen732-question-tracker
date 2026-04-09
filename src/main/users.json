@@ -1,8 +1,13 @@
-[
-    {
-        "id": 1,
-        "username": "admin",
-        "password": "admin123",
-        "isTeacher": true
-    }
-]
+[ {
+  "id" : 1,
+  "username" : "admin",
+  "password" : "admin123",
+  "isTeacher" : true,
+  "wrongQuestionData" : [ ]
+}, {
+  "id" : 2,
+  "username" : "phantom",
+  "password" : "admin123",
+  "isTeacher" : true,
+  "wrongQuestionData" : [ ]
+} ]
