@@ -64,28 +64,30 @@ public class studySetTest {
     //Creates a study set with a list of tags
     @Test
     public void testCreateStudySetWithTags(){
-        ArrayList<String> tags = new ArrayList<>();
-        tags.add("Math");
-        tags.add("test prep");
-
         StudySet fakeSet = new StudySet();
-        fakeSet.setTags(tags);
+        fakeSet.setTitle("Math test Prep");
+        fakeSet.setSubject("Math");
+        fakeSet.setCreator("teacher2");
 
         try (MockedStatic<studySetMaker> mocked = mockStatic(studySetMaker.class)) {
 
             mocked.when(() -> studySetMaker.createSet(
-                    any(ArrayList.class),   // MUST match ArrayList
+                    any(ArrayList.class),
                     any(User.class),
                     anyString(),
-                    anyString(),
-                    any(ArrayList.class)    // tags is also ArrayList<String>
+                    anyString()
             )).thenReturn(fakeSet);
 
             StudySet result = studySetMaker.createSet(
-                    new ArrayList<>(), null, "", "", new ArrayList<>()
+                    new ArrayList<>(),
+                    new User(),
+                    "Math test Prep",
+                    "Math"
             );
 
-            assertEquals(tags, result.getTags());
+            assertEquals("Math test Prep", result.getTitle());
+            assertEquals("Math", result.getSubject());
+            assertEquals("teacher2", result.getCreator());
         }
     }
 
