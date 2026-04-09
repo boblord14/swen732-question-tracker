@@ -45,6 +45,18 @@ public class UserPrediction {
      * Composite version of the struggle vector generator that can perform it from a list of users(looking at classes)
      * rather than a single user. Computes for each user individually, then combines them all and computes the final
      * result from the composite user array.
+     *
+     * What makes this version interesting is that in the final output vector, each user's struggles is weighted at a
+     * total weight of 1. So if a user has a lot more wrong answers in one subject, it doesn't disproportionately throw
+     * off the final result like a normal average might. That value would just be closer to 1 for the user in the input.
+     *
+     * If users dont have overlapping wrong question tag sets, this fizzles a bit and provides a slightly suspect result.
+     * With that said, that should never be the case as a question set should by default, share tags across the board,
+     * even if it's just a generic tag like "math" rather than a subject specific topic like "addition".
+     *
+     * In general, this will score higher tags that multiple users got wrong, which is pretty much what we want to see
+     * on a class wide basis. Some users getting various things wrong here and there sure, but multiple users getting
+     * one thing wrong speaks to the class fundamentally not understanding the topic(which is the point)
      * @param users user input list
      * @return a map of (Tag, struggleScore) where the higher a score is for a tag, the more struggle the class has with it
      */
@@ -99,7 +111,10 @@ public class UserPrediction {
     }
 
     /**
-     * Quick scoring for a question to see how it lines up with a user's score vector
+     * Quick scoring for a question to see how it lines up with a user's score vector. More specialized questions on
+     * subjects the user struggles with will score higher than questions that tackle a number of tags that the user
+     * has middling issues with.
+     *
      * @param question question object to score
      * @param struggleVector user's struggle score vector
      * @return score of the question to see how well it aligns with the user's struggle score
