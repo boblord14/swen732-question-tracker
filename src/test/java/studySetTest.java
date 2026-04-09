@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -160,5 +161,68 @@ public class studySetTest {
         long count = studySetMaker.getSetCount(user1.getUsername());
         System.out.println(count);
         assertEquals(count, 2);
+    }
+
+    //Runs a test on the studySetQuiz function where all the answers given are correct.
+    @Test
+    public void testReviewStudySetPerfectScore(){
+        questionTracker.signUp("phantom", "admin123", true);
+        User user1 = questionTracker.logIn("phantom", "admin123");
+        Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
+        Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
+
+        ArrayList<Question> list = new ArrayList<>();
+        list.add(q1);
+        list.add(q2);
+        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
+
+        String answers = "four\n" + "seven\n";
+        ByteArrayInputStream testInput = new ByteArrayInputStream(answers.getBytes());
+        System.setIn(testInput);
+
+        double testScore = studySetMaker.studySetQuiz("phantom", "Math test Prep");
+        assertEquals(1.0, testScore);
+    }
+
+    //Runs a test on the studySetQuiz function where all the answers given are incorrect.
+    @Test
+    public void testReviewStudySetAllIncorect(){
+        questionTracker.signUp("phantom", "admin123", true);
+        User user1 = questionTracker.logIn("phantom", "admin123");
+        Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
+        Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
+
+        ArrayList<Question> list = new ArrayList<>();
+        list.add(q1);
+        list.add(q2);
+        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
+
+        String answers = "six\n" + "five\n";
+        ByteArrayInputStream testInput = new ByteArrayInputStream(answers.getBytes());
+        System.setIn(testInput);
+
+        double testScore = studySetMaker.studySetQuiz("phantom", "Math test Prep");
+        assertEquals(0.0, testScore);
+    }
+
+    //Runs a test on the studySetQuiz function where only some of the answers given are correct.
+    @Test
+    public void testReviewStudySetNonPerfectScore(){
+        questionTracker.signUp("phantom", "admin123", true);
+        User user1 = questionTracker.logIn("phantom", "admin123");
+        Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
+        Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
+
+        ArrayList<Question> list = new ArrayList<>();
+        list.add(q1);
+        list.add(q2);
+        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
+
+        String answers = "four\n" + "five\n";
+        ByteArrayInputStream testInput = new ByteArrayInputStream(answers.getBytes());
+        System.setIn(testInput);
+
+        double testScore = studySetMaker.studySetQuiz("phantom", "Math test Prep");
+        assertEquals(0.5, testScore);
     }
 }
