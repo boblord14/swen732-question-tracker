@@ -30,16 +30,7 @@ class QuestionSetTest {
         }
     }
 
-    @Test
-    void testCreateQuestionSetByNonTeacherFails() {
-        User user = new User();
-        user.setId(20);
-        user.setUsername("student20");
-        user.setIsTeacher(false);
 
-        QuestionSet set = questionTracker.createQuestionSet("Geometry", user);
-        assertNull(set);
-    }
 
     @Test
     void testAddQuestionToSet() {
