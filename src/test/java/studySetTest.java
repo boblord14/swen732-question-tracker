@@ -3,15 +3,18 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
 import question.Question;
 import teacher.StudySet;
@@ -33,29 +36,61 @@ public class studySetTest {
 
     //A test that creates a study set
     @Test
-    public void testCreateStudySet(){
-        User user1 = questionTracker.logIn("admin", "admin123");
+    public void testCreateStudySet() {
+        User user1 = new User();
+        user1.setId(1);
+        user1.setUsername("teacher1");
+        user1.setPassword("password1");
+        user1.setIsTeacher(true);
+
+        User[] mockUsers = { user1 };
+
+        User user2;
+        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
+
+            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+
+            user2 = questionTracker.logIn("teacher1", "password1");
+        }
+
+        assertNotNull(user2);
+
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
 
+        StudySet set1 = studySetMaker.createSet(list, user2, "Math test Prep", "Math");
         assertNotNull(set1);
 
-        String answer1 = set1.getQuestionSet().get(0).getAnswer();
-        String answer2 = set1.getQuestionSet().get(1).getAnswer();
-
-        assertEquals(answer1, "four");
-        assertEquals(answer2, "seven");
+        assertEquals("four", set1.getQuestionSet().get(0).getAnswer());
+        assertEquals("seven", set1.getQuestionSet().get(1).getAnswer());
+        
     }
+
 
     //Creates a study set with a list of tags
     @Test
     public void testCreateStudySetWithTags(){
-        User user1 = questionTracker.logIn("admin", "admin123");
+        User user1 = new User();
+        user1.setId(1);
+        user1.setUsername("teacher2");
+        user1.setPassword("password2");
+        user1.setIsTeacher(true);
+
+        User[] mockUsers = { user1 };
+
+        User user2;
+        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
+
+            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+
+            user2 = questionTracker.logIn("teacher2", "password2");
+        }
+
+        assertNotNull(user2);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -67,7 +102,7 @@ public class studySetTest {
         tags.add("Math");
         tags.add("test prep");
 
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math", tags);
+        StudySet set1 = studySetMaker.createSet(list, user2, "Math test Prep", "Math", tags);
         
         ArrayList<String> tagList = set1.getTags();
         assertEquals(tagList, tags);    
@@ -76,7 +111,23 @@ public class studySetTest {
     //Adds tags to a study set
     @Test
     public void testCreateStudySetAddTags(){
-        User user1 = questionTracker.logIn("admin", "admin123");
+        User user1 = new User();
+        user1.setId(1);
+        user1.setUsername("teacher3");
+        user1.setPassword("password3");
+        user1.setIsTeacher(true);
+
+        User[] mockUsers = { user1 };
+
+        User user2;
+        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
+
+            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+
+            user2 = questionTracker.logIn("teacher3", "password3");
+        }
+
+        assertNotNull(user2);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -88,8 +139,8 @@ public class studySetTest {
         tags.add("Student Aid");
         tags.add("test prep");
 
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
-        StudySet set2 = studySetMaker.addTags(user1.getUsername(), "Math test Prep", tags);
+        studySetMaker.createSet(list, user2, "Math test Prep", "Math");
+        StudySet set2 = studySetMaker.addTags(user2.getUsername(), "Math test Prep", tags);
         ArrayList<String> tagList = set2.getTags();
 
         assertEquals(tagList, tags);    
@@ -98,7 +149,23 @@ public class studySetTest {
     //Tests adding a tag to a list that already had tags
     @Test
     public void testCreateStudySetAddTagToAnExistingList(){
-        User user1 = questionTracker.logIn("admin", "admin123");
+        User user1 = new User();
+        user1.setId(1);
+        user1.setUsername("teacher4");
+        user1.setPassword("password4");
+        user1.setIsTeacher(true);
+
+        User[] mockUsers = { user1 };
+
+        User user2;
+        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
+
+            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+
+            user2 = questionTracker.logIn("teacher4", "password4");
+        }
+
+        assertNotNull(user2);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -113,11 +180,9 @@ public class studySetTest {
         ArrayList<String> newTag = new ArrayList<>();
         newTag.add("Math");
         
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math", tags);
-        StudySet set2 = studySetMaker.addTags(user1.getUsername(), "Math test Prep", newTag);
+        studySetMaker.createSet(list, user2, "Math test Prep", "Math", tags);
+        StudySet set2 = studySetMaker.addTags(user2.getUsername(), "Math test Prep", newTag);
         ArrayList<String> tagList = set2.getTags();
-
-        System.out.println(tagList.get(2));
 
         assertEquals(tagList.get(2), newTag.get(0));    
     }
@@ -125,15 +190,32 @@ public class studySetTest {
     //Retrieves a users study set with a specific name
     @Test
     public void testRetreiveStudySet(){
-        User user1 = questionTracker.logIn("admin", "admin123");
+        User user1 = new User();
+        user1.setId(1);
+        user1.setUsername("teacher5");
+        user1.setPassword("password5");
+        user1.setIsTeacher(true);
+
+        User[] mockUsers = { user1 };
+
+        User user2;
+        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
+
+            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+
+            user2 = questionTracker.logIn("teacher5", "password5");
+        }
+
+        assertNotNull(user2);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
-        StudySet set2 = studySetMaker.getSet(user1.getUsername(), "Math test Prep");
+        
+        studySetMaker.createSet(list, user2, "Math test Prep", "Math");
+        StudySet set2 = studySetMaker.getSet(user2.getUsername(), "Math test Prep");
         
         assertNotNull(set2);
 
@@ -147,18 +229,33 @@ public class studySetTest {
     // A test that creates multiple study sets
     @Test
     public void testCreateTwoStudySets(){
-        questionTracker.signUp("phantom", "admin123", true);
-        User user1 = questionTracker.logIn("phantom", "admin123");
+        User user1 = new User();
+        user1.setId(1);
+        user1.setUsername("teacher6");
+        user1.setPassword("password6");
+        user1.setIsTeacher(true);
+
+        User[] mockUsers = { user1 };
+
+        User user2;
+        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
+
+            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+
+            user2 = questionTracker.logIn("teacher6", "password6");
+        }
+
+        assertNotNull(user2);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
-        StudySet set2 = studySetMaker.createSet(list, user1, "Moth test Prep", "Math");
+        studySetMaker.createSet(list, user2, "Math test Prep", "Math");
+        studySetMaker.createSet(list, user2, "Moth test Prep", "Math");
         
-        long count = studySetMaker.getSetCount(user1.getUsername());
+        long count = studySetMaker.getSetCount(user2.getUsername());
         System.out.println(count);
         assertEquals(count, 2);
     }
@@ -166,15 +263,30 @@ public class studySetTest {
     //Runs a test on the studySetQuiz function where all the answers given are correct.
     @Test
     public void testReviewStudySetPerfectScore(){
-        questionTracker.signUp("phantom", "admin123", true);
-        User user1 = questionTracker.logIn("phantom", "admin123");
+        User user1 = new User();
+        user1.setId(1);
+        user1.setUsername("teacher7");
+        user1.setPassword("password7");
+        user1.setIsTeacher(true);
+
+        User[] mockUsers = { user1 };
+
+        User user2;
+        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
+
+            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+
+            user2 = questionTracker.logIn("teacher7", "password7");
+        }
+
+        assertNotNull(user2);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
+        studySetMaker.createSet(list, user2, "Math test Prep", "Math");
 
         String answers = "four\n" + "seven\n";
         ByteArrayInputStream testInput = new ByteArrayInputStream(answers.getBytes());
@@ -187,15 +299,30 @@ public class studySetTest {
     //Runs a test on the studySetQuiz function where all the answers given are incorrect.
     @Test
     public void testReviewStudySetAllIncorect(){
-        questionTracker.signUp("phantom", "admin123", true);
-        User user1 = questionTracker.logIn("phantom", "admin123");
+        User user1 = new User();
+        user1.setId(1);
+        user1.setUsername("teacher8");
+        user1.setPassword("password8");
+        user1.setIsTeacher(true);
+
+        User[] mockUsers = { user1 };
+
+        User user2;
+        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
+
+            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+
+            user2 = questionTracker.logIn("teacher8", "password8");
+        }
+
+        assertNotNull(user2);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
+        studySetMaker.createSet(list, user2, "Math test Prep", "Math");
 
         String answers = "six\n" + "five\n";
         ByteArrayInputStream testInput = new ByteArrayInputStream(answers.getBytes());
@@ -208,15 +335,30 @@ public class studySetTest {
     //Runs a test on the studySetQuiz function where only some of the answers given are correct.
     @Test
     public void testReviewStudySetNonPerfectScore(){
-        questionTracker.signUp("phantom", "admin123", true);
-        User user1 = questionTracker.logIn("phantom", "admin123");
+        User user1 = new User();
+        user1.setId(1);
+        user1.setUsername("teacher9");
+        user1.setPassword("password9");
+        user1.setIsTeacher(true);
+
+        User[] mockUsers = { user1 };
+
+        User user2;
+        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
+
+            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+
+            user2 = questionTracker.logIn("teacher9", "password9");
+        }
+
+        assertNotNull(user2);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
+        studySetMaker.createSet(list, user2, "Math test Prep", "Math");
 
         String answers = "four\n" + "five\n";
         ByteArrayInputStream testInput = new ByteArrayInputStream(answers.getBytes());
