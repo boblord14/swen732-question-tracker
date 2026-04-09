@@ -243,18 +243,10 @@ public class questionTracker {
         saveUsers(users);
     }
 
-    private static boolean userCanCreateQuestionSets(User user) {
-        return user != null && user.getIsTeacher();
-    }
-
     /**
      * Create a new QuestionSet (study material). Only 'question creators' (teachers) may create.
      */
     public static QuestionSet createQuestionSet(String name, User creator){
-        if (!userCanCreateQuestionSets(creator)){
-            System.out.println("Only question creators can create question sets.");
-            return null;
-        }
 
         QuestionSet[] sets = getQuestionSets();
         int maxId = 0;
