@@ -28,6 +28,13 @@ public class studySetTest {
     private final Path usersFile = Paths.get("src/main/users.json");
     private final Path setsFile = Paths.get("src/main/sets.json");
 
+    @BeforeEach
+    //delete users and sets file before each test so we're testing on a fresh DB
+    void setUp() throws IOException {
+        Files.deleteIfExists(usersFile);
+        Files.deleteIfExists(setsFile);
+    }
+
     //A test that creates a study set
     @Test
     public void testCreateStudySet() {
