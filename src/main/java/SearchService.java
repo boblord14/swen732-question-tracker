@@ -15,7 +15,7 @@ public class SearchService {
     private final ObjectMapper objectMapper;
 
     public SearchService() {
-        this("src/main/resources/questions.json", "src/main/resources/studysets", new ObjectMapper());
+        this("src/main/questions.json", "src/main/studysets", new ObjectMapper());
     }
 
     /**
