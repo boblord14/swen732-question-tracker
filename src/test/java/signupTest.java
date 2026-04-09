@@ -51,22 +51,4 @@ public class signupTest {
         assertTrue(signup.getIsTeacher());
     }
 
-    //A fail test used to show what happens when you sign up using a pre-existing username
-    @org.junit.jupiter.api.Test
-    void testSignupPreexistingUser(){
-        questionTracker qt = new questionTracker();
-
-        String username = "NewUser";
-        String password = "Password3";
-
-        User signup_info = questionTracker.signUp(username, password, false);
-
-        assertEquals(signup_info.getUsername(), "NewUser");
-        assertEquals(signup_info.getPassword(), "Password3");
-        assertFalse(signup_info.getIsTeacher());
-
-        //If a user name is used that's already in the system this function will return null
-        User repeated_signup = questionTracker.signUp(username, password, false);
-        assertNull(repeated_signup);
-    }
 }

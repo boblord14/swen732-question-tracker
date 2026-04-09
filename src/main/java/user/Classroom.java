@@ -1,7 +1,7 @@
 package user;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import teacher.StudySet;
 
 /**
  * Classroom represents a class created by a teacher.
@@ -12,32 +12,32 @@ public class Classroom {
     private String code;
     private User teacher; // single teacher
     private List<User> students;
-    private List<Question> questions; // placeholder Question objects
-
-    public Classroom() {
-        this.students = new ArrayList<>();
-        this.questions = new ArrayList<>();
-    }
+    private List<StudySet> assignedStudySets;
 
     public Classroom(String name, String code, User teacher) {
         this.name = name;
         this.code = code;
         this.teacher = teacher;
         this.students = new ArrayList<>();
-        this.questions = new ArrayList<>();
+        this.assignedStudySets = new ArrayList<>();
+    }
+
+    public Classroom() {
+        this.students = new ArrayList<>();
+        this.assignedStudySets = new ArrayList<>();
     }
 
     public String getName() { return name; }
     public String getCode() { return code; }
     public User getTeacher() { return teacher; }
     public List<User> getStudents() { return students; }
-    public List<Question> getQuestions() { return questions; }
+    public List<StudySet> getAssignedStudySets() { return assignedStudySets; }
 
     public void setName(String name) { this.name = name; }
     public void setCode(String code) { this.code = code; }
     public void setTeacher(User teacher) { this.teacher = teacher; }
     public void setStudents(List<User> students) { this.students = students; }
-    public void setQuestions(List<Question> questions) { this.questions = questions; }
+    public void setAssignedStudySets(List<StudySet> assignedStudySets) { this.assignedStudySets = assignedStudySets; }
 
     // helper methods
     public boolean addStudent(User student) {
@@ -51,9 +51,37 @@ public class Classroom {
         return students.remove(student);
     }
 
-    public boolean addQuestion(Question q) {
-        if (q == null) return false;
-        return questions.add(q);
+    public boolean addStudySet(StudySet s) {
+        if (s == null) return false;
+        return assignedStudySets.add(s);
+    }
+
+    public List<Map<Integer, Double>> studentsSetScores() {
+        List<Map<Integer, Double>> scores = new ArrayList<>();
+        for (User student : students) {
+            scores.add(student.getStudySetAvg());
+        }
+        return scores;
+    }
+
+    public List<Map<String, Double>> classStruggleVector() {
+        List<Map<String, Double>> struggleVectors = new ArrayList<>();
+        struggleVectors.add(UserPrediction.generateUserStruggleVector(this.students));
+        for (User student : students) {
+            UserPrediction up = new UserPrediction(student);
+            struggleVectors.add(up.generateUserStruggleVector());
+        }
+        return struggleVectors;
+    }
+
+    public Map<String, Double> studentStruggleVector(int id) {
+        User student = students.stream()
+                .filter(s -> s.getId() == id)
+                .findFirst()
+                .orElse(null);
+        if (student == null) return Collections.emptyMap();
+        UserPrediction up = new UserPrediction(student);
+        return up.generateUserStruggleVector();
     }
 
     /**

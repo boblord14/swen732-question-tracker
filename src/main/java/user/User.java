@@ -10,17 +10,34 @@ public class User {
     private String username;
     private String password;
     private boolean isTeacher;
-    private final Deque<List<String>> wrongQuestionList = new LinkedList<>();
+    private Deque<List<String>> wrongQuestionList;
+    private Map<Integer, Double> studySetAvg;
+
+    public User(int id, String username, String password, boolean isTeacher) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.isTeacher = isTeacher;   
+        this.wrongQuestionList = new LinkedList<>();
+        this.studySetAvg = new HashMap<>();
+    }
+
+    public User() {
+        this.wrongQuestionList = new LinkedList<>();
+        this.studySetAvg = new HashMap<>();
+    }
 
     public int getId() { return id;}
     public String getUsername() { return username;}
     public String getPassword() { return password;}
     public boolean getIsTeacher() { return isTeacher;}
+    public Map<Integer, Double> getStudySetAvg() { return studySetAvg;}
 
     public void setId(int id) { this.id = id;}
     public void setUsername(String username) { this.username = username;}
     public void setPassword(String password) { this.password = password;}
     public void setIsTeacher(boolean isTeacher) { this.isTeacher = isTeacher;}
+    public void setStudySetAvg(Map<Integer, Double> studySetAvg) { this.studySetAvg = studySetAvg;}
 
     /**
      * Add a question's subject tags to the last x wrong question lists, removes oldest if list reaches capacity
@@ -34,6 +51,10 @@ public class User {
         wrongQuestionList.addLast(wrongQuestion);
     }
 
+    public void addStudySetScore(int id, double score){
+        this.studySetAvg.put(id, score);
+    }
+
     /**
      * Return wrong question tag data as an arraylist
      * @return question data as arraylist rather than dequeue
@@ -44,6 +65,14 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        return this.id == ((User) o).getId() && o.getClass().getName().equals(this.getClass().getName());
+        if (this == o) return true;
+        if (o == null || !(o instanceof User)) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

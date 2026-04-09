@@ -18,11 +18,7 @@ class questionTrackerTest {
     @Test
     void testLoginValidCredentials(){
         // Simple teacher account
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUsername("teacher1");
-        user1.setPassword("password1");
-        user1.setIsTeacher(true);
+        User user1 = new User(1, "teacher1", "password1", true);
 
         User[] mockUsers = {user1};
         // Mockito to use real methods
@@ -45,11 +41,7 @@ class questionTrackerTest {
     @Test
     void testLoginInvalidCredentials(){
         // Simple user account
-        User user2 = new User();
-        user2.setId(2);
-        user2.setUsername("student2");
-        user2.setPassword("password2");
-        user2.setIsTeacher(false);
+        User user2 = new User(2, "student2", "password2", false);
         User[] mockUsers = {user2};
 
         // Mock the real getUsers method
@@ -69,11 +61,7 @@ class questionTrackerTest {
     @Test
     void testUserDoesNotExist(){
         // Simple user account
-        User user3 = new User();
-        user3.setId(3);
-        user3.setUsername("student3");
-        user3.setPassword("password3");
-        user3.setIsTeacher(false);
+        User user3 = new User(3, "student3", "password3", false);
         User[] mockUsers = {user3};
 
         try(MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)){
@@ -92,16 +80,8 @@ class questionTrackerTest {
     @Test
     void testGetUsers(){
         // Multiple user accounts
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUsername("teacher1");
-        user1.setPassword("password1");
-        user1.setIsTeacher(true);
-        User user2 = new User();
-        user2.setId(2);
-        user2.setUsername("student2");
-        user2.setPassword("password2");
-        user2.setIsTeacher(false);
+        User user1 = new User(1, "teacher1", "password1", true);
+        User user2 = new User(2, "student2", "password2", false);
         User[] mockUsers = {user1, user2};
 
         try(MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)){

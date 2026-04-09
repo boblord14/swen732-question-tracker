@@ -71,12 +71,9 @@ public class questionTracker {
         }
         
         // Create new user
-        User newUser = new User();
-        newUser.setId(maxId + 1);
-        newUser.setUsername(username);
-        newUser.setPassword(password);
-        newUser.setIsTeacher(isTeacher);
-        
+        int newId = maxId + 1;
+        User newUser = new User(newId, username, password, isTeacher);
+
         // Add to users array
         User[] updatedUsers = new User[users.length + 1];
         System.arraycopy(users, 0, updatedUsers, 0, users.length);
@@ -142,6 +139,7 @@ public class questionTracker {
         updated[classes.length] = newClass;
 
         saveClasses(updated);
+
         System.out.println("Class created: " + name + " (" + code + ") by " + teacher.getUsername());
         return newClass;
     }

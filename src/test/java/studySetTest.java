@@ -31,11 +31,7 @@ public class studySetTest {
     //A test that creates a study set
     @Test
     public void testCreateStudySet() {
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUsername("teacher1");
-        user1.setPassword("password1");
-        user1.setIsTeacher(true);
+        User user1 = new User(1, "teacher1", "password1", true);
 
         User[] mockUsers = { user1 };
 
@@ -66,11 +62,7 @@ public class studySetTest {
     //Creates a study set with a list of tags
     @Test
     public void testCreateStudySetWithTags(){
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUsername("teacher2");
-        user1.setPassword("password2");
-        user1.setIsTeacher(true);
+        User user1 = new User(1, "teacher2", "password2", true);
 
         User[] mockUsers = { user1 };
 
@@ -102,11 +94,7 @@ public class studySetTest {
     //Adds tags to a study set
     @Test
     public void testCreateStudySetAddTags(){
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUsername("teacher3");
-        user1.setPassword("password3");
-        user1.setIsTeacher(true);
+        User user1 = new User(1, "teacher3", "password3", true);
 
         User[] mockUsers = { user1 };
 
@@ -130,7 +118,7 @@ public class studySetTest {
         tags.add("Student Aid");
         tags.add("test prep");
 
-        studySetMaker.createSet(list, user2, "Math test Prep", "Math");
+        studySetMaker.createSet(list, user1, "Math test Prep", "Math");
         StudySet set2 = studySetMaker.addTags(user2.getUsername(), "Math test Prep", tags);
         ArrayList<String> tagList = set2.getTags();
 
@@ -140,11 +128,7 @@ public class studySetTest {
     //Tests adding a tag to a list that already had tags
     @Test
     public void testCreateStudySetAddTagToAnExistingList(){
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUsername("teacher4");
-        user1.setPassword("password4");
-        user1.setIsTeacher(true);
+        User user1 = new User(1, "teacher4", "password4", true);
 
         User[] mockUsers = { user1 };
 
@@ -192,11 +176,7 @@ public class studySetTest {
     //Retrieves a users study set with a specific name
     @Test
     public void testRetreiveStudySet(){
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUsername("teacher5");
-        user1.setPassword("password5");
-        user1.setIsTeacher(true);
+        User user1 = new User(1, "teacher5", "password5", true);
 
         User[] mockUsers = { user1 };
 
@@ -230,18 +210,14 @@ public class studySetTest {
     // A test that creates multiple study sets
     @Test
     public void testCreateTwoStudySets(){
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUsername("teacher5");
-        user1.setPassword("password5");
-        user1.setIsTeacher(true);
+        User user1 = new User(1, "teacher6", "password6", true);
 
         User[] mockUsers = { user1 };
 
         User user2;
         try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
             mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
-            user2 = questionTracker.logIn("teacher5", "password5");
+            user2 = questionTracker.logIn("teacher6", "password6");
         }
 
         assertNotNull(user2);
@@ -266,11 +242,7 @@ public class studySetTest {
     //Runs a test on the studySetQuiz function where all the answers given are correct.
     @Test
     public void testReviewStudySetPerfectScore(){
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUsername("teacher7");
-        user1.setPassword("password7");
-        user1.setIsTeacher(true);
+        User user1 = new User(1, "teacher7", "password7", true);
 
         User[] mockUsers = { user1 };
         User user2;
@@ -302,7 +274,7 @@ public class studySetTest {
             mocked.when(() -> studySetMaker.getSet("teacher7", "Math test Prep"))
                 .thenReturn(mockSet);
 
-            double testScore = studySetMaker.studySetQuiz("teacher7", "Math test Prep");
+            double testScore = studySetMaker.studySetQuiz(user1, "Math test Prep");
 
             assertEquals(1.0, testScore);
         }
@@ -311,11 +283,7 @@ public class studySetTest {
     //Runs a test on the studySetQuiz function where all the answers given are incorrect.
     @Test
     public void testReviewStudySetAllIncorect(){
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUsername("teacher8");
-        user1.setPassword("password8");
-        user1.setIsTeacher(true);
+        User user1 = new User(1, "teacher8", "password8", true);
 
         User[] mockUsers = { user1 };
         User user2;
@@ -347,7 +315,7 @@ public class studySetTest {
             mocked.when(() -> studySetMaker.getSet("teacher8", "Math test Prep"))
                 .thenReturn(mockSet);
 
-            double testScore = studySetMaker.studySetQuiz("teacher8", "Math test Prep");
+            double testScore = studySetMaker.studySetQuiz(user1, "Math test Prep");
 
             assertEquals(0.0, testScore);
         }
@@ -356,11 +324,7 @@ public class studySetTest {
     //Runs a test on the studySetQuiz function where only some of the answers given are correct.
     @Test
     public void testReviewStudySetNonPerfectScore(){
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUsername("teacher9");
-        user1.setPassword("password9");
-        user1.setIsTeacher(true);
+        User user1 = new User(1, "teacher9", "password9", true);
 
         User[] mockUsers = { user1 };
         User user2;
@@ -392,7 +356,7 @@ public class studySetTest {
             mocked.when(() -> studySetMaker.getSet("teacher9", "Math test Prep"))
                 .thenReturn(mockSet);
 
-            double testScore = studySetMaker.studySetQuiz("teacher9", "Math test Prep");
+            double testScore = studySetMaker.studySetQuiz(user1, "Math test Prep");
 
             assertEquals(0.5, testScore);
         }

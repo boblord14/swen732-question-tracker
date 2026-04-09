@@ -96,7 +96,8 @@ public class studySetMaker {
     }
 
     //This function quizzes a user on a specific study set
-    public static double studySetQuiz(String username, String title){
+    public static double studySetQuiz(User user, String title){
+        String username = user.getUsername();
         StudySet set = getSet(username, title);
         System.out.println("Practice Test begins now:");
         Scanner s = new Scanner(System.in);
@@ -124,6 +125,7 @@ public class studySetMaker {
         System.out.println("You got " + correct + " out of " + i + " questions right.\n"
             + "Your average is " + average);
 
+        user.addStudySetScore(set.getId(), average);
         return average;
     }
 

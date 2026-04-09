@@ -37,8 +37,7 @@ public class userPredictionTest {
         q2.addTag("tag 2");
         q2.addTag("tag 3");
 
-        User user = new User();
-        user.setIsTeacher(false);
+        User user = new User(1, "test", "test", false);
         user.addWrongQuestion(q1.getTags());
         user.addWrongQuestion(q2.getTags());
 
@@ -75,12 +74,10 @@ public class userPredictionTest {
         q4.addTag("tag 3");
         q4.addTag("tag 6");
 
-        User user1 = new User();
-        user1.setIsTeacher(false);
+        User user1 = new User(1, "test", "test", false);
         user1.addWrongQuestion(q1.getTags());
 
-        User user2 = new User();
-        user2.setIsTeacher(false);
+        User user2 = new User(2, "test2", "test2", false);
         user2.addWrongQuestion(q2.getTags());
         user2.addWrongQuestion(q3.getTags());
         user2.addWrongQuestion(q4.getTags());
@@ -120,8 +117,7 @@ public class userPredictionTest {
         q2.addTag("tag 2");
         q2.addTag("tag 3");
 
-        User user = new User();
-        user.setIsTeacher(false);
+        User user = new User(3, "test3", "test3", false);
         user.addWrongQuestion(q1.getTags());
         user.addWrongQuestion(q2.getTags());
 
