@@ -24,16 +24,6 @@ public class studySetTest {
     private final Path usersFile = Paths.get("src/main/users.json");
     private final Path setsFile = Paths.get("src/main/sets.json");
 
-    //Resets the json file before each test
-    @BeforeEach
-    public void clearJson() {
-        try (FileWriter writer = new FileWriter("src/main/sets.json")) {
-            writer.write("");   // or "[]" if you want an empty array
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     //A test that creates a study set
     @Test
     public void testCreateStudySet() {
