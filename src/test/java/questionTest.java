@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
-import user.Question;
+import question.Question;
 
 /**
  * Tests for the various getters and setters of the Question class
@@ -20,6 +20,16 @@ class QuestionTest {
         Question q = new Question();
         q.setId(101);
         assertEquals(101, q.getId());
+    }
+
+    /**
+     * Tests if getting/setting subject works correctly
+     */
+    @Test
+    void testSetAndGetSubject() {
+        Question q = new Question();
+        q.setSubject("Math");
+        assertEquals("Math", q.getSubject());
     }
 
     /**
@@ -43,8 +53,8 @@ class QuestionTest {
     @Test
     void testSetAndGetQuestion() {
         Question q = new Question();
-        q.setText("What is 2 + 2?");
-        assertEquals("What is 2 + 2?", q.getText());
+        q.setQuestion("What is 2 + 2?");
+        assertEquals("What is 2 + 2?", q.getQuestion());
     }
 
     /**
@@ -67,13 +77,15 @@ class QuestionTest {
         ArrayList<String> tags = new ArrayList<>(Arrays.asList("Software Architecture", "Software Design"));
 
         q.setId(73);
+        q.setSubject("Software Engineering");
         q.setTags(tags);
-        q.setText("What does MVC stand for?");
+        q.setQuestion("What does MVC stand for?");
         q.setAnswer("Model-View-Controller");
 
         assertEquals(73, q.getId());
+        assertEquals("Software Engineering", q.getSubject());
         assertEquals(tags, q.getTags());
-        assertEquals("What does MVC stand for?", q.getText());
+        assertEquals("What does MVC stand for?", q.getQuestion());
         assertEquals("Model-View-Controller", q.getAnswer());
     }
 
@@ -82,8 +94,9 @@ class QuestionTest {
         Question q = new Question();
 
         assertEquals(0, q.getId());
+        assertNull(q.getSubject());
         assertNull(q.getTags());
-        assertNull(q.getText());
+        assertNull(q.getQuestion());
         assertNull(q.getAnswer());
     }
 }
