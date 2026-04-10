@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Scanner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -54,6 +55,7 @@ public class studySetMaker {
         }
     }
 
+
     //Retrieves the users set based on the name entered
     public static StudySet getSet(String username, String title){
         
@@ -91,6 +93,38 @@ public class studySetMaker {
         }
         editTags(set, username, title);
         return set;
+    }
+
+    //This function quizzes a user on a specific study set
+    public static double studySetQuiz(String username, String title){
+        StudySet set = getSet(username, title);
+        System.out.println("Practice Test begins now:");
+        Scanner s = new Scanner(System.in);
+
+        int correct = 0;
+        int i = 0;
+
+        ArrayList<Question> questionSet = set.getQuestionSet();
+        for(Question question : questionSet){
+            System.out.println(question.getQuestion());
+            System.out.print("Your answer: ");
+            String line = s.nextLine();
+            
+            if(line.toLowerCase().equals(question.getAnswer().toLowerCase())){
+                System.out.println("Correct");
+                correct++;
+            } else{
+                System.out.println("Incorrect");
+            }
+
+            i++;
+        }
+        
+        double average = Double.valueOf(correct) / Double.valueOf(i);
+        System.out.println("You got " + correct + " out of " + i + " questions right.\n"
+            + "Your average is " + average);
+
+        return average;
     }
 
     public static long getSetCount(String username){
