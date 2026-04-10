@@ -1,6 +1,6 @@
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import question.Question;
+import user.Question;
 import teacher.StudySet;
 
 import java.io.File;

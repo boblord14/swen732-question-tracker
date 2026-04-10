@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import question.Question;
+import user.Question;
 import teacher.StudySet;
 import user.User;
 

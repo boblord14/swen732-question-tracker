@@ -2,7 +2,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import question.Question;
+import user.Question;
 import teacher.StudySet;
 
 import java.io.File;
@@ -45,7 +45,7 @@ class SearchServiceTest {
         List<Question> questions = searchService.loadAllQuestions();
 
         assertEquals(3, questions.size());
-        assertEquals("What is polymorphism?", questions.get(0).getQuestion());
+        assertEquals("What is polymorphism?", questions.get(0).getText());
     }
 
     @Test
@@ -85,8 +85,8 @@ class SearchServiceTest {
         );
 
         assertEquals(2, results.size());
-        assertTrue(results.stream().anyMatch(q -> q.getQuestion().equals("What is polymorphism?")));
-        assertTrue(results.stream().anyMatch(q -> q.getQuestion().equals("Explain merge sort.")));
+        assertTrue(results.stream().anyMatch(q -> q.getText().equals("What is polymorphism?")));
+        assertTrue(results.stream().anyMatch(q -> q.getText().equals("Explain merge sort.")));
     }
 
     @Test
@@ -114,7 +114,7 @@ class SearchServiceTest {
         );
 
         assertEquals(2, results.size());
-        assertTrue(results.stream().noneMatch(q -> q.getQuestion().equals("What is two + two?")));
+        assertTrue(results.stream().noneMatch(q -> q.getText().equals("What is two + two?")));
     }
 
     @Test
@@ -134,23 +134,20 @@ class SearchServiceTest {
 
         Question q1 = new Question();
         q1.setId(1);
-        q1.setSubject("CS");
         q1.setTags(new ArrayList<>(Arrays.asList("Java", "OOP")));
-        q1.setQuestion("What is polymorphism?");
+        q1.setText("What is polymorphism?");
         q1.setAnswer("The ability of objects to take many forms.");
 
         Question q2 = new Question();
         q2.setId(2);
-        q2.setSubject("CS");
         q2.setTags(new ArrayList<>(Arrays.asList("Sorting", "Algorithms")));
-        q2.setQuestion("Explain merge sort.");
+        q2.setText("Explain merge sort.");
         q2.setAnswer("A divide-and-conquer sorting algorithm.");
 
         Question q3 = new Question();
         q3.setId(3);
-        q3.setSubject("Math");
         q3.setTags(null);
-        q3.setQuestion("What is two + two?");
+        q3.setText("What is two + two?");
         q3.setAnswer("four");
 
         questions.add(q1);
