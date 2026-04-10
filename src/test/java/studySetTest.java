@@ -146,8 +146,8 @@ public class studySetTest {
     // A test that creates multiple study sets
     @Test
     public void testCreateTwoStudySets(){
-        questionTracker.signUp("phantom", "admin123", true);
-        User user1 = questionTracker.logIn("phantom", "admin123");
+        questionTracker.signUp("admin", "admin123", true);
+        User user1 = questionTracker.logIn("admin", "admin123");
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
