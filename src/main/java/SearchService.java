@@ -109,4 +109,28 @@ public class SearchService {
                         .anyMatch(normalizedTags::contains))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Searches the StudySet folder for each StudySet json file
+     * Works by matching tags to StudySet
+     */
+    public List<StudySet> searchStudySetsByTags(List<String> searchTags) {
+        if (searchTags == null || searchTags.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Set<String> normalizedTags = searchTags.stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+
+        return loadAllStudySets().stream()
+                .filter(set -> set.getTags() != null && set.getTags().stream()
+                        .filter(Objects::nonNull)
+                        .map(String::trim)
+                        .map(String::toLowerCase)
+                        .anyMatch(normalizedTags::contains))
+                .collect(Collectors.toList());
+    }
 }
