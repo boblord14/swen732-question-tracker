@@ -2,6 +2,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import user.Question;
 import teacher.StudySet;
+import user.User;
+import user.UserPrediction;
 
 import java.io.File;
 import java.io.IOException;
