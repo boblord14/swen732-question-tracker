@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import question.Question;
+import user.Question;
 import teacher.StudySet;
 import user.User;
 
@@ -107,7 +107,7 @@ public class studySetMaker {
 
         ArrayList<Question> questionSet = set.getQuestionSet();
         for(Question question : questionSet){
-            System.out.println(question.getQuestion());
+            System.out.println(question.getText());
             System.out.print("Your answer: ");
             String line = s.nextLine();
             

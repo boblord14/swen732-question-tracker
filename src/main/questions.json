@@ -1,127 +1,91 @@
 [ {
   "id" : 0,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What is two + two?",
-  "answer" : "four"
+  "text" : "What's 2 + 2?",
+  "answer" : "four",
+  "tags" : null
 }, {
   "id" : 1,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What is two + two?",
-  "answer" : "four"
+  "text" : "What's 5 + 2?",
+  "answer" : "seven",
+  "tags" : null
 }, {
   "id" : 2,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 2 + 2?",
-  "answer" : "four"
+  "text" : "What's 2 + 2?",
+  "answer" : "four",
+  "tags" : null
 }, {
   "id" : 3,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 5 + 2?",
-  "answer" : "seven"
+  "text" : "What's 5 + 2?",
+  "answer" : "seven",
+  "tags" : null
 }, {
   "id" : 4,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 2 + 2?",
-  "answer" : "four"
+  "text" : "What's 2 + 2?",
+  "answer" : "four",
+  "tags" : null
 }, {
   "id" : 5,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 5 + 2?",
-  "answer" : "seven"
+  "text" : "What's 5 + 2?",
+  "answer" : "seven",
+  "tags" : null
 }, {
   "id" : 6,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 2 + 2?",
-  "answer" : "four"
+  "text" : "What's 2 + 2?",
+  "answer" : "four",
+  "tags" : null
 }, {
   "id" : 7,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 5 + 2?",
-  "answer" : "seven"
+  "text" : "What's 5 + 2?",
+  "answer" : "seven",
+  "tags" : null
 }, {
   "id" : 8,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 2 + 2?",
-  "answer" : "four"
+  "text" : "What's 2 + 2?",
+  "answer" : "four",
+  "tags" : null
 }, {
   "id" : 9,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 5 + 2?",
-  "answer" : "seven"
+  "text" : "What's 5 + 2?",
+  "answer" : "seven",
+  "tags" : null
 }, {
   "id" : 10,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 2 + 2?",
-  "answer" : "four"
+  "text" : "What's 2 + 2?",
+  "answer" : "four",
+  "tags" : null
 }, {
   "id" : 11,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 5 + 2?",
-  "answer" : "seven"
+  "text" : "What's 5 + 2?",
+  "answer" : "seven",
+  "tags" : null
 }, {
   "id" : 12,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 2 + 2?",
-  "answer" : "four"
+  "text" : "What's 2 + 2?",
+  "answer" : "four",
+  "tags" : null
 }, {
   "id" : 13,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 5 + 2?",
-  "answer" : "seven"
+  "text" : "What's 5 + 2?",
+  "answer" : "seven",
+  "tags" : null
 }, {
   "id" : 14,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 2 + 2?",
-  "answer" : "four"
+  "text" : "What's 2 + 2?",
+  "answer" : "four",
+  "tags" : null
 }, {
   "id" : 15,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 5 + 2?",
-  "answer" : "seven"
+  "text" : "What's 5 + 2?",
+  "answer" : "seven",
+  "tags" : null
 }, {
   "id" : 16,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 2 + 2?",
-  "answer" : "four"
+  "text" : "What's 2 + 2?",
+  "answer" : "four",
+  "tags" : null
 }, {
   "id" : 17,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 5 + 2?",
-  "answer" : "seven"
-}, {
-  "id" : 18,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 2 + 2?",
-  "answer" : "four"
-}, {
-  "id" : 19,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 5 + 2?",
-  "answer" : "seven"
-}, {
-  "id" : 20,
-  "subject" : null,
-  "tags" : null,
-  "question" : "What's 2 + 2?",
-  "answer" : "four"
+  "text" : "What's 5 + 2?",
+  "answer" : "seven",
+  "tags" : null
 } ]

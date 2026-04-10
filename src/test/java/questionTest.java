@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
-import question.Question;
+import user.Question;
 
 /**
  * Tests for the various getters and setters of the Question class
@@ -23,23 +23,13 @@ class QuestionTest {
     }
 
     /**
-     * Tests if getting/setting subject works correctly
-     */
-    @Test
-    void testSetAndGetSubject() {
-        Question q = new Question();
-        q.setSubject("Math");
-        assertEquals("Math", q.getSubject());
-    }
-
-    /**
      * Tests if getting/setting tags works correctly
      */
     @Test
     void testSetAndGetTags() {
         Question q = new Question();
         ArrayList<String> tags = new ArrayList<>(Arrays.asList("algebra", "equations"));
-        q.setTag(tags);
+        q.setTags(tags);
 
         assertEquals(tags, q.getTags());
         assertEquals(2, q.getTags().size());
@@ -53,8 +43,8 @@ class QuestionTest {
     @Test
     void testSetAndGetQuestion() {
         Question q = new Question();
-        q.setQuestion("What is 2 + 2?");
-        assertEquals("What is 2 + 2?", q.getQuestion());
+        q.setText("What is 2 + 2?");
+        assertEquals("What is 2 + 2?", q.getText());
     }
 
     /**
@@ -77,15 +67,13 @@ class QuestionTest {
         ArrayList<String> tags = new ArrayList<>(Arrays.asList("Software Architecture", "Software Design"));
 
         q.setId(73);
-        q.setSubject("Software Engineering");
-        q.setTag(tags);
-        q.setQuestion("What does MVC stand for?");
+        q.setTags(tags);
+        q.setText("What does MVC stand for?");
         q.setAnswer("Model-View-Controller");
 
         assertEquals(73, q.getId());
-        assertEquals("Software Engineering", q.getSubject());
         assertEquals(tags, q.getTags());
-        assertEquals("What does MVC stand for?", q.getQuestion());
+        assertEquals("What does MVC stand for?", q.getText());
         assertEquals("Model-View-Controller", q.getAnswer());
     }
 
@@ -94,9 +82,8 @@ class QuestionTest {
         Question q = new Question();
 
         assertEquals(0, q.getId());
-        assertNull(q.getSubject());
         assertNull(q.getTags());
-        assertNull(q.getQuestion());
+        assertNull(q.getText());
         assertNull(q.getAnswer());
     }
 }

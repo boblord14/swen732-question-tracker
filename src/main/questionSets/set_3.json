@@ -6,6 +6,7 @@
     "username" : "creator9",
     "password" : null,
     "isTeacher" : true,
+    "studySetAvg" : { },
     "wrongQuestionData" : [ ]
   },
   "questions" : [ {

@@ -1,7 +1,7 @@
 package teacher;
 
 import java.util.ArrayList;
-import question.Question;
+import user.Question;
 
 public class StudySet {
     private int id;

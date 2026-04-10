@@ -20,7 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
-import question.Question;
+import user.Question;
 import teacher.StudySet;
 import user.User;
 
