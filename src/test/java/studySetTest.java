@@ -33,7 +33,10 @@ public class studySetTest {
     //A test that creates a study set
     @Test
     public void testCreateStudySet(){
-        User user1 = questionTracker.logIn("admin", "admin123");
+        String username = "admin";
+        String password = "admin123";
+        questionTracker.signUp(username, password, true);
+        User user1 = questionTracker.logIn(username, password);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -54,7 +57,10 @@ public class studySetTest {
     //Creates a study set with a list of tags
     @Test
     public void testCreateStudySetWithTags(){
-        User user1 = questionTracker.logIn("admin", "admin123");
+        String username = "admin";
+        String password = "admin123";
+        questionTracker.signUp(username, password, true);
+        User user1 = questionTracker.logIn(username, password);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -75,7 +81,10 @@ public class studySetTest {
     //Adds tags to a study set
     @Test
     public void testCreateStudySetAddTags(){
-        User user1 = questionTracker.logIn("admin", "admin123");
+        String username = "admin";
+        String password = "admin123";
+        questionTracker.signUp(username, password, true);
+        User user1 = questionTracker.logIn(username, password);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -97,7 +106,10 @@ public class studySetTest {
     //Tests adding a tag to a list that already had tags
     @Test
     public void testCreateStudySetAddTagToAnExistingList(){
-        User user1 = questionTracker.logIn("admin", "admin123");
+        String username = "admin";
+        String password = "admin123";
+        questionTracker.signUp(username, password, true);
+        User user1 = questionTracker.logIn(username, password);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -124,7 +136,10 @@ public class studySetTest {
     //Retrieves a users study set with a specific name
     @Test
     public void testRetreiveStudySet(){
-        User user1 = questionTracker.logIn("admin", "admin123");
+        String username = "admin";
+        String password = "admin123";
+        questionTracker.signUp(username, password, true);
+        User user1 = questionTracker.logIn(username, password);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -146,8 +161,10 @@ public class studySetTest {
     // A test that creates multiple study sets
     @Test
     public void testCreateTwoStudySets(){
-        questionTracker.signUp("admin", "admin123", true);
-        User user1 = questionTracker.logIn("admin", "admin123");
+        String username = "phantom";
+        String password = "admin123";
+        questionTracker.signUp(username, password, true);
+        User user1 = questionTracker.logIn(username, password);
         Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
 
