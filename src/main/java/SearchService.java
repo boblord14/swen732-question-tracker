@@ -135,4 +135,123 @@ public class SearchService {
                         .anyMatch(normalizedTags::contains))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Returns the user's struggle vector in a map
+     * Helper instead of calling UserPrediction.generate... over again
+     */
+    public Map<String, Double> getUserStruggleVector(User user) {
+        if (user == null) {
+            return new HashMap<>();
+        }
+        return new UserPrediction(user).generateUserStruggleVector();
+    }
+
+    /**
+     * Recommends questions for a user based on their struggle tags - highest scoring questions come first
+     */
+    public List<Question> recommendQuestionsForUser(User user) {
+        Map<String, Double> struggleVector = getUserStruggleVector(user);
+
+        return loadAllQuestions().stream()
+                .filter(q -> q.getTags() != null && !q.getTags().isEmpty())
+                .sorted(Comparator.comparingDouble(
+                        (Question q) -> UserPrediction.scoreQuestion(q, struggleVector)
+                ).reversed())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Recommends only the top N questions for a user
+     */
+    public List<Question> recommendTopQuestionsForUser(User user, int count) {
+        if (count <= 0) {
+            return new ArrayList<>();
+        }
+
+        return recommendQuestionsForUser(user).stream()
+                .limit(count)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Scores a StudySet by averaging the struggle scores of its tags
+     */
+    public double scoreStudySet(StudySet set, Map<String, Double> struggleVector) {
+        if (set == null || set.getTags() == null || set.getTags().isEmpty()) {
+            return 0.0;
+        }
+
+        double score = 0.0;
+        int count = 0;
+
+        for (String tag : set.getTags()) {
+            if (tag != null) {
+                score += struggleVector.getOrDefault(tag.trim().toLowerCase(), 0.0);
+                count++;
+            }
+        }
+
+        if(count > 0){
+            return score / count;
+        }else{
+            return 0;
+        }
+    }
+
+    /**
+     * Recommends study sets for a user based on their struggle tags
+     */
+    public List<StudySet> recommendStudySetsForUser(User user) {
+        Map<String, Double> struggleVector = normalizeStruggleVector(getUserStruggleVector(user));
+
+        return loadAllStudySets().stream()
+                .filter(set -> set.getTags() != null && !set.getTags().isEmpty())
+                .sorted(Comparator.comparingDouble(
+                        (StudySet set) -> scoreStudySet(set, struggleVector)
+                ).reversed())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Recommends top N study sets for a user
+     */
+    public List<StudySet> recommendTopStudySetsForUser(User user, int count) {
+        if (count <= 0) {
+            return new ArrayList<>();
+        }
+
+        return recommendStudySetsForUser(user).stream()
+                .limit(count)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Combines text search with personalized ranking
+     * Example: user searches with a biology tag but results are sorted by what they struggle with most
+     */
+    public List<Question> searchQuestionsByTagsForUser(User user, List<String> searchTags) {
+        Map<String, Double> struggleVector = getUserStruggleVector(user);
+
+        return searchQuestionsByTags(searchTags).stream()
+                .sorted(Comparator.comparingDouble(
+                        (Question q) -> UserPrediction.scoreQuestion(q, struggleVector)
+                ).reversed())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Helper to make struggle vectors more consistent
+     */
+    private Map<String, Double> normalizeStruggleVector(Map<String, Double> struggleVector) {
+        Map<String, Double> normalized = new HashMap<>();
+
+        for (Map.Entry<String, Double> entry : struggleVector.entrySet()) {
+            if (entry.getKey() != null) {
+                normalized.put(entry.getKey().trim().toLowerCase(), entry.getValue());
+            }
+        }
+        return normalized;
+    }
+
 }
