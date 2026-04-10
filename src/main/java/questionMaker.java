@@ -61,7 +61,7 @@ public class questionMaker {
         newQuestion.setId(maxId);
         newQuestion.setQuestion(question);
         newQuestion.setAnswer(answer);
-        newQuestion.setTag(tags);
+        newQuestion.setTags(tags);
 
         Question[] updatedQuestions = new Question[questions.length + 1];
         System.arraycopy(questions, 0, updatedQuestions, 0, questions.length);
@@ -80,7 +80,7 @@ public class questionMaker {
         newQuestion.setQuestion(question);
         newQuestion.setAnswer(answer);
         newQuestion.setSubject(subject);
-        newQuestion.setTag(tags);
+        newQuestion.setTags(tags);
 
         Question[] updatedQuestions = new Question[questions.length + 1];
         System.arraycopy(questions, 0, updatedQuestions, 0, questions.length);
@@ -97,6 +97,6 @@ public class questionMaker {
                 tags.add(tag);
             }
         }
-        question.setTag(tags);
+        question.setTags(tags);
     }
 }
