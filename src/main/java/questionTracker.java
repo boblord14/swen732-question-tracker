@@ -3,9 +3,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import user.User;
 import user.Classroom;
+import user.Question;
+import user.QuestionSet;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class questionTracker {
@@ -169,6 +170,178 @@ public class questionTracker {
         }
 
         return changed;
+    }
+
+    // --- QuestionSet (study materials) persistence and operations ---
+
+    public static QuestionSet[] getQuestionSets(){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            File dir = new File("src/main/questionSets");
+            if (!dir.exists() || !dir.isDirectory()) return new QuestionSet[0];
+            File[] files = dir.listFiles((d, name) -> name.endsWith(".json"));
+            if (files == null || files.length == 0) return new QuestionSet[0];
+            List<QuestionSet> out = new java.util.ArrayList<>();
+            for (File f : files) {
+                try {
+                    QuestionSet s = mapper.readValue(f, QuestionSet.class);
+                    out.add(s);
+                } catch (Exception ex) {
+                    // skip malformed file but continue
+                    ex.printStackTrace();
+                }
+            }
+            return out.toArray(new QuestionSet[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new QuestionSet[0];
+        }
+    }
+
+    private static void saveQuestionSets(QuestionSet[] sets){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            File dir = new File("src/main/questionSets");
+            if (!dir.exists()) dir.mkdirs();
+            for (QuestionSet s : sets) {
+                if (s == null) continue;
+                File out = new File(dir, "set_" + s.getId() + ".json");
+                try {
+                    mapper.writerWithDefaultPrettyPrinter().writeValue(out, s);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Update a single user entry in users.json (by id).
+     */
+    public static void saveUser(User user) {
+        if (user == null) return;
+        User[] users = getUsers();
+        boolean found = false;
+        for (int i = 0; i < users.length; i++){
+            if (users[i] != null && users[i].getId() == user.getId()){
+                users[i] = user;
+                found = true;
+                break;
+            }
+        }
+        if (!found){
+            // append
+            User[] updated = new User[users.length + 1];
+            System.arraycopy(users, 0, updated, 0, users.length);
+            updated[users.length] = user;
+            users = updated;
+        }
+        saveUsers(users);
+    }
+
+    /**
+     * Create a new QuestionSet (study material). Only 'question creators' (teachers) may create.
+     */
+    public static QuestionSet createQuestionSet(String name, User creator){
+
+        QuestionSet[] sets = getQuestionSets();
+        int maxId = 0;
+        for (QuestionSet s : sets){
+            if (s != null && s.getId() > maxId) maxId = s.getId();
+        }
+
+        QuestionSet newSet = new QuestionSet(maxId + 1, name, creator);
+        QuestionSet[] updated = new QuestionSet[sets.length + 1];
+        System.arraycopy(sets, 0, updated, 0, sets.length);
+        updated[sets.length] = newSet;
+        saveQuestionSets(updated);
+        System.out.println("Question set created: " + name + " (id=" + newSet.getId() + ") by " + creator.getUsername());
+        return newSet;
+    }
+
+    /**
+     * Add a question to a question set. Returns true if added.
+     */
+    public static boolean addQuestionToSet(int setId, String questionText, String answer, List<String> tags){
+        QuestionSet[] sets = getQuestionSets();
+        boolean changed = false;
+        for (QuestionSet s : sets){
+            if (s != null && s.getId() == setId){
+                // determine next question id within the set
+                int maxQ = 0;
+                for (Question q : s.getQuestions()){
+                    if (q.getId() > maxQ) maxQ = q.getId();
+                }
+                Question q = new Question(maxQ + 1, questionText, answer);
+                if (tags != null) q.setTags(tags);
+                s.addQuestion(q);
+                changed = true;
+                break;
+            }
+        }
+
+        if (changed) saveQuestionSets(sets);
+        return changed;
+    }
+
+    /**
+     * Edit an existing question inside a set. Returns true if modified.
+     */
+    public static boolean editQuestionInSet(int setId, int questionId, String newText, String newAnswer, List<String> newTags){
+        QuestionSet[] sets = getQuestionSets();
+        boolean changed = false;
+        for (QuestionSet s : sets){
+            if (s != null && s.getId() == setId){
+                Question q = s.findQuestionById(questionId);
+                if (q != null){
+                    if (newText != null) q.setText(newText);
+                    if (newAnswer != null) q.setAnswer(newAnswer);
+                    if (newTags != null) q.setTags(newTags);
+                    changed = true;
+                }
+                break;
+            }
+        }
+        if (changed) saveQuestionSets(sets);
+        return changed;
+    }
+
+    /**
+     * Update metadata for a question set (name, tags). Only the creator may edit.
+     */
+    public static boolean updateQuestionSetMetadata(int setId, User requester, String newName, List<String> newTags){
+        if (requester == null) return false;
+        QuestionSet[] sets = getQuestionSets();
+        boolean changed = false;
+        for (QuestionSet s : sets){
+            if (s != null && s.getId() == setId){
+                if (s.getCreator() == null || s.getCreator().getId() != requester.getId()){
+                    System.out.println("Only the creator may edit this question set.");
+                    return false;
+                }
+                if (newName != null) s.setName(newName);
+                if (newTags != null) s.setTags(newTags);
+                changed = true;
+                break;
+            }
+        }
+        if (changed) saveQuestionSets(sets);
+        return changed;
+    }
+
+    /**
+     * Create an interactive session for a question set so a user can go through it question-by-question.
+     */
+    public static QuestionSetSession createQuestionSetSession(int setId, User user) {
+        QuestionSet[] sets = getQuestionSets();
+        for (QuestionSet s : sets) {
+            if (s != null && s.getId() == setId) {
+                return new QuestionSetSession(s, user);
+            }
+        }
+        return null;
     }
 
 

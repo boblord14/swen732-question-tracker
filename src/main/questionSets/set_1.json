@@ -1,0 +1,13 @@
+{
+  "id" : 1,
+  "name" : "Algebra",
+  "creator" : {
+    "id" : 10,
+    "username" : "teacher10",
+    "password" : null,
+    "isTeacher" : true,
+    "wrongQuestionData" : [ ]
+  },
+  "questions" : [ ],
+  "tags" : [ ]
+}

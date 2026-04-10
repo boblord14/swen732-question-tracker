@@ -1,0 +1,18 @@
+{
+  "id" : 7,
+  "name" : "Physics",
+  "creator" : {
+    "id" : 5,
+    "username" : "creator5",
+    "password" : null,
+    "isTeacher" : true,
+    "wrongQuestionData" : [ ]
+  },
+  "questions" : [ {
+    "id" : 1,
+    "text" : "What is velocity?",
+    "answer" : "distance/time",
+    "tags" : [ "physics", "easy" ]
+  } ],
+  "tags" : [ ]
+}
