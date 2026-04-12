@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:controller="app.MainController"
+            xmlns:fx="http://javafx.com/fxml">
+    <children>
+        <Button text="Load Classes"
+                layoutX="100"
+                layoutY="100"
+                onAction="#handleLoad"/>
+        
+    </children>
+</AnchorPane>
