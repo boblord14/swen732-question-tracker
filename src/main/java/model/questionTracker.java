@@ -1,3 +1,4 @@
+package model;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -103,6 +104,16 @@ public class questionTracker {
             e.printStackTrace();
             return new Classroom[0];
         }
+    }
+
+    public static Classroom getClassByName(String name){
+        Classroom[] classes = getClasses();
+        for (Classroom c : classes){
+            if (c != null && c.getName() != null && c.getName().equals(name)){
+                return c;
+            }
+        }
+        return null;
     }
 
     private static void saveClasses(Classroom[] classes){

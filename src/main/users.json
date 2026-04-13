@@ -1,8 +1,1 @@
-[ {
-  "id" : 1,
-  "username" : "admin",
-  "password" : "admin123",
-  "isTeacher" : true,
-  "studySetAvg" : { },
-  "wrongQuestionData" : [ ]
-} ]
+[  ]
