@@ -78,6 +78,33 @@ public class studySetMaker {
         }
     }
 
+    public static StudySet getSetById(int id) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            StudySet[] data = mapper.readValue(new File("src/main/sets.json"), StudySet[].class);
+            return Arrays.stream(data)
+                .filter(item -> item.getId() == id)
+                .findFirst()
+                .orElse(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static StudySet[] getAllSets() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            File file = new File("src/main/sets.json");
+            if (!file.exists() || file.length() == 0) return new StudySet[0];
+            StudySet[] data = mapper.readValue(file, StudySet[].class);
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new StudySet[0];
+        }
+    }
+
     public static StudySet addTags(String username, String title, ArrayList<String> newTags){
         StudySet set = getSet(username, title);
         ArrayList<String> tags = set.getTags();

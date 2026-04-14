@@ -7,23 +7,21 @@
             xmlns:fx="http://javafx.com/fxml"
             prefWidth="400" prefHeight="300">
     <children>
-        <Button fx:id="classListButton"
-                text="Class List"
-                layoutX="100"
-                layoutY="100"
-                onAction="#handleLoad"/>
 
-        <Button fx:id="loginButton"
-                text="login"
-                layoutX="200"
-                layoutY="100"
-                onAction="#handleLogin"/>
+        <VBox layoutX="200" layoutY="160" spacing="12" prefWidth="560" styleClass="card">
+            <Label text="Question Tracker" styleClass="title" />
+            <Button fx:id="questionSetsButton" text="Question Sets" onAction="#handleQuestionSets" styleClass="button ghost" />
+            <Button fx:id="classListButton"
+                    text="Class List"
+                    onAction="#handleLoad"/>
 
-        <Button fx:id="signupButton"
-                text="signup"
-                layoutX="300"
-                layoutY="100"
-                onAction="#handleSignup"/>
-        
+            <Button fx:id="loginButton"
+                    text="login"
+                    onAction="#handleLogin"/>
+
+            <Button fx:id="signupButton"
+                    text="signup"
+                    onAction="#handleSignup"/>
+        </VBox>
     </children>
 </AnchorPane>

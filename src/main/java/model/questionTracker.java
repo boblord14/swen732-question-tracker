@@ -151,6 +151,12 @@ public class questionTracker {
         updated[classes.length] = newClass;
 
         saveClasses(updated);
+        // Persist teacher update (their classrooms list was modified in Classroom constructor)
+        try {
+            if (teacher != null) saveUser(teacher);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         System.out.println("Class created: " + name + " (" + code + ") by " + teacher.getUsername());
         return newClass;
@@ -188,21 +194,46 @@ public class questionTracker {
     public static QuestionSet[] getQuestionSets(){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            File dir = new File("src/main/questionSets");
-            if (!dir.exists() || !dir.isDirectory()) return new QuestionSet[0];
-            File[] files = dir.listFiles((d, name) -> name.endsWith(".json"));
-            if (files == null || files.length == 0) return new QuestionSet[0];
-            List<QuestionSet> out = new java.util.ArrayList<>();
-            for (File f : files) {
-                try {
-                    QuestionSet s = mapper.readValue(f, QuestionSet.class);
-                    out.add(s);
-                } catch (Exception ex) {
-                    // skip malformed file but continue
-                    ex.printStackTrace();
-                }
+            File central = new File("src/main/questionSets.json");
+            if (central.exists()){
+                // read centralized file
+                List<QuestionSet> list = mapper.readValue(central, new TypeReference<List<QuestionSet>>(){});
+                return list.toArray(new QuestionSet[0]);
             }
-            return out.toArray(new QuestionSet[0]);
+
+            // Backwards-compatibility: if centralized file missing but old per-file dir exists, migrate
+            File dir = new File("src/main/questionSets");
+            if (dir.exists() && dir.isDirectory()){
+                File[] files = dir.listFiles((d, name) -> name.endsWith(".json"));
+                if (files == null || files.length == 0) return new QuestionSet[0];
+                List<QuestionSet> out = new java.util.ArrayList<>();
+                for (File f : files) {
+                    try {
+                        QuestionSet s = mapper.readValue(f, QuestionSet.class);
+                        out.add(s);
+                    } catch (Exception ex) {
+                        // skip malformed file but continue
+                        ex.printStackTrace();
+                    }
+                }
+                // persist centralized file for future runs
+                QuestionSet[] arr = out.toArray(new QuestionSet[0]);
+                saveQuestionSets(arr);
+                // attempt to remove old per-set files and directory to avoid duplicate storage
+                try {
+                    for (File old : files) {
+                        try { old.delete(); } catch (Exception ignore) { }
+                    }
+                    File[] remaining = dir.listFiles();
+                    if (remaining == null || remaining.length == 0) dir.delete();
+                } catch (Exception cleanupEx) {
+                    // don't fail migration on cleanup errors
+                    cleanupEx.printStackTrace();
+                }
+                return arr;
+            }
+
+            return new QuestionSet[0];
         } catch (Exception e) {
             e.printStackTrace();
             return new QuestionSet[0];
@@ -212,17 +243,13 @@ public class questionTracker {
     private static void saveQuestionSets(QuestionSet[] sets){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            File dir = new File("src/main/questionSets");
-            if (!dir.exists()) dir.mkdirs();
-            for (QuestionSet s : sets) {
-                if (s == null) continue;
-                File out = new File(dir, "set_" + s.getId() + ".json");
-                try {
-                    mapper.writerWithDefaultPrettyPrinter().writeValue(out, s);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+            File out = new File("src/main/questionSets.json");
+            // convert to list for cleaner JSON array
+            List<QuestionSet> list = new java.util.ArrayList<>();
+            if (sets != null) {
+                for (QuestionSet s : sets) if (s != null) list.add(s);
             }
+            mapper.writerWithDefaultPrettyPrinter().writeValue(out, list);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -268,8 +295,56 @@ public class questionTracker {
         System.arraycopy(sets, 0, updated, 0, sets.length);
         updated[sets.length] = newSet;
         saveQuestionSets(updated);
-        System.out.println("Question set created: " + name + " (id=" + newSet.getId() + ") by " + creator.getUsername());
+        // Associate created set with creator and persist
+        try {
+            if (creator != null) {
+                creator.addQuestionSetId(newSet.getId());
+                saveUser(creator);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("Question set created: " + name + " (id=" + newSet.getId() + ") by " + (creator != null ? creator.getUsername() : "unknown"));
         return newSet;
+    }
+
+    /**
+     * Return question sets available to the given user (by membership in user's questionSetIds).
+     */
+    public static QuestionSet[] getQuestionSetsForUser(User user) {
+        if (user == null) return new QuestionSet[0];
+        QuestionSet[] all = getQuestionSets();
+        java.util.List<QuestionSet> out = new java.util.ArrayList<>();
+        java.util.List<Integer> ids = user.getQuestionSetIds();
+        if (ids == null || ids.isEmpty()) return new QuestionSet[0];
+        for (QuestionSet s : all) {
+            if (s == null) continue;
+            if (ids.contains(s.getId())) out.add(s);
+        }
+        return out.toArray(new QuestionSet[0]);
+    }
+
+    /**
+     * Return a user by id from persistent storage, or null if not found.
+     */
+    public static User getUserById(int id) {
+        User[] users = getUsers();
+        for (User u : users) {
+            if (u != null && u.getId() == id) return u;
+        }
+        return null;
+    }
+
+    /**
+     * Return a QuestionSet by id from the centralized questionSets.json storage.
+     */
+    public static user.QuestionSet getQuestionSetById(int id) {
+        QuestionSet[] sets = getQuestionSets();
+        if (sets == null) return null;
+        for (QuestionSet s : sets) {
+            if (s != null && s.getId() == id) return s;
+        }
+        return null;
     }
 
     /**
@@ -353,6 +428,33 @@ public class questionTracker {
             }
         }
         return null;
+    }
+
+    /**
+     * Assign an existing study set (question set) to a class by name.
+     * This updates the classroom's assignedStudySetIds and persists classes.json.
+     */
+    public static boolean assignStudySetToClass(String className, int setId) {
+        Classroom[] classes = getClasses();
+        boolean changed = false;
+        for (int i = 0; i < classes.length; i++){
+            Classroom c = classes[i];
+            if (c != null && c.getName() != null && c.getName().equals(className)){
+                // add id to classroom and try to load StudySet for runtime list
+                c.addAssignedStudySetId(setId);
+                teacher.StudySet set = model.studySetMaker.getSetById(setId);
+                if (set != null) c.addStudySet(set);
+                changed = true;
+                break;
+            }
+        }
+
+        if (changed) {
+            // reuse private saveClasses method
+            saveClasses(classes);
+        }
+
+        return changed;
     }
 
 

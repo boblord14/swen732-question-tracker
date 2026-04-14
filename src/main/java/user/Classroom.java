@@ -13,6 +13,7 @@ public class Classroom {
     private User teacher; // single teacher
     private List<User> students;
     private List<StudySet> assignedStudySets;
+    private List<Integer> assignedStudySetIds;
 
     public Classroom(String name, String code, User teacher) {
         this.name = name;
@@ -20,12 +21,14 @@ public class Classroom {
         this.teacher = teacher;
         this.students = new ArrayList<>();
         this.assignedStudySets = new ArrayList<>();
+        this.assignedStudySetIds = new ArrayList<>();
         teacher.getClassrooms().add(this.name);
     }
 
     public Classroom() {
         this.students = new ArrayList<>();
         this.assignedStudySets = new ArrayList<>();
+        this.assignedStudySetIds = new ArrayList<>();
     }
 
     public String getName() { return name; }
@@ -33,12 +36,14 @@ public class Classroom {
     public User getTeacher() { return teacher; }
     public List<User> getStudents() { return students; }
     public List<StudySet> getAssignedStudySets() { return assignedStudySets; }
+    public List<Integer> getAssignedStudySetIds() { return assignedStudySetIds; }
 
     public void setName(String name) { this.name = name; }
     public void setCode(String code) { this.code = code; }
     public void setTeacher(User teacher) { this.teacher = teacher; }
     public void setStudents(List<User> students) { this.students = students; }
     public void setAssignedStudySets(List<StudySet> assignedStudySets) { this.assignedStudySets = assignedStudySets; }
+    public void setAssignedStudySetIds(List<Integer> ids) { this.assignedStudySetIds = ids; }
 
     // helper methods
     public boolean addStudent(User student) {
@@ -57,6 +62,12 @@ public class Classroom {
     public boolean addStudySet(StudySet s) {
         if (s == null) return false;
         return assignedStudySets.add(s);
+    }
+
+    public boolean addAssignedStudySetId(int id) {
+        if (assignedStudySetIds == null) assignedStudySetIds = new ArrayList<>();
+        if (assignedStudySetIds.contains(id)) return false;
+        return assignedStudySetIds.add(id);
     }
 
     public List<Map<Integer, Double>> studentsSetScores() {

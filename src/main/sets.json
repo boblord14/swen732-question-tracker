@@ -15,4 +15,26 @@
     "answer" : "seven",
     "tags" : null
   } ]
+}, {
+  "id" : 0,
+  "subject" : "",
+  "creator" : "admin",
+  "title" : "Testset",
+  "tags" : null,
+  "questionSet" : [ {
+    "id" : 1,
+    "text" : "te",
+    "answer" : "tt",
+    "tags" : [ ]
+  }, {
+    "id" : 2,
+    "text" : "ttt",
+    "answer" : "ttt",
+    "tags" : [ ]
+  }, {
+    "id" : 3,
+    "text" : "yttt",
+    "answer" : "tttt",
+    "tags" : [ ]
+  } ]
 } ]

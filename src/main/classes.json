@@ -1,1 +1,87 @@
-[ ]
+[ {
+  "name" : "test",
+  "code" : "1234",
+  "teacher" : {
+    "id" : 1,
+    "username" : "admin",
+    "password" : "admin123",
+    "isTeacher" : true,
+    "studySetAvg" : { },
+    "classrooms" : [ "test" ],
+    "questionSetIds" : [ ],
+    "wrongQuestionData" : [ ]
+  },
+  "students" : [ ],
+  "assignedStudySets" : [ ],
+  "assignedStudySetIds" : [ ]
+}, {
+  "name" : "Testss",
+  "code" : "12345",
+  "teacher" : {
+    "id" : 1,
+    "username" : "admin",
+    "password" : "admin123",
+    "isTeacher" : true,
+    "studySetAvg" : { },
+    "classrooms" : [ "Testss" ],
+    "questionSetIds" : [ ],
+    "wrongQuestionData" : [ ]
+  },
+  "students" : [ ],
+  "assignedStudySets" : [ ],
+  "assignedStudySetIds" : [ ]
+}, {
+  "name" : "Testss",
+  "code" : "12",
+  "teacher" : {
+    "id" : 1,
+    "username" : "admin",
+    "password" : "admin123",
+    "isTeacher" : true,
+    "studySetAvg" : { },
+    "classrooms" : [ "Testss" ],
+    "questionSetIds" : [ ],
+    "wrongQuestionData" : [ ]
+  },
+  "students" : [ ],
+  "assignedStudySets" : [ ],
+  "assignedStudySetIds" : [ ]
+}, {
+  "name" : "Test2",
+  "code" : "22222",
+  "teacher" : {
+    "id" : 1,
+    "username" : "admin",
+    "password" : "admin123",
+    "isTeacher" : true,
+    "studySetAvg" : { },
+    "classrooms" : [ "test", "Test2" ],
+    "questionSetIds" : [ 2, 3, 4 ],
+    "wrongQuestionData" : [ ]
+  },
+  "students" : [ ],
+  "assignedStudySets" : [ {
+    "id" : 0,
+    "subject" : "",
+    "creator" : "admin",
+    "title" : "Testset",
+    "tags" : null,
+    "questionSet" : [ {
+      "id" : 1,
+      "text" : "te",
+      "answer" : "tt",
+      "tags" : [ ]
+    }, {
+      "id" : 2,
+      "text" : "ttt",
+      "answer" : "ttt",
+      "tags" : [ ]
+    }, {
+      "id" : 3,
+      "text" : "yttt",
+      "answer" : "tttt",
+      "tags" : [ ]
+    } ]
+  } ],
+  "assignedStudySetIds" : [ 0 ]
+} ]
