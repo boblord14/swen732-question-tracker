@@ -41,7 +41,16 @@ public class ClassListController {
 
     @FXML
     private void handleBack() {
-        System.out.println("Back button pressed (not implemented)");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) classListBox.getScene().getWindow();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            stage.setScene(scene);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void loadClasses(){
@@ -62,7 +71,9 @@ public class ClassListController {
                     controller.setData(c, user);
 
                     Stage stage = (Stage) classListBox.getScene().getWindow();
-                    stage.setScene(new Scene(root));
+                    Scene scene = new Scene(root);
+                    scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+                    stage.setScene(scene);
                 } catch (IOException exception) {
                     exception.printStackTrace();
                 }
@@ -83,6 +94,7 @@ public class ClassListController {
     
     private void handleCreateClass() {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setGraphic(null);
         dialog.setTitle("Create Class");
         dialog.setHeaderText("Enter Class Details");
     
@@ -131,6 +143,7 @@ public class ClassListController {
 
     private void handleJoinClass() {
         TextInputDialog dialog = new TextInputDialog();
+        dialog.setGraphic(null);
         dialog.setTitle("Join Class");
         dialog.setHeaderText("Enter Class Code");
         dialog.setContentText("Code:");

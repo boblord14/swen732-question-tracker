@@ -9,10 +9,9 @@
             prefWidth="960" prefHeight="540">
 
     <children>
-        <VBox spacing="20" layoutX="200" layoutY="40" prefWidth="560">
+        <VBox spacing="20" layoutX="200" layoutY="40" prefWidth="560" styleClass="card">
 
-            <Label text="Your Classes"
-                   style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Label text="Your Classes" styleClass="title"/>
 
             <ScrollPane prefHeight="350" fitToWidth="true">
                 <content>
@@ -24,15 +23,15 @@
                 </content>
             </ScrollPane>
 
-            <HBox spacing="10">
-                <Button fx:id="actionButton"
-                        onAction="#handleAction"
-                        prefWidth="200"/>
+        <HBox spacing="10">
+        <Button fx:id="actionButton"
+            onAction="#handleAction"
+            prefWidth="200" styleClass="button primary"/>
 
-                <Button text="Back"
-                        onAction="#handleBack"
-                        prefWidth="100"/>
-            </HBox>
+        <Button text="Back"
+            onAction="#handleBack"
+            prefWidth="100" styleClass="button ghost"/>
+        </HBox>
 
         </VBox>
     </children>

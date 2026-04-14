@@ -11,21 +11,31 @@
     <children>
         <VBox spacing="20" layoutX="200" layoutY="40" prefWidth="560">
 
-            <Label fx:id="classNameLabel"
-                   style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+         <Label fx:id="classNameLabel" styleClass="title" />
 
-            <Label fx:id="classCodeLabel"
-                   style="-fx-font-size: 16px;"/>
+         <Label fx:id="classCodeLabel" styleClass="muted" />
 
-            <Button text="View Assigned Study Sets"
-                    onAction="#handleViewStudySets"
-                    prefWidth="250"/>
 
-            <VBox fx:id="teacherSection" spacing="10">
+            <Label text="Study Sets in this Class:" style="-fx-font-weight: bold;"/>
+            <ScrollPane prefHeight="150" fitToWidth="true">
+                <content>
+                    <VBox fx:id="studySetListVBox" spacing="8">
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="10"/>
+                        </padding>
+                    </VBox>
+                </content>
+            </ScrollPane>
 
-                <Button text="View Student Struggles"
-                        onAction="#handleViewStruggles"
-                        prefWidth="250"/>
+        <VBox fx:id="teacherSection" spacing="10">
+
+        <Button text="Create Study Set"
+            onAction="#handleCreateStudySet"
+            prefWidth="250" styleClass="button primary"/>
+
+        <Button text="View Student Struggles"
+            onAction="#handleViewStruggles"
+            prefWidth="250" styleClass="button ghost"/>
 
                 <Label text="Students in Class:"
                        style="-fx-font-weight: bold;"/>
@@ -42,9 +52,9 @@
 
             </VBox>
 
-            <Button text="Back to Class List"
-                    onAction="#handleBack"
-                    prefWidth="200"/>
+        <Button text="Back to Class List"
+            onAction="#handleBack"
+            prefWidth="200" styleClass="button ghost"/>
 
         </VBox>
     </children>

@@ -7,11 +7,10 @@
             xmlns:fx="http://javafx.com/fxml"
             prefWidth="960" prefHeight="540">
     <children>
-        <Button fx:id="classListButton"
-                text="Class List"
-                layoutX="100"
-                layoutY="100"
-                onAction="#handleLoad"/>
-        
+        <VBox layoutX="200" layoutY="160" spacing="12" prefWidth="560" styleClass="card">
+            <Label text="Question Tracker" styleClass="title" />
+            <Button fx:id="classListButton" text="Class List" onAction="#handleLoad" styleClass="button primary" />
+            <Button fx:id="questionSetsButton" text="Question Sets" onAction="#handleQuestionSets" styleClass="button ghost" />
+        </VBox>
     </children>
 </AnchorPane>

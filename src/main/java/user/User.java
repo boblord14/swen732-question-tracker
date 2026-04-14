@@ -13,6 +13,7 @@ public class User {
     private Deque<List<String>> wrongQuestionList;
     private Map<Integer, Double> studySetAvg;
     private List<String> classrooms;
+    private List<Integer> questionSetIds;
 
     public User(int id, String username, String password, boolean isTeacher) {
         this.id = id;
@@ -22,12 +23,14 @@ public class User {
         this.wrongQuestionList = new LinkedList<>();
         this.studySetAvg = new HashMap<>();
         this.classrooms = new ArrayList<>();
+        this.questionSetIds = new ArrayList<>();
     }
 
     public User() {
         this.wrongQuestionList = new LinkedList<>();
         this.studySetAvg = new HashMap<>();
         this.classrooms = new ArrayList<>();
+        this.questionSetIds = new ArrayList<>();
     }
 
     public int getId() { return id;}
@@ -36,6 +39,7 @@ public class User {
     public boolean getIsTeacher() { return isTeacher;}
     public Map<Integer, Double> getStudySetAvg() { return studySetAvg;}
     public List<String> getClassrooms() { return classrooms;}
+    public List<Integer> getQuestionSetIds() { return questionSetIds;}
 
     public void setId(int id) { this.id = id;}
     public void setUsername(String username) { this.username = username;}
@@ -43,6 +47,17 @@ public class User {
     public void setIsTeacher(boolean isTeacher) { this.isTeacher = isTeacher;}
     public void setStudySetAvg(Map<Integer, Double> studySetAvg) { this.studySetAvg = studySetAvg;}
     public void setClassrooms(List<String> classrooms) { this.classrooms = classrooms;}
+    public void setQuestionSetIds(List<Integer> questionSetIds) { this.questionSetIds = questionSetIds;}
+
+    public void addQuestionSetId(int id) {
+        if (this.questionSetIds == null) this.questionSetIds = new ArrayList<>();
+        if (!this.questionSetIds.contains(id)) this.questionSetIds.add(id);
+    }
+
+    public void removeQuestionSetId(int id) {
+        if (this.questionSetIds == null) return;
+        this.questionSetIds.removeIf(i -> i == id);
+    }
 
     /**
      * Add a question's subject tags to the last x wrong question lists, removes oldest if list reaches capacity
