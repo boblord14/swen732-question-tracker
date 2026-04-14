@@ -78,5 +78,14 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                    <include>**/*.json</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 </project>

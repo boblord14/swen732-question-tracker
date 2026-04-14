@@ -1,0 +1,17 @@
+[ {
+  "id" : 1,
+  "username" : "User0",
+  "password" : "Password0",
+  "isTeacher" : false,
+  "studySetAvg" : { },
+  "classrooms" : [ ],
+  "wrongQuestionData" : [ ]
+}, {
+  "id" : 2,
+  "username" : "kjk",
+  "password" : "rer",
+  "isTeacher" : false,
+  "studySetAvg" : { },
+  "classrooms" : [ ],
+  "wrongQuestionData" : [ ]
+} ]

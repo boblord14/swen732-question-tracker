@@ -37,7 +37,7 @@ public class questionTracker {
     public static User[] getUsers(){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(new File("src/main/users.json"), User[].class);
+            return mapper.readValue(new File("src/main/resources/users.json"), User[].class);
         } catch (Exception e) {
             e.printStackTrace();
             return new User[0];
@@ -47,7 +47,7 @@ public class questionTracker {
     private static void saveUsers(User[] users){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("src/main/users.json"), users);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("src/main/resources/users.json"), users);
         } catch (Exception e) {
             e.printStackTrace();
         }
