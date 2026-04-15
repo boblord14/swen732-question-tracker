@@ -17,11 +17,7 @@ import user.User;
 
 public class MainController {
 
-    private User user;
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    private static User user;
 
     @FXML
     private Button classListButton;
@@ -29,9 +25,15 @@ public class MainController {
     private Button questionSetsButton;
     @FXML
     private Button userStruggleButton;
-
     @FXML
-    private Button loginButton;
+    private Button logoutButton;
+    @FXML
+    private Label usernameLabel;
+
+    public void setUser(User user) {
+        this.user = user;
+        this.usernameLabel.setText("Welcome, " + user.getUsername() + "!");
+    }
 
     @FXML
     public void handleLoad() {
@@ -55,10 +57,6 @@ public class MainController {
 
     @FXML
     public void handleQuestionSets() {
-        User user = model.questionTracker.getUserById(1);
-        if (user == null) {
-            user = new User(1, "admin", "admin123", true);
-        }
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/QuestionSetListView.fxml"));
             Parent root = loader.load();
@@ -76,28 +74,14 @@ public class MainController {
         }
     }
 
-    public void handleLogin() {
+    @FXML
+    public void handleLogout(ActionEvent actionEvent) {
         try {
             FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
             Parent root2 = loader2.load();
-            LoginController controller2 = loader2.getController();
-            controller2.loadLoginScreen(user);
 
-            Stage stage2 = (Stage) loginButton.getScene().getWindow();
+            Stage stage2 = (Stage) logoutButton.getScene().getWindow();
             stage2.setScene(new Scene(root2));
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    public void handleSignup(){
-        try{
-            FXMLLoader loader3 = new FXMLLoader(getClass().getResource("/fxml/SignupView.fxml"));
-            Parent root3 = loader3.load();
-            SignupController controller3 = loader3.getController();
-
-            Stage stage3 = (Stage) loginButton.getScene().getWindow();
-            stage3.setScene(new Scene(root3));
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -105,10 +89,6 @@ public class MainController {
 
     @FXML
     public void handleViewStruggles(ActionEvent actionEvent) {
-        User user = model.questionTracker.getUserById(1);
-        if (user == null) {
-            user = new User(1, "admin", "admin123", true);
-        }
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/StruggleView.fxml"));
             Parent root = loader.load();

@@ -34,10 +34,12 @@ public class QuestionSetListController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
             Parent root = loader.load();
+
+            MainController controller = loader.getController();
+            controller.setUser(user);
+
             Stage stage = (Stage) setListVBox.getScene().getWindow();
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
-            stage.setScene(scene);
+            stage.setScene(new Scene(root));
         } catch (IOException e) {
             e.printStackTrace();
         }

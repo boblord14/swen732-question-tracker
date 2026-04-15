@@ -80,16 +80,23 @@ public class StruggleViewController {
         titleLabel.setText(student.getUsername() + ": Your Struggles");
         practiceButton.setText("Practice Struggles");
 
-        UserPrediction up = new UserPrediction(student);
-        struggleVector = up.generateUserStruggleVector();
-
-        if (struggleVector.isEmpty()) {
+        if (student.getWrongQuestionData().isEmpty()) {
             Label none = new Label("No struggle data, go get some questions wrong");
             none.setStyle("-fx-font-size: 13px;");
             struggleListVBox.getChildren().add(none);
             practiceButton.setDisable(true);
-        } else {
-            buildStruggleList();
+        }else{
+            UserPrediction up = new UserPrediction(student);
+            struggleVector = up.generateUserStruggleVector();
+
+            if (struggleVector.isEmpty()) {
+                Label none = new Label("No struggle data, go get some questions wrong");
+                none.setStyle("-fx-font-size: 13px;");
+                struggleListVBox.getChildren().add(none);
+                practiceButton.setDisable(true);
+            } else {
+                buildStruggleList();
+            }
         }
     }
 
@@ -211,10 +218,12 @@ public class StruggleViewController {
             }else{
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
                 Parent root = loader.load();
+
+                MainController controller = loader.getController();
+                controller.setUser(user);
+
                 Stage stage = (Stage) titleLabel.getScene().getWindow();
-                Scene scene = new Scene(root);
-                scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
-                stage.setScene(scene);
+                stage.setScene(new Scene(root));
             }
 
         } catch (IOException e) {

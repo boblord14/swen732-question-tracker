@@ -15,6 +15,7 @@ import java.util.Arrays;
 
 public class SignupController {
 
+    @FXML private CheckBox teacherBox;
     @FXML private Button loginButton;
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
@@ -36,16 +37,16 @@ public class SignupController {
         if (found != null) {
             errorLabel.setText("This username already exists");
             return;
-        } else{
-            questionTracker.signUp(username, password, false);
         }
+        User realUser = questionTracker.signUp(username, password, teacherBox.isSelected());
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
             Parent root = loader.load();
 
             MainController controller = loader.getController();
-            controller.setUser(found);
+            assert realUser != null;
+            controller.setUser(realUser);
 
             Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(new Scene(root));
