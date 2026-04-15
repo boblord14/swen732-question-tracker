@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox prefWidth="400" prefHeight="300" spacing="10" alignment="CENTER"
-      xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="app.SignupController">
+<VBox alignment="CENTER" prefHeight="300" prefWidth="400" spacing="10" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.SignupController">
+    <Label style="-fx-font-size: 20;" text="Welcome to Question-Tracker!" />
+    <Label style="-fx-font-size: 20;" text="Sign Up" />
 
-    <Label text="Signup" style="-fx-font-size: 20;" />
+    <TextField fx:id="usernameField" maxWidth="-Infinity" promptText="Username" />
+    <PasswordField fx:id="passwordField" maxWidth="-Infinity" promptText="Password" />
 
-    <TextField fx:id="usernameField" promptText="Username" />
-    <PasswordField fx:id="passwordField" promptText="Password" />
-
-    <Button text="Signup" onAction="#handleSignup" />
+    <Button onAction="#handleSignup" text="Sign Up" />
     <Label fx:id="errorLabel" textFill="red" />
+   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+      <children>
+         <Label text="Already have an account? " />
+         <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" text="Log In" />
+      </children>
+   </HBox>
 </VBox>

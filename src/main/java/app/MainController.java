@@ -95,7 +95,6 @@ public class MainController {
             FXMLLoader loader3 = new FXMLLoader(getClass().getResource("/fxml/SignupView.fxml"));
             Parent root3 = loader3.load();
             SignupController controller3 = loader3.getController();
-            controller3.loadSignupScreen(user);
 
             Stage stage3 = (Stage) loginButton.getScene().getWindow();
             stage3.setScene(new Scene(root3));

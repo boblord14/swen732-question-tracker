@@ -1,5 +1,6 @@
 package app;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,6 +10,7 @@ import javafx.stage.Stage;
 import model.questionTracker;
 import user.User;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class LoginController {
@@ -16,6 +18,7 @@ public class LoginController {
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
     @FXML private Label errorLabel;
+    @FXML private Button signupButton;
 
     private User[] users;
 
@@ -62,6 +65,21 @@ public class LoginController {
             stage.setScene(new Scene(root));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void handleSignup(ActionEvent actionEvent) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SignupView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) signupButton.getScene().getWindow();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            stage.setScene(scene);
+            app.UIUtils.fadeIn(root);
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
 }
