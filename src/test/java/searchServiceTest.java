@@ -10,7 +10,9 @@ import teacher.StudySet;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,8 +29,17 @@ class SearchServiceTest {
     private SearchService searchService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private final Path questionFile = Paths.get("src/main/questions.json");
+    private final Path studySetFile = Paths.get("src/main/sets.json");
+    private final Path questionSetFile = Paths.get("src/main/questionSets.json");
+
+
     @BeforeEach
     void setUp() throws IOException {
+        Files.deleteIfExists(questionFile);
+        Files.deleteIfExists(studySetFile);
+        Files.deleteIfExists(questionSetFile);
+
         questionsFile = tempDir.resolve("questions.json").toFile();
         studySetsFolder = tempDir.resolve("StudySets").toFile();
         assertTrue(studySetsFolder.mkdirs());
