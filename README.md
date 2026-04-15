@@ -1,4 +1,4 @@
-### 1. Code Coverage
+# 1. Code Coverage
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -96,12 +96,12 @@
 </body>
 </html>
 
-### Project Overview:
+# Project Overview:
 ## A program that helps a student review for a subject. Either by reviewing questions the student
 ## made themselves or joining classes a teacher created and taking practice quizzes the teacher assigned.
 ## Additionally this project can recommend questions based on what subjects you are struggling with.
 
-### Installation Instructions:
+# Installation Instructions:
 ## JDK 17 or Later
 ## JavaFX 21
 ## Apache Maven 3.8+
@@ -110,7 +110,7 @@
 ## javafx-controls
 ## javafx-fxml
 
-### Project Structure:
+# Project Structure:
 ## src/main/java/model- Holds the backend applications
 ## src/main/java/app- Holds the frontend applications
 ## src/main/java/question- Holds the class used when making Questions
@@ -119,10 +119,10 @@
 ##      User, UserPrediction(The users question data based on answers to past questions)
 ## src/test/java- The tests ran to test the application and verify code coverage.
 
-### Contributing Guidelines: 
+# Contributing Guidelines: 
 ##      1. Create a branch off of an existing branch
 ##      2. When finished push changes as a merge request
 ##      3. Wait for merge request to be approved or rejected
 
-### Contact or Support Information:
+# Contact or Support Information:
 ## If you have any questions or concerns please email: kjk7134@rit.edu
