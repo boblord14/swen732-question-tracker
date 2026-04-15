@@ -1,16 +1,24 @@
 [ {
   "id" : 1,
-  "username" : "User0",
-  "password" : "Password0",
-  "isTeacher" : false,
+  "username" : "Teacher1",
+  "password" : "TPassword1",
+  "isTeacher" : true,
   "studySetAvg" : { },
   "classrooms" : [ ],
   "wrongQuestionData" : [ ]
 }, {
   "id" : 2,
-  "username" : "kjk",
-  "password" : "rer",
-  "isTeacher" : false,
+  "username" : "admin",
+  "password" : "admin123",
+  "isTeacher" : true,
+  "studySetAvg" : { },
+  "classrooms" : [ ],
+  "wrongQuestionData" : [ ]
+}, {
+  "id" : 3,
+  "username" : "phantom",
+  "password" : "admin123",
+  "isTeacher" : true,
   "studySetAvg" : { },
   "classrooms" : [ ],
   "wrongQuestionData" : [ ]
