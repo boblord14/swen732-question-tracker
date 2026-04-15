@@ -12,8 +12,43 @@
     "wrongQuestionData" : [ ]
   },
   "students" : [ ],
-  "assignedStudySets" : [ ],
-  "assignedStudySetIds" : [ ]
+  "assignedStudySets" : [ {
+    "id" : 3,
+    "name" : "asdfafsd",
+    "creator" : "test",
+    "subject" : "sdafdfsdasfddsfadsafsfa",
+    "tags" : [ ],
+    "questionSet" : [ ]
+  }, {
+    "id" : 6,
+    "name" : "dsfdf",
+    "creator" : "test",
+    "subject" : "asdfasdfdsfdsfsd",
+    "tags" : [ ],
+    "questionSet" : [ ]
+  }, {
+    "id" : 4,
+    "name" : "sdasdfads",
+    "creator" : "test",
+    "subject" : "dsfaadsddfsddfdfd",
+    "tags" : [ ],
+    "questionSet" : [ ]
+  }, {
+    "id" : 5,
+    "name" : "te",
+    "creator" : "test",
+    "subject" : "asdasfsdfddf",
+    "tags" : [ ],
+    "questionSet" : [ ]
+  }, {
+    "id" : 2,
+    "name" : "asdfdddddd",
+    "creator" : "test",
+    "subject" : "test",
+    "tags" : [ ],
+    "questionSet" : [ ]
+  } ],
+  "assignedStudySetIds" : [ 3, 6, 4, 5, 2 ]
 }, {
   "name" : "newclass",
   "code" : "1233",

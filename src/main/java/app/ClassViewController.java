@@ -24,6 +24,7 @@ import user.QuestionSet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ClassViewController {
@@ -81,8 +82,13 @@ public class ClassViewController {
             StudySet[] allSets = studySetMaker.getAllSets();
             for(StudySet set : allSets) {
                 if (!user.getUsername().equals(set.getCreator())) continue;
+
+                VBox rowGroup = new VBox(0);
+
                 HBox row = new HBox(10);
                 Label lbl = new Label(set.getName());
+                lbl.setMaxWidth(Double.MAX_VALUE);
+                HBox.setHgrow(lbl, javafx.scene.layout.Priority.ALWAYS);
 
                 Button editBtn = new Button("Edit");
                 editBtn.setOnAction(e -> openStudySetEditor(set));
@@ -99,9 +105,26 @@ public class ClassViewController {
                     assignBtn.setDisable(true);
                 });
 
-                row.getChildren().addAll(lbl, editBtn, assignBtn);
-                studySetListVBox.getChildren().add(row);
+                VBox gradesBox = new VBox(4);
+                gradesBox.setVisible(false);
+                gradesBox.setManaged(false);
+                gradesBox.setStyle("-fx-padding: 4 0 4 16;");
+                buildGradesBox(gradesBox, set.getId());
 
+                Button gradesBtn = new Button("Grades v");
+                boolean isSetAssigned = classroom.getAssignedStudySetIds().contains(set.getId());
+                gradesBtn.setVisible(isSetAssigned);
+                gradesBtn.setManaged(isSetAssigned);
+                gradesBtn.setOnAction(e -> {
+                    boolean nowVisible = !gradesBox.isVisible();
+                    gradesBox.setVisible(nowVisible);
+                    gradesBox.setManaged(nowVisible);
+                    gradesBtn.setText(nowVisible ? "Grades ^" : "Grades v");
+                });
+
+                row.getChildren().addAll(lbl, editBtn, assignBtn, gradesBtn);
+                rowGroup.getChildren().addAll(row, gradesBox);
+                studySetListVBox.getChildren().add(rowGroup);
             }
         } else {
             if (ids == null || ids.isEmpty()) return;
@@ -126,6 +149,35 @@ public class ClassViewController {
                 row.getChildren().addAll(lbl, takeBtn);
                 studySetListVBox.getChildren().add(row);
             }
+        }
+    }
+
+    private void buildGradesBox(VBox gradesBox, int id) {
+        List<User> students = classroom.getStudents();
+        if(students == null || students.isEmpty()){
+            gradesBox.getChildren().add(new Label("No students enrolled"));
+            return;
+        }
+
+        for(User student : students){
+            //done since the student in the class and the student object itself can diverge at times
+            User realStudentUser = questionTracker.getUserById(student.getId());
+            if (realStudentUser == null) realStudentUser = student; //pls dont break k thx
+
+            String name = realStudentUser.getUsername();
+            Map<Integer, Double> scores = realStudentUser.getStudySetAvg();
+            String scoreText;
+
+            if (scores != null && scores.containsKey(id)) {
+                double pct = scores.get(id) * 100;
+                scoreText = String.format("%.0f%%", pct);
+            } else {
+                scoreText = "Not Attempted";
+            }
+
+            Label entry = new Label("- " + name + ": " + scoreText);
+            entry.setStyle("-fx-font-size: 13px;");
+            gradesBox.getChildren().add(entry);
         }
     }
 
@@ -200,6 +252,7 @@ public class ClassViewController {
             Alert a = new Alert(Alert.AlertType.INFORMATION, "Study set assigned to class.", ButtonType.OK);
             a.setGraphic(null);
             a.showAndWait();
+            loadStudySets();
         } else {
             Alert a = new Alert(Alert.AlertType.WARNING, "Failed to assign study set to class.", ButtonType.OK);
             a.setGraphic(null);
