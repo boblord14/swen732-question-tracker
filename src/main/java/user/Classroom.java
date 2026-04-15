@@ -20,6 +20,7 @@ public class Classroom {
         this.teacher = teacher;
         this.students = new ArrayList<>();
         this.assignedStudySets = new ArrayList<>();
+        teacher.getClassrooms().add(this.name);
     }
 
     public Classroom() {
@@ -43,11 +44,13 @@ public class Classroom {
     public boolean addStudent(User student) {
         if (student == null) return false;
         if (students.contains(student)) return false;
+        student.getClassrooms().add(this.name);
         return students.add(student);
     }
 
     public boolean removeStudent(User student) {
         if (student == null) return false;
+        student.getClassrooms().remove(this.name);
         return students.remove(student);
     }
 

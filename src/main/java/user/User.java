@@ -12,6 +12,7 @@ public class User {
     private boolean isTeacher;
     private Deque<List<String>> wrongQuestionList;
     private Map<Integer, Double> studySetAvg;
+    private List<String> classrooms;
 
     public User(int id, String username, String password, boolean isTeacher) {
         this.id = id;
@@ -20,11 +21,13 @@ public class User {
         this.isTeacher = isTeacher;   
         this.wrongQuestionList = new LinkedList<>();
         this.studySetAvg = new HashMap<>();
+        this.classrooms = new ArrayList<>();
     }
 
     public User() {
         this.wrongQuestionList = new LinkedList<>();
         this.studySetAvg = new HashMap<>();
+        this.classrooms = new ArrayList<>();
     }
 
     public int getId() { return id;}
@@ -32,12 +35,14 @@ public class User {
     public String getPassword() { return password;}
     public boolean getIsTeacher() { return isTeacher;}
     public Map<Integer, Double> getStudySetAvg() { return studySetAvg;}
+    public List<String> getClassrooms() { return classrooms;}
 
     public void setId(int id) { this.id = id;}
     public void setUsername(String username) { this.username = username;}
     public void setPassword(String password) { this.password = password;}
     public void setIsTeacher(boolean isTeacher) { this.isTeacher = isTeacher;}
     public void setStudySetAvg(Map<Integer, Double> studySetAvg) { this.studySetAvg = studySetAvg;}
+    public void setClassrooms(List<String> classrooms) { this.classrooms = classrooms;}
 
     /**
      * Add a question's subject tags to the last x wrong question lists, removes oldest if list reaches capacity

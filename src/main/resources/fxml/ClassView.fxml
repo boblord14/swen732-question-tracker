@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane fx:controller="app.ClassViewController"
+            xmlns:fx="http://javafx.com/fxml"
+            prefWidth="960" prefHeight="540">
+
+    <children>
+        <VBox spacing="20" layoutX="200" layoutY="40" prefWidth="560">
+
+            <Label fx:id="classNameLabel"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+            <Label fx:id="classCodeLabel"
+                   style="-fx-font-size: 16px;"/>
+
+            <Button text="View Assigned Study Sets"
+                    onAction="#handleViewStudySets"
+                    prefWidth="250"/>
+
+            <VBox fx:id="teacherSection" spacing="10">
+
+                <Button text="View Student Struggles"
+                        onAction="#handleViewStruggles"
+                        prefWidth="250"/>
+
+                <Label text="Students in Class:"
+                       style="-fx-font-weight: bold;"/>
+
+                <ScrollPane prefHeight="200" fitToWidth="true">
+                    <content>
+                        <VBox fx:id="studentListVBox" spacing="8">
+                            <padding>
+                                <Insets top="10" right="10" bottom="10" left="10"/>
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+
+            </VBox>
+
+            <Button text="Back to Class List"
+                    onAction="#handleBack"
+                    prefWidth="200"/>
+
+        </VBox>
+    </children>
+</AnchorPane>

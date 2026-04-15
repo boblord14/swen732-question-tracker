@@ -1,4 +1,7 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import model.SearchService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:controller="app.MainController"
+            xmlns:fx="http://javafx.com/fxml"
+            prefWidth="400" prefHeight="300">
+    <children>
+        <Button fx:id="classListButton"
+                text="Class List"
+                layoutX="100"
+                layoutY="100"
+                onAction="#handleLoad"/>
+
+        <Button fx:id="loginButton"
+                text="login"
+                layoutX="200"
+                layoutY="100"
+                onAction="#handleLogin"/>
+
+        <Button fx:id="signupButton"
+                text="signup"
+                layoutX="300"
+                layoutY="100"
+                onAction="#handleSignup"/>
+        
+    </children>
+</AnchorPane>

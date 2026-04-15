@@ -1,3 +1,4 @@
+package model;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -36,7 +37,7 @@ public class questionTracker {
     public static User[] getUsers(){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(new File("src/main/users.json"), User[].class);
+            return mapper.readValue(new File("src/main/resources/users.json"), User[].class);
         } catch (Exception e) {
             e.printStackTrace();
             return new User[0];
@@ -46,7 +47,7 @@ public class questionTracker {
     private static void saveUsers(User[] users){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("src/main/users.json"), users);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("src/main/resources/users.json"), users);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,6 +104,16 @@ public class questionTracker {
             e.printStackTrace();
             return new Classroom[0];
         }
+    }
+
+    public static Classroom getClassByName(String name){
+        Classroom[] classes = getClasses();
+        for (Classroom c : classes){
+            if (c != null && c.getName() != null && c.getName().equals(name)){
+                return c;
+            }
+        }
+        return null;
     }
 
     private static void saveClasses(Classroom[] classes){

@@ -12,6 +12,9 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import model.questionMaker;
+import model.questionTracker;
+import model.studySetMaker;
 import user.Question;
 import teacher.StudySet;
 import user.User;
