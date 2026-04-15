@@ -37,3 +37,6 @@ jobs:
         with:
           name: junit-reports
           path: target/surefire-reports/
+
+      - name: Codecov
+        uses: codecov/codecov-action@v6.0.0
