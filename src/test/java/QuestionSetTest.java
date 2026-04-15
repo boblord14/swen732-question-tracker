@@ -28,7 +28,7 @@ class QuestionSetTest {
             assertNotNull(set);
             assertEquals("Algebra", set.getName());
             assertEquals(1, set.getId()); // first created id should be 1
-            assertEquals(teacher.getId(), set.getCreator().getId());
+            assertEquals(teacher.getUsername(), set.getCreator());
         }
     }
 
@@ -41,7 +41,7 @@ class QuestionSetTest {
         creator.setUsername("creator5");
         creator.setIsTeacher(true);
 
-        QuestionSet set = new QuestionSet(7, "Physics", creator);
+        QuestionSet set = new QuestionSet(7, "Physics", creator.getUsername());
 
         try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
             mocked.when(questionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});
@@ -64,7 +64,7 @@ class QuestionSetTest {
         creator.setUsername("creator9");
         creator.setIsTeacher(true);
 
-        QuestionSet set = new QuestionSet(3, "Chemistry", creator);
+        QuestionSet set = new QuestionSet(3, "Chemistry", creator.getUsername());
         Question q = new Question(1, "What is H2O?", "water");
         set.addQuestion(q);
 
@@ -93,7 +93,7 @@ class QuestionSetTest {
         other.setUsername("other12");
         other.setIsTeacher(true);
 
-        QuestionSet set = new QuestionSet(4, "Biology", creator);
+        QuestionSet set = new QuestionSet(4, "Biology", creator.getUsername());
 
         try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
             mocked.when(questionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});

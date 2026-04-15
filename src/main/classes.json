@@ -1,13 +1,13 @@
 [ {
-  "name" : "test",
+  "name" : "Classroom Name",
   "code" : "1234",
   "teacher" : {
     "id" : 1,
-    "username" : "admin",
-    "password" : "admin123",
+    "username" : "test",
+    "password" : "test",
     "isTeacher" : true,
     "studySetAvg" : { },
-    "classrooms" : [ "test" ],
+    "classrooms" : [ "Classroom Name" ],
     "questionSetIds" : [ ],
     "wrongQuestionData" : [ ]
   },
@@ -15,73 +15,26 @@
   "assignedStudySets" : [ ],
   "assignedStudySetIds" : [ ]
 }, {
-  "name" : "Testss",
-  "code" : "12345",
+  "name" : "newclass",
+  "code" : "1233",
   "teacher" : {
     "id" : 1,
-    "username" : "admin",
-    "password" : "admin123",
+    "username" : "test",
+    "password" : "test",
     "isTeacher" : true,
     "studySetAvg" : { },
-    "classrooms" : [ "Testss" ],
+    "classrooms" : [ "Classroom Name", "newclass" ],
     "questionSetIds" : [ ],
-    "wrongQuestionData" : [ ]
-  },
-  "students" : [ ],
-  "assignedStudySets" : [ ],
-  "assignedStudySetIds" : [ ]
-}, {
-  "name" : "Testss",
-  "code" : "12",
-  "teacher" : {
-    "id" : 1,
-    "username" : "admin",
-    "password" : "admin123",
-    "isTeacher" : true,
-    "studySetAvg" : { },
-    "classrooms" : [ "Testss" ],
-    "questionSetIds" : [ ],
-    "wrongQuestionData" : [ ]
-  },
-  "students" : [ ],
-  "assignedStudySets" : [ ],
-  "assignedStudySetIds" : [ ]
-}, {
-  "name" : "Test2",
-  "code" : "22222",
-  "teacher" : {
-    "id" : 1,
-    "username" : "admin",
-    "password" : "admin123",
-    "isTeacher" : true,
-    "studySetAvg" : { },
-    "classrooms" : [ "test", "Test2" ],
-    "questionSetIds" : [ 2, 3, 4 ],
     "wrongQuestionData" : [ ]
   },
   "students" : [ ],
   "assignedStudySets" : [ {
-    "id" : 0,
-    "subject" : "",
-    "creator" : "admin",
-    "title" : "Testset",
-    "tags" : null,
-    "questionSet" : [ {
-      "id" : 1,
-      "text" : "te",
-      "answer" : "tt",
-      "tags" : [ ]
-    }, {
-      "id" : 2,
-      "text" : "ttt",
-      "answer" : "ttt",
-      "tags" : [ ]
-    }, {
-      "id" : 3,
-      "text" : "yttt",
-      "answer" : "tttt",
-      "tags" : [ ]
-    } ]
+    "id" : 7,
+    "name" : "broke",
+    "creator" : "test",
+    "subject" : "class",
+    "tags" : [ ],
+    "questionSet" : [ ]
   } ],
-  "assignedStudySetIds" : [ 0 ]
+  "assignedStudySetIds" : [ 7 ]
 } ]

@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.event.ActionEvent;
 
+import model.BaseSet;
+import model.SetSession;
 import model.questionTracker;
 import model.studySetMaker;
 import teacher.StudySet;
@@ -19,6 +21,7 @@ import user.User;
 import user.Question;
 import user.QuestionSet;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,51 +75,86 @@ public class ClassViewController {
 
         // Prefer persisted IDs
         List<Integer> ids = classroom.getAssignedStudySetIds();
-        if (ids != null && !ids.isEmpty()) {
-            for (Integer id : ids) {
-                StudySet tset = studySetMaker.getSetById(id);
-                if (tset != null) {
-                    HBox row = new HBox(10);
-                    String subj = tset.getSubject();
-                    String titleText = tset.getTitle();
-                    if (subj != null && !subj.trim().isEmpty()) titleText += " (" + subj + ")";
-                    Label lbl = new Label(titleText);
-                    Button action = new Button(user != null && user.getIsTeacher() ? "View" : "Take");
-                    action.setOnAction(e -> takeStudySet(tset));
-                    row.getChildren().addAll(lbl, action);
-                    studySetListVBox.getChildren().add(row);
-                    continue;
-                }
 
-                // try centralized QuestionSet (user.QuestionSet)
-                QuestionSet qset = questionTracker.getQuestionSetById(id);
-                if (qset != null) {
-                    HBox row = new HBox(10);
-                    Label lbl = new Label(qset.getName() + " (question set)");
-                    Button action = new Button(user != null && user.getIsTeacher() ? "View" : "Take");
-                    action.setOnAction(e -> takeStudySet(qset));
-                    row.getChildren().addAll(lbl, action);
-                    studySetListVBox.getChildren().add(row);
-                    continue;
-                }
-            }
-            return;
-        }
-
-        // Fallback: runtime StudySet objects
-        if (classroom.getAssignedStudySets() != null) {
-            for (StudySet set : classroom.getAssignedStudySets()) {
-                if (set == null) continue;
+        if (user.getIsTeacher()) {
+            //teachers can see all their owned study sets, even unassigned ones
+            StudySet[] allSets = studySetMaker.getAllSets();
+            for(StudySet set : allSets) {
+                if (!user.getUsername().equals(set.getCreator())) continue;
                 HBox row = new HBox(10);
-                String subj = set.getSubject();
-                String titleText = set.getTitle();
-                if (subj != null && !subj.trim().isEmpty()) titleText += " (" + subj + ")";
-                Label lbl = new Label(titleText);
-                Button action = new Button(user != null && user.getIsTeacher() ? "View" : "Take");
-                action.setOnAction(e -> takeStudySet(set));
-                row.getChildren().addAll(lbl, action);
+                Label lbl = new Label(set.getName());
+
+                Button editBtn = new Button("Edit");
+                editBtn.setOnAction(e -> openStudySetEditor(set));
+
+                //if already assigned, disable the assign button
+                boolean alreadyAssigned = ids.contains(set.getId());
+                Button assignBtn = new Button(alreadyAssigned ? "Assigned" : "Assign");
+                assignBtn.setDisable(alreadyAssigned);
+
+                StudySet finalS = set;
+                assignBtn.setOnAction(e -> {
+                    assignSetToClass(finalS);
+                    assignBtn.setText("Assigned");
+                    assignBtn.setDisable(true);
+                });
+
+                row.getChildren().addAll(lbl, editBtn, assignBtn);
+                studySetListVBox.getChildren().add(row);
+
+            }
+        } else {
+            if (ids == null || ids.isEmpty()) return;
+            for (Integer id : ids) {
+
+                BaseSet tset = studySetMaker.getSetById(id);
+                String displayName;
+                if (tset != null) {
+                    String subj = ((StudySet) tset).getSubject();
+                    displayName = tset.getName() + (subj != null && !subj.isBlank() ? " (" + subj + ")" : "");
+                } else {
+                    tset = questionTracker.getQuestionSetById(id);
+                    if (tset == null) continue;
+                    displayName = tset.getName() + " (question set)";
+                }
+
+                HBox row = new HBox(10);
+                Label lbl = new Label(displayName);
+                Button takeBtn = new Button("Take");
+                BaseSet finalTset = tset;
+                takeBtn.setOnAction(e -> startSession(finalTset));
+                row.getChildren().addAll(lbl, takeBtn);
                 studySetListVBox.getChildren().add(row);
             }
+        }
+    }
+
+    private void startSession(BaseSet set) {
+        if (set == null || user == null) return;
+        boolean isStudyMode = set instanceof StudySet;
+        SetSession session = new SetSession(set, user, isStudyMode);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SetSessionView.fxml"));
+            Parent root = loader.load();
+            SetSessionController ctrl = loader.getController();
+            Stage stage = (Stage) classNameLabel.getScene().getWindow();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            stage.setScene(scene);
+
+            ctrl.setSession(session, user, () -> {
+                try {
+                    FXMLLoader back = new FXMLLoader(getClass().getResource("/fxml/ClassView.fxml"));
+                    Parent backRoot = back.load();
+                    ClassViewController backCtrl = back.getController();
+                    backCtrl.setData(classroom.getName(), user);
+                    stage.setScene(new Scene(backRoot));
+                } catch (IOException e) { e.printStackTrace(); }
+            });
+
+            app.UIUtils.fadeIn(root);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -133,53 +171,33 @@ public class ClassViewController {
         if (title.isEmpty()) return;
 
         TextInputDialog subjDlg = new TextInputDialog();
-    subjDlg.setGraphic(null);
+        subjDlg.setGraphic(null);
         subjDlg.setHeaderText("Enter subject (optional)");
         Optional<String> subjOpt = subjDlg.showAndWait();
         String subject = subjOpt.map(String::trim).orElse("");
 
-        TextInputDialog numDlg = new TextInputDialog("3");
-    numDlg.setGraphic(null);
-        numDlg.setHeaderText("How many questions?");
-        Optional<String> numOpt = numDlg.showAndWait();
-        int count = 0;
-        try { count = Integer.parseInt(numOpt.orElse("0").trim()); } catch (Exception ex) { count = 0; }
-        if (count <= 0) count = 1;
+        teacher.StudySet set = studySetMaker.createSet(new ArrayList<>(), user, title, subject);
 
-        ArrayList<Question> questions = new ArrayList<>();
-        for (int i = 1; i <= count; i++) {
-            TextInputDialog qDlg = new TextInputDialog();
-            qDlg.setGraphic(null);
-            qDlg.setHeaderText("Question " + i);
-            Optional<String> qOpt = qDlg.showAndWait();
-            if (!qOpt.isPresent()) break;
-            String qText = qOpt.get().trim();
-            if (qText.isEmpty()) break;
+        classroom.addStudySet(set);
+        loadStudySets();
 
-            TextInputDialog aDlg = new TextInputDialog();
-            aDlg.setGraphic(null);
-            aDlg.setHeaderText("Answer for question " + i);
-            Optional<String> aOpt = aDlg.showAndWait();
-            String ans = aOpt.map(String::trim).orElse("");
+        // also add to user's owned sets and persist user
+        try {
+            user.addQuestionSetId(set.getId());
+            questionTracker.saveUser(user);
+        } catch (Exception ex) { ex.printStackTrace(); }
 
-            questions.add(new Question(i, qText, ans));
-        }
+    }
 
-        teacher.StudySet set = studySetMaker.createSet(questions, user, title, subject);
+    // Study sets (Question Sets) are now managed from the main app screen; class view keeps class-only controls.
 
+    private void assignSetToClass(StudySet set){
         // assign to class and persist
         boolean assigned = questionTracker.assignStudySetToClass(classroom.getName(), set.getId());
         if (assigned) {
-            // also add to user's owned sets and persist user
-            try {
-                user.addQuestionSetId(set.getId());
-                questionTracker.saveUser(user);
-            } catch (Exception ex) { ex.printStackTrace(); }
             // update local classroom object
-            classroom.addStudySet(set);
             classroom.addAssignedStudySetId(set.getId());
-            loadStudySets();
-            Alert a = new Alert(Alert.AlertType.INFORMATION, "Study set created and assigned to class.", ButtonType.OK);
+            Alert a = new Alert(Alert.AlertType.INFORMATION, "Study set assigned to class.", ButtonType.OK);
             a.setGraphic(null);
             a.showAndWait();
         } else {
@@ -188,48 +206,6 @@ public class ClassViewController {
             a.showAndWait();
         }
     }
-
-    private void takeStudySet(StudySet set) {
-        if (set == null || user == null) return;
-        takeQuestions(set.getQuestionSet(), set.getId());
-    }
-
-    private void takeStudySet(QuestionSet qset) {
-        if (qset == null || user == null) return;
-        takeQuestions(qset.getQuestions(), qset.getId());
-    }
-
-    private void takeQuestions(List<Question> qlist, int setId) {
-        if (qlist == null || qlist.isEmpty()) {
-            Alert a = new Alert(Alert.AlertType.INFORMATION, "This study set has no questions.", ButtonType.OK);
-            a.showAndWait();
-            return;
-        }
-
-        int correct = 0;
-        for (Question q : qlist) {
-            TextInputDialog dlg = new TextInputDialog();
-            dlg.setGraphic(null);
-            dlg.setHeaderText(q.getText());
-            Optional<String> ansOpt = dlg.showAndWait();
-            String ans = ansOpt.map(String::trim).orElse("");
-            boolean ok = ans.equalsIgnoreCase(q.getAnswer());
-            Alert res = new Alert(Alert.AlertType.INFORMATION, ok ? "Correct" : "Incorrect. Correct: " + q.getAnswer(), ButtonType.OK);
-            res.setGraphic(null);
-            res.showAndWait();
-            if (ok) correct++;
-        }
-
-        double avg = (double) correct / (double) qlist.size();
-        user.addStudySetScore(setId, avg);
-        questionTracker.saveUser(user);
-
-        Alert fin = new Alert(Alert.AlertType.INFORMATION, "You got " + correct + " out of " + qlist.size() + " (avg=" + avg + ")", ButtonType.OK);
-        fin.setGraphic(null);
-        fin.showAndWait();
-    }
-
-    // Study sets (Question Sets) are now managed from the main app screen; class view keeps class-only controls.
 
     @FXML
     private void handleViewStruggles(ActionEvent event) {
@@ -252,6 +228,21 @@ public class ClassViewController {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void openStudySetEditor(StudySet set) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/QuestionSetView.fxml"));
+            Parent root = loader.load();
+            QuestionSetViewController controller = loader.getController();
+            controller.setDataStudySet(set, user, classroom.getName());
+            Stage stage = (Stage) classNameLabel.getScene().getWindow();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            stage.setScene(scene);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

@@ -9,6 +9,7 @@ import user.QuestionSet;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 public class questionTracker {
     public static void main(String[] args) {
@@ -290,7 +291,7 @@ public class questionTracker {
             if (s != null && s.getId() > maxId) maxId = s.getId();
         }
 
-        QuestionSet newSet = new QuestionSet(maxId + 1, name, creator);
+        QuestionSet newSet = new QuestionSet(maxId + 1, name, creator.getUsername());
         QuestionSet[] updated = new QuestionSet[sets.length + 1];
         System.arraycopy(sets, 0, updated, 0, sets.length);
         updated[sets.length] = newSet;
@@ -373,6 +374,24 @@ public class questionTracker {
     }
 
     /**
+     * Add a question to a question set. Returns true if added.
+     */
+    public static boolean removeQuestionFromSet(int setId, int questionId){
+        QuestionSet[] sets = getQuestionSets();
+        boolean changed = false;
+        for (QuestionSet s : sets){
+            if (s != null && s.getId() == setId){
+                s.removeQuestionById(questionId);
+                changed = true;
+                break;
+            }
+        }
+
+        if (changed) saveQuestionSets(sets);
+        return changed;
+    }
+
+    /**
      * Edit an existing question inside a set. Returns true if modified.
      */
     public static boolean editQuestionInSet(int setId, int questionId, String newText, String newAnswer, List<String> newTags){
@@ -403,7 +422,7 @@ public class questionTracker {
         boolean changed = false;
         for (QuestionSet s : sets){
             if (s != null && s.getId() == setId){
-                if (s.getCreator() == null || s.getCreator().getId() != requester.getId()){
+                if (s.getCreator() == null || !Objects.equals(s.getCreator(), requester.getUsername())){
                     System.out.println("Only the creator may edit this question set.");
                     return false;
                 }
@@ -420,14 +439,10 @@ public class questionTracker {
     /**
      * Create an interactive session for a question set so a user can go through it question-by-question.
      */
-    public static QuestionSetSession createQuestionSetSession(int setId, User user) {
-        QuestionSet[] sets = getQuestionSets();
-        for (QuestionSet s : sets) {
-            if (s != null && s.getId() == setId) {
-                return new QuestionSetSession(s, user);
-            }
-        }
-        return null;
+    public static SetSession createQuestionSetSession(int id, User user) {
+        QuestionSet set = getQuestionSetById(id);
+        if (set == null) return null;
+        return new SetSession(set, user, false);  // false = flashcard mode
     }
 
     /**

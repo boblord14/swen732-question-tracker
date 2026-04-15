@@ -84,8 +84,8 @@ public class SearchService {
         String lowerQuery = query.toLowerCase();
 
         return loadAllStudySets().stream()
-                .filter(set -> set.getTitle() != null &&
-                        set.getTitle().toLowerCase().contains(lowerQuery))
+                .filter(set -> set.getName() != null &&
+                        set.getName().toLowerCase().contains(lowerQuery))
                 .collect(Collectors.toList());
     }
 

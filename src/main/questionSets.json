@@ -1,71 +1,7 @@
 [ {
   "id" : 1,
   "name" : "Algebra",
-  "creator" : {
-    "id" : 10,
-    "username" : "teacher10",
-    "password" : null,
-    "isTeacher" : true,
-    "studySetAvg" : { },
-    "classrooms" : [ ],
-    "questionSetIds" : [ ],
-    "wrongQuestionData" : [ ]
-  },
-  "questions" : [ ],
-  "tags" : [ ]
-}, {
-  "id" : 2,
-  "name" : "test",
-  "creator" : {
-    "id" : 1,
-    "username" : "admin",
-    "password" : "admin123",
-    "isTeacher" : true,
-    "studySetAvg" : { },
-    "classrooms" : [ ],
-    "questionSetIds" : [ ],
-    "wrongQuestionData" : [ ]
-  },
-  "questions" : [ {
-    "id" : 1,
-    "text" : "Test?",
-    "answer" : "test",
-    "tags" : [ ]
-  }, {
-    "id" : 2,
-    "text" : "Test2",
-    "answer" : "sad",
-    "tags" : [ ]
-  } ],
-  "tags" : [ ]
-}, {
-  "id" : 3,
-  "name" : "Test",
-  "creator" : {
-    "id" : 1,
-    "username" : "admin",
-    "password" : "admin123",
-    "isTeacher" : true,
-    "studySetAvg" : { },
-    "classrooms" : [ ],
-    "questionSetIds" : [ ],
-    "wrongQuestionData" : [ ]
-  },
-  "questions" : [ ],
-  "tags" : [ ]
-}, {
-  "id" : 4,
-  "name" : "test2",
-  "creator" : {
-    "id" : 1,
-    "username" : "admin",
-    "password" : "admin123",
-    "isTeacher" : true,
-    "studySetAvg" : { },
-    "classrooms" : [ ],
-    "questionSetIds" : [ 3 ],
-    "wrongQuestionData" : [ ]
-  },
+  "creator" : "teacher10",
   "questions" : [ ],
   "tags" : [ ]
 } ]

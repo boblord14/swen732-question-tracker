@@ -50,8 +50,8 @@ public class studySetTest {
 
         assertNotNull(set1);
 
-        String answer1 = set1.getQuestionSet().get(0).getAnswer();
-        String answer2 = set1.getQuestionSet().get(1).getAnswer();
+        String answer1 = set1.getQuestions().get(0).getAnswer();
+        String answer2 = set1.getQuestions().get(1).getAnswer();
 
         assertEquals(answer1, "four");
         assertEquals(answer2, "seven");
@@ -77,7 +77,7 @@ public class studySetTest {
 
         StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math", tags);
 
-        ArrayList<String> tagList = set1.getTags();
+        ArrayList<String> tagList = (ArrayList<String>) set1.getTags();
         assertEquals(tagList, tags);
     }
 
@@ -101,7 +101,7 @@ public class studySetTest {
 
         StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
         StudySet set2 = studySetMaker.addTags(user1.getUsername(), "Math test Prep", tags);
-        ArrayList<String> tagList = set2.getTags();
+        ArrayList<String> tagList = (ArrayList<String>) set2.getTags();
 
         assertEquals(tagList, tags);
     }
@@ -129,7 +129,7 @@ public class studySetTest {
 
         StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math", tags);
         StudySet set2 = studySetMaker.addTags(user1.getUsername(), "Math test Prep", newTag);
-        ArrayList<String> tagList = set2.getTags();
+        ArrayList<String> tagList = (ArrayList<String>) set2.getTags();
 
         System.out.println(tagList.get(2));
 
@@ -154,8 +154,8 @@ public class studySetTest {
 
         assertNotNull(set2);
 
-        String answer1 = set2.getQuestionSet().get(0).getAnswer();
-        String answer2 = set2.getQuestionSet().get(1).getAnswer();
+        String answer1 = set2.getQuestions().get(0).getAnswer();
+        String answer2 = set2.getQuestions().get(1).getAnswer();
 
         assertEquals(answer1, "four");
         assertEquals(answer2, "seven");

@@ -16,8 +16,8 @@
             </HBox>
 
             <HBox spacing="8">
-                <Button text="Add Question" onAction="#handleAddQuestion"/>
-                <Button text="Take Set" onAction="#handleTakeSet"/>
+                <Button fx:id="addQuestionButton" text="Add Question" onAction="#handleAddQuestion"/>
+                <Button fx:id="takeButton" text="Take Set" onAction="#handleTakeSet"/>
             </HBox>
 
             <Label text="Questions:" style="-fx-font-weight: bold;"/>
@@ -30,19 +30,6 @@
                     </VBox>
                 </content>
             </ScrollPane>
-
-            <VBox fx:id="sessionBox" spacing="8" visible="false">
-                <Label fx:id="sessionQuestionLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-                <Label fx:id="sessionAnswerLabel" style="-fx-font-size: 14px;"/>
-                <HBox spacing="8">
-                    <Button text="Show Answer" onAction="#handleShowAnswer"/>
-                    <Button text="Mark Correct" onAction="#handleMarkCorrect"/>
-                    <Button text="Mark Wrong" onAction="#handleMarkWrong"/>
-                    <Button text="Next" onAction="#handleNext"/>
-                    <Region HBox.hgrow="ALWAYS"/>
-                </HBox>
-            </VBox>
-
         </VBox>
     </children>
 </AnchorPane>

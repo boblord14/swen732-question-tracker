@@ -1,44 +1,42 @@
 package teacher;
 
 import java.util.ArrayList;
-import user.Question;
+import java.util.List;
 
-public class StudySet {
+import model.BaseSet;
+import user.Question;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class StudySet implements BaseSet {
     private int id;
-    private static int counter = 0;
-    private String subject;
+    private String name;
     private String creator;
-    private String title;
+    private String subject;
     private ArrayList<String> tags;
+    @JsonProperty("questionSet")
     private ArrayList<Question> questionSet;
 
-    public StudySet(){
-        this.id = counter++;
+    public StudySet() {}
+
+    public StudySet(int id, String name, String creator) {
+        this.id = id;
+        this.name = name;
+        this.creator = creator;
+        this.questionSet = new ArrayList<>();
+        this.tags = new ArrayList<>();
     }
 
-    public ArrayList<Question> getQuestionSet() { 
+    // BaseSet impl
+    @Override public int getId() { return id; }
+    @Override public String getName() { return name; }
+    @JsonProperty("questionSet")
+    public List<Question> getQuestions() {
         return questionSet;
     }
+    @Override public List<String> getTags() { return tags != null ? tags : new ArrayList<>(); }
+    @Override public String getCreator() { return creator; }
 
-    public ArrayList<String> getTags() {
-        return tags;
-    }
-
-    public String getCreator(){
-        return creator;
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public String getTitle(){
-        return title;
-    }
-
-    public String getSubject(){
-        return subject;
-    }
+    public String getSubject() { return subject; }
 
     public void setCreator(String creator){
         this.creator = creator;
@@ -56,11 +54,19 @@ public class StudySet {
         this.questionSet = questionSet;
     }
 
-    public void setSubject(String subject){
-        this.subject = subject;
+    public void setName(String name){
+        this.name = name;
     }
 
-    public void setTitle(String title){
-        this.title = title;
+    public void setSubject(String subject) { this.subject = subject; }
+
+    // Helpers
+    public boolean addQuestion(Question q) {
+        if (q == null) return false;
+        return this.questionSet.add(q);
+    }
+
+    public boolean removeQuestionById(int questionId) {
+        return this.questionSet.removeIf(q -> q.getId() == questionId);
     }
 }
