@@ -20,6 +20,8 @@ public class SetSessionController {
     @FXML private Button wrongButton;
     @FXML private Button submitButton;
     @FXML private Button showAnswerButton;
+    @FXML private Label progressLabel;
+
 
     private SetSession session;
     private Question currentQuestion;
@@ -43,6 +45,7 @@ public class SetSessionController {
 
         currentQuestion = session.nextQuestion();
         questionLabel.setText(currentQuestion.getText());
+        progressLabel.setText("Question " + session.getCurrentIndex() + "/" + session.getTotalQuestions());
 
         answerLabel.setText("");
         resultLabel.setText("");

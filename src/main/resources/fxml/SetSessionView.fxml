@@ -14,7 +14,7 @@
    <VBox alignment="CENTER" spacing="10"
          AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-
+      <Label fx:id="progressLabel" style="-fx-font-size: 12px; -fx-text-fill: #888;"/>
       <Label fx:id="questionLabel" style="-fx-font-size: 18px;"/>
 
       <Label fx:id="answerLabel"/>
