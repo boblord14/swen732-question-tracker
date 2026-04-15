@@ -57,4 +57,68 @@
   "subject" : "class",
   "tags" : [ ],
   "questionSet" : [ ]
+}, {
+  "id" : 8,
+  "name" : "bobset",
+  "creator" : "bobteach",
+  "subject" : "test",
+  "tags" : [ ],
+  "questionSet" : [ {
+    "id" : 1,
+    "text" : "1",
+    "answer" : "2",
+    "tags" : [ "3" ]
+  }, {
+    "id" : 2,
+    "text" : "4",
+    "answer" : "5",
+    "tags" : [ "6" ]
+  }, {
+    "id" : 3,
+    "text" : "7",
+    "answer" : "8",
+    "tags" : [ "9" ]
+  } ]
+}, {
+  "id" : 9,
+  "name" : "bobclass Struggle Set #1",
+  "creator" : "bobteach",
+  "subject" : "",
+  "tags" : [ ],
+  "questionSet" : [ {
+    "id" : 1,
+    "text" : "1",
+    "answer" : "2",
+    "tags" : [ "3" ]
+  }, {
+    "id" : 1,
+    "text" : "1",
+    "answer" : "2",
+    "tags" : [ "3" ]
+  }, {
+    "id" : 2,
+    "text" : "test2",
+    "answer" : "a",
+    "tags" : [ "3" ]
+  }, {
+    "id" : 2,
+    "text" : "4",
+    "answer" : "5",
+    "tags" : [ "6" ]
+  }, {
+    "id" : 2,
+    "text" : "4",
+    "answer" : "5",
+    "tags" : [ "6" ]
+  }, {
+    "id" : 1,
+    "text" : "test1",
+    "answer" : "a",
+    "tags" : [ "6" ]
+  }, {
+    "id" : 3,
+    "text" : "7",
+    "answer" : "8",
+    "tags" : [ "9" ]
+  } ]
 } ]

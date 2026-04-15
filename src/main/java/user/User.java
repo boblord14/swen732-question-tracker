@@ -1,5 +1,7 @@
 package user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -10,6 +12,7 @@ public class User {
     private String username;
     private String password;
     private boolean isTeacher;
+    @JsonProperty("wrongQuestionData")
     private Deque<List<String>> wrongQuestionList;
     private Map<Integer, Double> studySetAvg;
     private List<String> classrooms;

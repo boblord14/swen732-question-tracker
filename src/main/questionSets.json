@@ -20,4 +20,20 @@
     "tags" : [ "6" ]
   } ],
   "tags" : [ ]
+}, {
+  "id" : 3,
+  "name" : "testgens",
+  "creator" : "bobteach",
+  "questions" : [ {
+    "id" : 1,
+    "text" : "test1",
+    "answer" : "a",
+    "tags" : [ "6" ]
+  }, {
+    "id" : 2,
+    "text" : "test2",
+    "answer" : "a",
+    "tags" : [ "3" ]
+  } ],
+  "tags" : [ ]
 } ]

@@ -55,7 +55,7 @@ public class StruggleViewController {
         List<User> updatedStudentData = new ArrayList<>();
         for(User student: students){
             User user = questionTracker.getUserById(student.getId());
-            if (user != null) {
+            if (user == null) {
                 user = student;
             }
             updatedStudentData.add(user);

@@ -1,6 +1,8 @@
 package user;
 
 import java.util.*;
+
+import model.questionTracker;
 import teacher.StudySet;
 
 /**
@@ -49,7 +51,10 @@ public class Classroom {
     public boolean addStudent(User student) {
         if (student == null) return false;
         if (students.contains(student)) return false;
-        student.getClassrooms().add(this.name);
+        List<String> classrooms = student.getClassrooms();
+        classrooms.add(this.name);
+        student.setClassrooms(classrooms);
+        questionTracker.saveUser(student);
         return students.add(student);
     }
 

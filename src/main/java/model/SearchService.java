@@ -3,6 +3,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import user.Question;
 import teacher.StudySet;
+import user.QuestionSet;
 import user.User;
 import user.UserPrediction;
 
@@ -34,14 +35,40 @@ public class SearchService {
      * Reads questions from the questions.json file
      */
     public List<Question> loadAllQuestions() {
+        Map<String, Question> seen = new LinkedHashMap<>();
+
+        //questions.json search
         try {
-            return objectMapper.readValue(
+            List<Question> flat = objectMapper.readValue(
                     new File(questionsPath),
                     new TypeReference<List<Question>>() {}
             );
+            for (Question q : flat) {
+                if (q != null) seen.put(Integer.toString(q.getId()), q);
+            }
         } catch (IOException e) {
-            return new ArrayList<>();
+            // if the file dies or something
         }
+
+        //search study sets too
+        for (StudySet s : studySetMaker.getAllSets()) {
+            if (s == null || s.getQuestions() == null) continue;
+            for (Question q : s.getQuestions()) {
+                String key = "study-" + s.getId() + "-" + q.getId();
+                seen.putIfAbsent(key, q);
+            }
+        }
+
+        //search question sets too
+        for (QuestionSet s : questionTracker.getQuestionSets()) {
+            if (s == null || s.getQuestions() == null) continue;
+            for (Question q : s.getQuestions()) {
+                String key = "question-" + s.getId() + "-" + q.getId();
+                seen.putIfAbsent(key, q);
+            }
+        }
+
+        return new ArrayList<>(seen.values());
     }
 
     /**
