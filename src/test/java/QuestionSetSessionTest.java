@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
-import model.QuestionSetSession;
+import model.SetSession;
 import model.questionTracker;
 import user.Question;
 import user.QuestionSet;
@@ -36,16 +36,13 @@ class QuestionSetSessionTest {
             // stub saveUser for this specific student to no-op so test does not write files
             mocked.when(() -> questionTracker.saveUser(any(User.class))).thenAnswer(invocation -> null);
 
-            QuestionSetSession session = questionTracker.createQuestionSetSession(1, student);
+            SetSession session = questionTracker.createQuestionSetSession(1, student);
             assertNotNull(session);
             assertTrue(session.hasNext());
 
             Question asked = session.nextQuestion();
             assertEquals("What is 2+2?", asked.getText());
-            assertEquals("4", session.revealAnswer());
-
-            // mark wrong
-            session.markLastAnswer(false);
+            assertFalse(session.submitAnswer("3"));
 
             // verify that the student's wrong-question list now contains the tags
             assertEquals(1, student.getWrongQuestionData().size());
@@ -78,17 +75,16 @@ class QuestionSetSessionTest {
             // do not expect saveUser to be called when marking correct
             mocked.when(() -> questionTracker.saveUser(any(User.class))).thenAnswer(invocation -> null);
 
-            QuestionSetSession session = questionTracker.createQuestionSetSession(2, student);
+            SetSession session = questionTracker.createQuestionSetSession(2, student);
             assertNotNull(session);
 
             Question a1 = session.nextQuestion();
             assertEquals("Capital of France?", a1.getText());
-            assertEquals("Paris", session.revealAnswer());
-            session.markLastAnswer(true);
+            assertTrue(session.submitAnswer("Paris"));
 
             Question a2 = session.nextQuestion();
             assertEquals("5*6?", a2.getText());
-            session.markLastAnswer(true);
+            assertTrue(session.submitAnswer("30"));
 
             assertEquals(2, session.getTotalQuestions());
             assertEquals(2, session.getCurrentIndex());

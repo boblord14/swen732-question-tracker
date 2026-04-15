@@ -10,7 +10,9 @@ import teacher.StudySet;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,8 +29,17 @@ class SearchServiceTest {
     private SearchService searchService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private final Path questionFile = Paths.get("src/main/questions.json");
+    private final Path studySetFile = Paths.get("src/main/sets.json");
+    private final Path questionSetFile = Paths.get("src/main/questionSets.json");
+
+
     @BeforeEach
     void setUp() throws IOException {
+        Files.deleteIfExists(questionFile);
+        Files.deleteIfExists(studySetFile);
+        Files.deleteIfExists(questionSetFile);
+
         questionsFile = tempDir.resolve("questions.json").toFile();
         studySetsFolder = tempDir.resolve("StudySets").toFile();
         assertTrue(studySetsFolder.mkdirs());
@@ -63,8 +74,8 @@ class SearchServiceTest {
         List<StudySet> results = searchService.searchStudySetsByTitle("java");
 
         assertEquals(2, results.size());
-        assertTrue(results.stream().anyMatch(s -> "Java Basics".equals(s.getTitle())));
-        assertTrue(results.stream().anyMatch(s -> "Advanced JAVA Collections".equals(s.getTitle())));
+        assertTrue(results.stream().anyMatch(s -> "Java Basics".equals(s.getName())));
+        assertTrue(results.stream().anyMatch(s -> "Advanced JAVA Collections".equals(s.getName())));
     }
 
     @Test
@@ -165,21 +176,21 @@ class SearchServiceTest {
      */
     private void writeStudySetFiles() throws IOException {
         StudySet s1 = new StudySet();
-        s1.setTitle("Java Basics");
+        s1.setName("Java Basics");
         s1.setSubject("CS");
         s1.setCreator("teacher1");
         s1.setTags(new ArrayList<>(Arrays.asList("java", "intro")));
         s1.setQuestionSet(new ArrayList<>());
 
         StudySet s2 = new StudySet();
-        s2.setTitle("Advanced JAVA Collections");
+        s2.setName("Advanced JAVA Collections");
         s2.setSubject("CS");
         s2.setCreator("teacher2");
         s2.setTags(new ArrayList<>(Arrays.asList("java", "collections")));
         s2.setQuestionSet(new ArrayList<>());
 
         StudySet s3 = new StudySet();
-        s3.setTitle("Discrete Math Review");
+        s3.setName("Discrete Math Review");
         s3.setSubject("Math");
         s3.setCreator("teacher3");
         s3.setTags(new ArrayList<>(Arrays.asList("math", "logic")));

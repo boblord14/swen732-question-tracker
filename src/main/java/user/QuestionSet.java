@@ -1,15 +1,17 @@
 package user;
 
+import model.BaseSet;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Represents a named collection of questions (study material) created by a user.
  */
-public class QuestionSet {
+public class QuestionSet implements BaseSet {
     private int id;
     private String name;
-    private User creator;
+    private String creator;
     private List<Question> questions;
     private List<String> tags;
 
@@ -18,7 +20,7 @@ public class QuestionSet {
         this.tags = new ArrayList<>();
     }
 
-    public QuestionSet(int id, String name, User creator) {
+    public QuestionSet(int id, String name, String creator) {
         this.id = id;
         this.name = name;
         this.creator = creator;
@@ -28,13 +30,13 @@ public class QuestionSet {
 
     public int getId() { return id; }
     public String getName() { return name; }
-    public User getCreator() { return creator; }
+    public String getCreator() { return creator; }
     public List<Question> getQuestions() { return questions; }
     public List<String> getTags() { return tags; }
 
     public void setId(int id) { this.id = id; }
     public void setName(String name) { this.name = name; }
-    public void setCreator(User creator) { this.creator = creator; }
+    public void setCreator(String creator) { this.creator = creator; }
     public void setQuestions(List<Question> questions) { this.questions = questions; }
     public void setTags(List<String> tags) { this.tags = tags; }
 

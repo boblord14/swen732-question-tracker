@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane fx:controller="app.QuestionSetListController"
+            xmlns:fx="http://javafx.com/fxml"
+            prefWidth="960" prefHeight="540">
+    <children>
+    <VBox spacing="12" layoutX="40" layoutY="20" prefWidth="880" styleClass="card">
+            <HBox spacing="10">
+        <Label text="Question Sets" styleClass="title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Back" onAction="#handleBack" styleClass="button ghost"/>
+            </HBox>
+
+            <HBox spacing="8">
+                <TextField fx:id="newSetNameField" promptText="New set name" prefWidth="400" styleClass="text-field"/>
+                <Button fx:id="createSetBtn" text="Create Set" onAction="#handleCreateSet" styleClass="button primary"/>
+            </HBox>
+
+            <ScrollPane fitToWidth="true" prefHeight="420">
+                <content>
+                    <VBox fx:id="setListVBox" spacing="8">
+                        <padding>
+                            <Insets top="8" right="8" bottom="8" left="8"/>
+                        </padding>
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </children>
+</AnchorPane>

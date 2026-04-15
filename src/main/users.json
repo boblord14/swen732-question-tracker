@@ -1,1 +1,28 @@
-[  ]
+[ {
+  "id" : 1,
+  "username" : "test",
+  "password" : "test",
+  "isTeacher" : true,
+  "studySetAvg" : { },
+  "classrooms" : [ "Classroom Name", "newclass" ],
+  "questionSetIds" : [ 2, 3, 4, 5, 6, 7 ],
+  "wrongQuestionData" : [ [ "3" ], [ "6" ] ]
+}, {
+  "id" : 2,
+  "username" : "admin",
+  "password" : "admin123",
+  "isTeacher" : true,
+  "studySetAvg" : { },
+  "classrooms" : [ ],
+  "questionSetIds" : [ ],
+  "wrongQuestionData" : [ ]
+}, {
+  "id" : 3,
+  "username" : "phantom",
+  "password" : "admin123",
+  "isTeacher" : true,
+  "studySetAvg" : { },
+  "classrooms" : [ ],
+  "questionSetIds" : [ ],
+  "wrongQuestionData" : [ ]
+} ]

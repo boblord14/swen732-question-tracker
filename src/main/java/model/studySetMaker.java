@@ -5,12 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import user.Question;
 import teacher.StudySet;
 import user.User;
+
+
 
 public class studySetMaker {
     public static void main(String[] args) {
@@ -43,13 +46,13 @@ public class studySetMaker {
         try {
             StudySet[] data = mapper.readValue(new File("src/main/sets.json"), StudySet[].class);
             for (int i = 0; i < data.length; i++) {
-                if (username.equals(data[i].getCreator()) && Objects.equals(title, data[i].getTitle())) {
+                if (username.equals(data[i].getCreator()) && Objects.equals(title, data[i].getName())) {
                     data[i] = set;   // <-- THIS is the important part
                     break;
                 }
             }
-            
-            
+
+
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File("src/main/sets.json"), data);
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,7 +69,7 @@ public class studySetMaker {
             return Arrays.stream(data)
                 .filter(item -> {
                     boolean creatorMatches = username.equals(item.getCreator());
-                    boolean titleMatches = Objects.equals(title, item.getTitle());
+                    boolean titleMatches = Objects.equals(title, item.getName());
                     return creatorMatches && titleMatches;
                 })
                 .findFirst()
@@ -78,9 +81,36 @@ public class studySetMaker {
         }
     }
 
+    public static StudySet getSetById(int id) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            StudySet[] data = mapper.readValue(new File("src/main/sets.json"), StudySet[].class);
+            return Arrays.stream(data)
+                .filter(item -> item.getId() == id)
+                .findFirst()
+                .orElse(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static StudySet[] getAllSets() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            File file = new File("src/main/sets.json");
+            if (!file.exists() || file.length() == 0) return new StudySet[0];
+            StudySet[] data = mapper.readValue(file, StudySet[].class);
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new StudySet[0];
+        }
+    }
+
     public static StudySet addTags(String username, String title, ArrayList<String> newTags){
         StudySet set = getSet(username, title);
-        ArrayList<String> tags = set.getTags();
+        ArrayList<String> tags = (ArrayList<String>) set.getTags();
         
         if (tags == null){
             set.setTags(newTags);
@@ -106,7 +136,7 @@ public class studySetMaker {
         int correct = 0;
         int i = 0;
 
-        ArrayList<Question> questionSet = set.getQuestionSet();
+        ArrayList<Question> questionSet = (ArrayList<Question>) set.getQuestions();
         for(Question question : questionSet){
             System.out.println(question.getText());
             System.out.print("Your answer: ");
@@ -145,24 +175,75 @@ public class studySetMaker {
 
     public static StudySet createSet(ArrayList<Question> questions, User user, String title, String subject){
         StudySet set = new StudySet();
+        set.setId(nextId());
         set.setCreator(user.getUsername());
         set.setQuestionSet(questions);
+        set.setName(title);
         set.setSubject(subject);
-        set.setTitle(title);
-
         saveSet(set);
         return set;
     }
 
     public static StudySet createSet(ArrayList<Question> questions, User user, String title, String subject, ArrayList<String> tags){
-        StudySet set = new StudySet();
-        set.setCreator(user.getUsername());
-        set.setQuestionSet(questions);
-        set.setSubject(subject);
-        set.setTags(tags);
-        set.setTitle(title);
+        StudySet set = createSet(questions, user, title, subject);
+        set.setTags(new ArrayList<>(tags));
 
-        saveSet(set);
+        editTags(set, user.getUsername(), title);
         return set;
     }
+
+    private static int nextId() {
+        StudySet[] all = getAllSets();
+        int max = 0;
+        for (StudySet s : all) if (s.getId() > max) max = s.getId();
+        return max + 1;
+    }
+
+    public static SetSession createStudySetSession(int id, User user) {
+        StudySet set = getSetById(id);
+        if (set == null) return null;
+        return new SetSession(set, user, true);
+    }
+
+    public static boolean addQuestionToStudySet(int setId, String text, String answer, List<String> tags) {
+        StudySet[] all = getAllSets();
+        boolean changed = false;
+        for (StudySet s : all) {
+            if (s != null && s.getId() == setId) {
+                ArrayList<Question> qs = (ArrayList<Question>) s.getQuestions();
+                if (qs == null) qs = new ArrayList<>();
+                int maxId = qs.stream().mapToInt(Question::getId).max().orElse(0);
+                Question q = new Question(maxId + 1, text, answer);
+                if (tags != null) q.setTags(tags);
+                qs.add(q);
+                s.setQuestionSet(qs);
+                changed = true;
+                break;
+            }
+        }
+        if (changed) saveAllSets(all);
+        return changed;
+    }
+
+    public static boolean removeQuestionFromStudySet(int setId, int questionId) {
+        StudySet[] all = getAllSets();
+        boolean changed = false;
+        for (StudySet s : all) {
+            if (s != null && s.getId() == setId) {
+                ArrayList<Question> qs = (ArrayList<Question>) s.getQuestions();
+                if (qs != null) changed = qs.removeIf(q -> q.getId() == questionId);
+                break;
+            }
+        }
+        if (changed) saveAllSets(all);
+        return changed;
+    }
+
+    private static void saveAllSets(StudySet[] sets) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("src/main/sets.json"), sets);
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
 }

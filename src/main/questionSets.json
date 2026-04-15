@@ -1,13 +1,39 @@
 [ {
   "id" : 1,
   "name" : "Algebra",
-  "creator" : {
-    "id" : 10,
-    "username" : "teacher10",
-    "password" : null,
-    "isTeacher" : true,
-    "wrongQuestionData" : [ ]
-  },
+  "creator" : "teacher10",
   "questions" : [ ],
+  "tags" : [ ]
+}, {
+  "id" : 2,
+  "name" : "testset",
+  "creator" : "test",
+  "questions" : [ {
+    "id" : 1,
+    "text" : "1",
+    "answer" : "2",
+    "tags" : [ "3" ]
+  }, {
+    "id" : 2,
+    "text" : "4",
+    "answer" : "5",
+    "tags" : [ "6" ]
+  } ],
+  "tags" : [ ]
+}, {
+  "id" : 3,
+  "name" : "testgens",
+  "creator" : "bobteach",
+  "questions" : [ {
+    "id" : 1,
+    "text" : "test1",
+    "answer" : "a",
+    "tags" : [ "6" ]
+  }, {
+    "id" : 2,
+    "text" : "test2",
+    "answer" : "a",
+    "tags" : [ "3" ]
+  } ],
   "tags" : [ ]
 } ]
