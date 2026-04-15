@@ -3,6 +3,7 @@ package app;
 import java.io.IOException;
 import java.util.List;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,6 +27,8 @@ public class MainController {
     private Button classListButton;
     @FXML
     private Button questionSetsButton;
+    @FXML
+    private Button userStruggleButton;
 
     @FXML
     private Button loginButton;
@@ -101,4 +104,26 @@ public class MainController {
         }
     }
 
+    @FXML
+    public void handleViewStruggles(ActionEvent actionEvent) {
+        User user = model.questionTracker.getUserById(1);
+        if (user == null) {
+            user = new User(1, "admin", "admin123", true);
+        }
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/StruggleView.fxml"));
+            Parent root = loader.load();
+            StruggleViewController ctrl = loader.getController();
+
+            ctrl.setDataStudent(user);
+
+            Stage stage = (Stage) userStruggleButton.getScene().getWindow();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            stage.setScene(scene);
+            app.UIUtils.fadeIn(root);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

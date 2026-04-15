@@ -253,7 +253,8 @@ public class QuestionSetViewController {
                         backCtrl.setDataStudySet(studySet, user, returnClassName);
                     } else {
                         backCtrl.setData(set, user);
-                    }                    stage.setScene(new Scene(backRoot));
+                    }
+                    stage.setScene(new Scene(backRoot));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

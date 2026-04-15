@@ -11,6 +11,7 @@
         <VBox layoutX="200" layoutY="160" spacing="12" prefWidth="560" styleClass="card">
             <Label text="Question Tracker" styleClass="title" />
             <Button fx:id="questionSetsButton" text="Question Sets" onAction="#handleQuestionSets" styleClass="button ghost" />
+            <Button fx:id="userStruggleButton" text="View Your Struggles" onAction="#handleViewStruggles" styleClass="button ghost" />
             <Button fx:id="classListButton"
                     text="Class List"
                     onAction="#handleLoad"/>

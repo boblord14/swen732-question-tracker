@@ -262,7 +262,21 @@ public class ClassViewController {
 
     @FXML
     private void handleViewStruggles(ActionEvent event) {
-        System.out.println("Navigate to Student Struggles screen (not implemented)");
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/StruggleView.fxml"));
+            Parent root = loader.load();
+            StruggleViewController ctrl = loader.getController();
+
+            ctrl.setDataTeacher(user, classroom.getName(), classroom.getStudents());
+
+            Stage stage = (Stage) classNameLabel.getScene().getWindow();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            stage.setScene(scene);
+            app.UIUtils.fadeIn(root);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

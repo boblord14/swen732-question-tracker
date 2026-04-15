@@ -255,4 +255,30 @@ public class SearchService {
         return normalized;
     }
 
+    /**
+     * Recommends only the top N questions for a struggle vector
+     */
+    public List<Question> recommendTopQuestionsGivenVector(Map<String, Double> vector, int count) {
+        if (count <= 0) {
+            return new ArrayList<>();
+        }
+
+        return recommendQuestionsGivenVector(vector).stream()
+                .limit(count)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Recommends questions for a given struggle vector w/ tags - highest scoring questions come first
+     */
+    public List<Question> recommendQuestionsGivenVector(Map<String, Double> vector) {
+
+        return loadAllQuestions().stream()
+                .filter(q -> q.getTags() != null && !q.getTags().isEmpty())
+                .sorted(Comparator.comparingDouble(
+                        (Question q) -> UserPrediction.scoreQuestion(q, vector)
+                ).reversed())
+                .collect(Collectors.toList());
+    }
+
 }

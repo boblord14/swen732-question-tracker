@@ -6,7 +6,7 @@
   "studySetAvg" : { },
   "classrooms" : [ "Classroom Name", "newclass" ],
   "questionSetIds" : [ 2, 3, 4, 5, 6, 7 ],
-  "wrongQuestionData" : [ ]
+  "wrongQuestionData" : [ [ "3" ], [ "6" ] ]
 }, {
   "id" : 2,
   "username" : "admin",
