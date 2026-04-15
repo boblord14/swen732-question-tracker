@@ -1,6 +1,5 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class signupTest {
-    private final Path usersFile = Paths.get("src/main/users.json");
+    private final Path usersFile = Paths.get("src/main/resources/users.json");
 
     @BeforeEach
     //delete users file before each test so we're testing on a fresh DB
@@ -25,8 +24,6 @@ public class signupTest {
     //Sign up test that creates a successful student account
     @org.junit.jupiter.api.Test
     void testSignupStudentSuccessful(){
-        questionTracker qt = new questionTracker();
-
         String username = "User0";
         String password = "Password0";
 
@@ -40,8 +37,6 @@ public class signupTest {
     //Sign up test that creates a successful student account
     @org.junit.jupiter.api.Test
     void testSignupTeacherSuccessful(){
-        questionTracker qt = new questionTracker();
-
         String username = "Teacher1";
         String password = "TPassword1";
 

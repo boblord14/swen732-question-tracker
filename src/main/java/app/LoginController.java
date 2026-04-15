@@ -1,7 +1,5 @@
 package app;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,9 +9,7 @@ import javafx.stage.Stage;
 import model.questionTracker;
 import user.User;
 
-import java.io.InputStream;
 import java.util.Arrays;
-import java.util.List;
 
 public class LoginController {
 
@@ -22,22 +18,6 @@ public class LoginController {
     @FXML private Label errorLabel;
 
     private User[] users;
-
-    /*@FXML
-    public void initialize() {
-        loadUsers();
-    }
-
-    private void loadUsers() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            InputStream is = getClass().getResourceAsStream("/users.json");
-
-            users = mapper.readValue(is, new TypeReference<List<User>>() {});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
     @FXML
     public void handleLogin() {
