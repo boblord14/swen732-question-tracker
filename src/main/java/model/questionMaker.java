@@ -6,19 +6,8 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import user.Question;
-//import user.User;
 
 public class questionMaker {
-
-    public static void main(String[] args) {
-        Question question = createQuestion("What is two + two?", "four");
-        if (question != null) {
-            System.out.println("Question successfully created: \n" + question.getText());
-        } else {
-            System.out.println("Failed to make question.");
-        }
-    }
-
     public static Question[] getQuestions(){
         ObjectMapper mapper = new ObjectMapper();
         try {
