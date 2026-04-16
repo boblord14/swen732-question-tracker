@@ -53,8 +53,8 @@ public class studySetTest {
         String answer1 = set1.getQuestions().get(0).getAnswer();
         String answer2 = set1.getQuestions().get(1).getAnswer();
 
-        assertEquals(answer1, "four");
-        assertEquals(answer2, "seven");
+        assertEquals("four", answer1);
+        assertEquals("seven", answer2);
     }
 
     //Creates a study set with a list of tags
@@ -78,7 +78,7 @@ public class studySetTest {
         StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math", tags);
 
         ArrayList<String> tagList = (ArrayList<String>) set1.getTags();
-        assertEquals(tagList, tags);
+        assertEquals(tags, tagList);
     }
 
     //Adds tags to a study set
@@ -157,8 +157,8 @@ public class studySetTest {
         String answer1 = set2.getQuestions().get(0).getAnswer();
         String answer2 = set2.getQuestions().get(1).getAnswer();
 
-        assertEquals(answer1, "four");
-        assertEquals(answer2, "seven");
+        assertEquals("four", answer1);
+        assertEquals("seven", answer2);
     }
 
     // A test that creates multiple study sets
@@ -178,7 +178,6 @@ public class studySetTest {
         studySetMaker.createSet(list, user1, "Moth test Prep", "Math");
 
         long count = studySetMaker.getSetCount(user1.getUsername());
-        System.out.println(count);
-        assertEquals(count, 2);
+        assertEquals(2, count);
     }
 }
