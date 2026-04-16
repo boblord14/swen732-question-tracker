@@ -1,3 +1,5 @@
+package tests;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import model.SearchService;

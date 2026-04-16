@@ -1,3 +1,5 @@
+package tests;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class signupTest {
+class SignupTest {
     private final Path usersFile = Paths.get("src/main/resources/users.json");
 
     @BeforeEach
@@ -27,11 +29,11 @@ public class signupTest {
         String username = "User0";
         String password = "Password0";
 
-        User signup_info = QuestionTracker.signUp(username, password, false);
+        User signupInfo = QuestionTracker.signUp(username, password, false);
 
-        assertEquals(signup_info.getUsername(), "User0");
-        assertEquals(signup_info.getPassword(), "Password0");
-        assertFalse(signup_info.getIsTeacher());
+        assertEquals("User0", signupInfo.getUsername());
+        assertEquals("Password0", signupInfo.getPassword());
+        assertFalse(signupInfo.getIsTeacher());
     }
 
     //Sign up test that creates a successful student account
@@ -43,8 +45,8 @@ public class signupTest {
         
         User signup = QuestionTracker.signUp(username, password, true);
 
-        assertEquals(signup.getUsername(), "Teacher1");
-        assertEquals(signup.getPassword(), "TPassword1");
+        assertEquals("Teacher1", signup.getUsername());
+        assertEquals("TPassword1", signup.getPassword());
         assertTrue(signup.getIsTeacher());
     }
 

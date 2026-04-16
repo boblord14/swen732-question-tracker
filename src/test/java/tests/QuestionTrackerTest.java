@@ -1,4 +1,5 @@
-//import org.junit.jupiter.api.BeforeEach;
+package tests;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
@@ -10,9 +11,7 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for logging in and utilizing the functionality of the system
  */
-class questionTrackerTest {
-
-    QuestionTracker qt = new QuestionTracker();
+class QuestionTrackerTest {
 
     /**
      * Test whether logging in with correct credentials allows a user to access the system

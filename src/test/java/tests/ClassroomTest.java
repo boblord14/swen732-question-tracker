@@ -1,3 +1,5 @@
+package tests;
+
 import org.junit.jupiter.api.BeforeEach;
 
 import model.QuestionTracker;
@@ -11,7 +13,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class classroomTest {
+class ClassroomTest {
     private final Path classFile = Paths.get("src/main/classes.json");
     private final Path usersFile = Paths.get("src/main/users.json");
 
@@ -25,7 +27,6 @@ public class classroomTest {
     //Create a classroom normally, expect success
     @org.junit.jupiter.api.Test
     void testCreateClassroom() {
-        //questionTracker qt = new questionTracker();
 
         User user = new User(1, "test", "test", true);
 
@@ -43,7 +44,6 @@ public class classroomTest {
     //Create a classroom from a nonteacher account, expect null return
     @org.junit.jupiter.api.Test
     void testNonteacherCreateClassroom() {
-        //questionTracker qt = new questionTracker();
 
         User user = new User(1, "test", "test", false);
 
@@ -58,7 +58,6 @@ public class classroomTest {
     //Create a classroom with the same code as another class, expect null return
     @org.junit.jupiter.api.Test
     void testDuplicateCodeCreateClassroom() {
-        //questionTracker qt = new questionTracker();
 
         User user = new User(1, "test", "test", true);
 
@@ -75,7 +74,6 @@ public class classroomTest {
     //Test class list get being empty
     @org.junit.jupiter.api.Test
     void testEmptyClassList() {
-        //questionTracker qt = new questionTracker();
 
         Classroom[] classList = QuestionTracker.getClasses();
 
@@ -85,7 +83,6 @@ public class classroomTest {
     //Test class list fetch
     @org.junit.jupiter.api.Test
     void testFetchClassList() {
-        //questionTracker qt = new questionTracker();
 
         User user = new User(1, "test", "test", true);
 
@@ -105,7 +102,6 @@ public class classroomTest {
     //Test join class success
     @org.junit.jupiter.api.Test
     void testJoinClass() {
-        //questionTracker qt = new questionTracker();
 
         User user = new User(1, "test", "test", true);
 
@@ -128,7 +124,6 @@ public class classroomTest {
     //Test join class failure on bad code
     @org.junit.jupiter.api.Test
     void testJoinClassBadCode() {
-        //questionTracker qt = new questionTracker();
 
         User user = new User(1, "test", "test", true);
 
@@ -153,7 +148,6 @@ public class classroomTest {
     //Test join class failure on student already present
     @org.junit.jupiter.api.Test
     void testJoinClassAlreadyPresent() {
-        //questionTracker qt = new questionTracker();
 
         User user = new User(1, "test", "test", true);
 

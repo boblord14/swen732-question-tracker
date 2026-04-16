@@ -1,6 +1,7 @@
+package tests;
+
 import org.junit.jupiter.api.BeforeEach;
 
-//import model.questionTracker;
 import user.Question;
 import user.User;
 import user.UserPrediction;
@@ -15,7 +16,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class userPredictionTest {
+class UserPredictionTest {
     private final Path classFile = Paths.get("src/main/classes.json");
     private final Path usersFile = Paths.get("src/main/users.json");
 

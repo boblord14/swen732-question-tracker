@@ -1,4 +1,5 @@
-//import java.nio.file.Paths;
+package tests;
+
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,13 +20,11 @@ import user.Question;
 import teacher.StudySet;
 import user.User;
 
-public class studySetTest {
-    //private final Path usersFile = Paths.get("src/main/users.json");
-    //private final Path setsFile = Paths.get("src/main/sets.json");
+class StudySetTest {
 
     //Resets the json file before each test
     @BeforeEach
-    public void clearJson() {
+    void clearJson() {
         try (FileWriter writer = new FileWriter("src/main/sets.json")) {
             writer.write("");   // or "[]" if you want an empty array
         } catch (IOException e) {
@@ -35,7 +34,7 @@ public class studySetTest {
 
     //A test that creates a study set
     @Test
-    public void testCreateStudySet(){
+    void testCreateStudySet(){
         String username = "admin";
         String password = "admin123";
         QuestionTracker.signUp(username, password, true);
@@ -53,13 +52,13 @@ public class studySetTest {
         String answer1 = set1.getQuestions().get(0).getAnswer();
         String answer2 = set1.getQuestions().get(1).getAnswer();
 
-        assertEquals(answer1, "four");
-        assertEquals(answer2, "seven");
+        assertEquals("four", answer1);
+        assertEquals("seven", answer2);
     }
 
     //Creates a study set with a list of tags
     @Test
-    public void testCreateStudySetWithTags(){
+    void testCreateStudySetWithTags(){
         String username = "admin";
         String password = "admin123";
         QuestionTracker.signUp(username, password, true);
@@ -83,7 +82,7 @@ public class studySetTest {
 
     //Adds tags to a study set
     @Test
-    public void testCreateStudySetAddTags(){
+    void testCreateStudySetAddTags(){
         String username = "admin";
         String password = "admin123";
         QuestionTracker.signUp(username, password, true);
@@ -108,7 +107,7 @@ public class studySetTest {
 
     //Tests adding a tag to a list that already had tags
     @Test
-    public void testCreateStudySetAddTagToAnExistingList(){
+    void testCreateStudySetAddTagToAnExistingList(){
         String username = "admin";
         String password = "admin123";
         QuestionTracker.signUp(username, password, true);
@@ -138,7 +137,7 @@ public class studySetTest {
 
     //Retrieves a users study set with a specific name
     @Test
-    public void testRetreiveStudySet(){
+    void testRetreiveStudySet(){
         String username = "admin";
         String password = "admin123";
         QuestionTracker.signUp(username, password, true);
@@ -157,13 +156,13 @@ public class studySetTest {
         String answer1 = set2.getQuestions().get(0).getAnswer();
         String answer2 = set2.getQuestions().get(1).getAnswer();
 
-        assertEquals(answer1, "four");
-        assertEquals(answer2, "seven");
+        assertEquals("four", answer1);
+        assertEquals("seven", answer2);
     }
 
     // A test that creates multiple study sets
     @Test
-    public void testCreateTwoStudySets(){
+    void testCreateTwoStudySets(){
         String username = "phantom";
         String password = "admin123";
         QuestionTracker.signUp(username, password, true);
@@ -179,6 +178,6 @@ public class studySetTest {
 
         long count = StudySetMaker.getSetCount(user1.getUsername());
         System.out.println(count);
-        assertEquals(count, 2);
+        assertEquals(2, count);
     }
 }
