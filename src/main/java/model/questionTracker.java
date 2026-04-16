@@ -8,6 +8,7 @@ import user.Question;
 import user.QuestionSet;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -224,14 +225,12 @@ public class questionTracker {
                 try {
                     for (File old : files) {
                         if(!old.delete()){
-                            throw new RuntimeException("Could not delete file: " + old.getAbsolutePath());
+                            throw new IOException("Could not delete file: " + old.getAbsolutePath());
                         }
                     }
                     File[] remaining = dir.listFiles();
-                    if (remaining == null || remaining.length == 0){
-                        if(!dir.delete()){
-                            throw new RuntimeException("Could not delete directory: " + dir.getAbsolutePath());
-                        }
+                    if ((remaining == null || remaining.length == 0) && !dir.delete()){
+                            throw new IOException("Could not delete directory: " + dir.getAbsolutePath());
                     }
                 } catch (Exception cleanupEx) {
                     // don't fail migration on cleanup errors
