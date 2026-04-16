@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
-import com.fasterxml.jackson.annotation.JsonProperty;
+//import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -157,6 +157,8 @@ public class studySetMaker {
             + "Your average is " + average);
 
         user.addStudySetScore(set.getId(), average);
+
+        s.close();
         return average;
     }
 

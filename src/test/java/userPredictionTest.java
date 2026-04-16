@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.BeforeEach;
 
-import model.questionTracker;
+//import model.questionTracker;
 import user.Question;
 import user.User;
 import user.UserPrediction;
@@ -29,8 +29,6 @@ public class userPredictionTest {
     //Generate a user struggle vector and ensure its correctly built
     @org.junit.jupiter.api.Test
     void testStruggleVectorResult() {
-        questionTracker qt = new questionTracker();
-
         Question q1 = new Question(1, "question 1");
         q1.addTag("tag 1");
         q1.addTag("tag 2");
@@ -58,8 +56,6 @@ public class userPredictionTest {
     //Generate a user struggle vector for a group of users and ensure its correctly built
     @org.junit.jupiter.api.Test
     void testGroupStruggleVectorResult() {
-        questionTracker qt = new questionTracker();
-
         Question q1 = new Question(1, "question 1");
         q1.addTag("tag 1");
         q1.addTag("tag 4");
@@ -109,8 +105,6 @@ public class userPredictionTest {
     //Take a dummy question and see how well it matches up to the struggle vector
     @org.junit.jupiter.api.Test
     void scoreQuestionOnVector() {
-        questionTracker qt = new questionTracker();
-
         Question q1 = new Question(1, "question 1");
         q1.addTag("tag 1");
         q1.addTag("tag 2");

@@ -3,7 +3,7 @@ package user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.*;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 public class User {
     private static final int QUESTION_STORAGE_MAX = 100;

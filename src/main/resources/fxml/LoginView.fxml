@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="300" prefWidth="400" spacing="10" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.LoginController">
+<VBox alignment="CENTER" prefHeight="960" prefWidth="540" spacing="10" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.LoginController">
     <Label style="-fx-font-size: 20;" text="Welcome to Question-Tracker!" />
     <Label style="-fx-font-size: 20;" text="Log In" />
 

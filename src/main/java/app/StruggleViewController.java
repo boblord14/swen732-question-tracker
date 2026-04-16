@@ -191,8 +191,8 @@ public class StruggleViewController {
             return;
         }
 
-        ArrayList<user.Question> qList = new ArrayList<>(recommended);
-        StudySet saved = studySetMaker.createSet(qList, user, setName, "");
+        //ArrayList<user.Question> qList = new ArrayList<>(recommended);
+        //StudySet saved = studySetMaker.createSet(qList, user, setName, "");
 
         new Alert(Alert.AlertType.INFORMATION,
                 "\"" + setName + "\" created and saved to your account. You can assign it to your class in the class window",

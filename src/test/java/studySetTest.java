@@ -1,4 +1,4 @@
-import java.nio.file.Paths;
+//import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+//import java.nio.file.Files;
+//import java.nio.file.Path;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +20,8 @@ import teacher.StudySet;
 import user.User;
 
 public class studySetTest {
-    private final Path usersFile = Paths.get("src/main/users.json");
-    private final Path setsFile = Paths.get("src/main/sets.json");
+    //private final Path usersFile = Paths.get("src/main/users.json");
+    //private final Path setsFile = Paths.get("src/main/sets.json");
 
     //Resets the json file before each test
     @BeforeEach
@@ -99,7 +99,7 @@ public class studySetTest {
         tags.add("Student Aid");
         tags.add("test prep");
 
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
+        studySetMaker.createSet(list, user1, "Math test Prep", "Math");
         StudySet set2 = studySetMaker.addTags(user1.getUsername(), "Math test Prep", tags);
         ArrayList<String> tagList = (ArrayList<String>) set2.getTags();
 
@@ -127,7 +127,7 @@ public class studySetTest {
         ArrayList<String> newTag = new ArrayList<>();
         newTag.add("Math");
 
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math", tags);
+        studySetMaker.createSet(list, user1, "Math test Prep", "Math", tags);
         StudySet set2 = studySetMaker.addTags(user1.getUsername(), "Math test Prep", newTag);
         ArrayList<String> tagList = (ArrayList<String>) set2.getTags();
 
@@ -149,7 +149,7 @@ public class studySetTest {
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
+        studySetMaker.createSet(list, user1, "Math test Prep", "Math");
         StudySet set2 = studySetMaker.getSet(user1.getUsername(), "Math test Prep");
 
         assertNotNull(set2);
@@ -174,8 +174,8 @@ public class studySetTest {
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
-        StudySet set2 = studySetMaker.createSet(list, user1, "Moth test Prep", "Math");
+        studySetMaker.createSet(list, user1, "Math test Prep", "Math");
+        studySetMaker.createSet(list, user1, "Moth test Prep", "Math");
 
         long count = studySetMaker.getSetCount(user1.getUsername());
         System.out.println(count);
