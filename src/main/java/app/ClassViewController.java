@@ -18,8 +18,6 @@ import model.studySetMaker;
 import teacher.StudySet;
 import user.Classroom;
 import user.User;
-import user.Question;
-import user.QuestionSet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +35,7 @@ public class ClassViewController {
 
     private Classroom classroom;
     private User user;
-    private final String cssSheet = "/styles/styles.css";
+    private static final  String CSS_SHEET = "/styles/styles.css";
 
     public void setData(String classroomName, User user) {
         this.classroom = questionTracker.getClassByName(classroomName);
@@ -200,7 +198,7 @@ public class ClassViewController {
             SetSessionController ctrl = loader.getController();
             Stage stage = (Stage) classNameLabel.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource(cssSheet).toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(CSS_SHEET).toExternalForm());
             stage.setScene(scene);
 
             ctrl.setSession(session, user, () -> {
@@ -280,7 +278,7 @@ public class ClassViewController {
 
             Stage stage = (Stage) classNameLabel.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("cssSheet").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("CSS_SHEET").toExternalForm());
             stage.setScene(scene);
             app.UIUtils.fadeIn(root);
         } catch (IOException e) {
@@ -299,7 +297,7 @@ public class ClassViewController {
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource(cssSheet).toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(CSS_SHEET).toExternalForm());
             stage.setScene(scene);
 
         } catch (Exception e) {
@@ -315,7 +313,7 @@ public class ClassViewController {
             controller.setDataStudySet(set, user, classroom.getName());
             Stage stage = (Stage) classNameLabel.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource(cssSheet).toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(CSS_SHEET).toExternalForm());
             stage.setScene(scene);
         } catch (IOException ex) {
             ex.printStackTrace();

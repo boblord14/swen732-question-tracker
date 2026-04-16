@@ -44,6 +44,8 @@ public class StruggleViewController {
     //practice quiz question number, 10 felt right
     private static final int PRACTICE_QUESTION_COUNT = 10;
 
+    private static final String GENERIC_STYLE = "-fx-font-size: 13px;";
+
     public void setDataTeacher(User teacher, String classroomName, List<User> students){
         this.user = teacher;
         this.classroomName = classroomName;
@@ -54,11 +56,11 @@ public class StruggleViewController {
 
         List<User> updatedStudentData = new ArrayList<>();
         for(User student: students){
-            User user = questionTracker.getUserById(student.getId());
-            if (user == null) {
-                user = student;
+            User userUpdate = questionTracker.getUserById(student.getId());
+            if (userUpdate == null) {
+                userUpdate = student;
             }
-            updatedStudentData.add(user);
+            updatedStudentData.add(userUpdate);
         }
 
         if (updatedStudentData.isEmpty()) {
@@ -82,7 +84,7 @@ public class StruggleViewController {
 
         if (student.getWrongQuestionData().isEmpty()) {
             Label none = new Label("No struggle data, go get some questions wrong");
-            none.setStyle("-fx-font-size: 13px;");
+            none.setStyle(GENERIC_STYLE);
             struggleListVBox.getChildren().add(none);
             practiceButton.setDisable(true);
         }else{
@@ -91,7 +93,7 @@ public class StruggleViewController {
 
             if (struggleVector.isEmpty()) {
                 Label none = new Label("No struggle data, go get some questions wrong");
-                none.setStyle("-fx-font-size: 13px;");
+                none.setStyle(GENERIC_STYLE);
                 struggleListVBox.getChildren().add(none);
                 practiceButton.setDisable(true);
             } else {
@@ -128,7 +130,7 @@ public class StruggleViewController {
 
             Label tagLabel = new Label(tag);
             tagLabel.setMinWidth(140);
-            tagLabel.setStyle("-fx-font-size: 13px;");
+            tagLabel.setStyle(GENERIC_STYLE);
 
             Pane bar = new Pane();
             bar.setPrefHeight(14);
@@ -191,9 +193,6 @@ public class StruggleViewController {
             return;
         }
 
-        //ArrayList<user.Question> qList = new ArrayList<>(recommended);
-        //StudySet saved = studySetMaker.createSet(qList, user, setName, "");
-
         new Alert(Alert.AlertType.INFORMATION,
                 "\"" + setName + "\" created and saved to your account. You can assign it to your class in the class window",
                 ButtonType.OK).showAndWait();
@@ -219,8 +218,7 @@ public class StruggleViewController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
                 Parent root = loader.load();
 
-                MainController controller = loader.getController();
-                controller.setUser(user);
+                MainController.setUser(user);
 
                 Stage stage = (Stage) titleLabel.getScene().getWindow();
                 stage.setScene(new Scene(root));

@@ -1,7 +1,6 @@
 package app;
 
 import java.io.IOException;
-import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,9 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import user.Classroom;
 import user.User;
 
 public class MainController {
@@ -28,16 +25,17 @@ public class MainController {
     @FXML
     private Button logoutButton;
     @FXML
-    private Label usernameLabel;
+    private static Label usernameLabel;
 
-    public void setUser(User user) {
-        this.user = user;
-        this.usernameLabel.setText("Welcome, " + user.getUsername() + "!");
+    private static final String CSS_SHEET = "/styles/styles.css";
+
+    public static void setUser(User user) {
+        MainController.user = user;
+        MainController.usernameLabel.setText("Welcome, " + user.getUsername() + "!");
     }
 
     @FXML
     public void handleLoad() {
-        //User teacher = new User(1, "admin", "admin123", true);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ClassListView.fxml"));
             Parent root = loader.load();
@@ -46,7 +44,7 @@ public class MainController {
 
             Stage stage = (Stage) classListButton.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(CSS_SHEET).toExternalForm());
             stage.setScene(scene);
             // apply a small fade animation on scene load
             app.UIUtils.fadeIn(root);
@@ -65,7 +63,7 @@ public class MainController {
 
             Stage stage = (Stage) questionSetsButton.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(CSS_SHEET).toExternalForm());
             stage.setScene(scene);
             // subtle fade in
             app.UIUtils.fadeIn(root);
@@ -98,11 +96,11 @@ public class MainController {
 
             Stage stage = (Stage) userStruggleButton.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(CSS_SHEET).toExternalForm());
             stage.setScene(scene);
             app.UIUtils.fadeIn(root);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }
