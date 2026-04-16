@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.questionTracker;
+import model.QuestionTracker;
 import user.QuestionSet;
 import user.User;
 
@@ -48,14 +48,14 @@ public class QuestionSetListController {
     private void handleCreateSet() {
         String name = newSetNameField.getText();
         if (name == null || name.trim().isEmpty()) return;
-        questionTracker.createQuestionSet(name.trim(), user);
+        QuestionTracker.createQuestionSet(name.trim(), user);
         newSetNameField.setText("");
         loadSets();
     }
 
     private void loadSets() {
         setListVBox.getChildren().clear();
-        List<QuestionSet> sets = java.util.Arrays.asList(questionTracker.getQuestionSetsForUser(user));
+        List<QuestionSet> sets = java.util.Arrays.asList(QuestionTracker.getQuestionSetsForUser(user));
         for (QuestionSet s : sets) {
             HBox row = new HBox(8);
             Label lbl = new Label(s.getName());

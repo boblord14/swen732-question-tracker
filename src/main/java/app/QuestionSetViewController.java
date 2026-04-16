@@ -9,7 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.SetSession;
-import model.questionTracker;
+import model.QuestionTracker;
 import model.studySetMaker;
 import teacher.StudySet;
 import user.Question;
@@ -194,9 +194,9 @@ public class QuestionSetViewController {
             String q = list.get(0);
             String a = list.get(1);
             List<String> tags = Arrays.stream(list.get(2).split(",")).map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
-            questionTracker.addQuestionToSet(set.getId(), q, a, tags);
+            QuestionTracker.addQuestionToSet(set.getId(), q, a, tags);
             // reload the set from storage
-            QuestionSet[] sets = questionTracker.getQuestionSets();
+            QuestionSet[] sets = QuestionTracker.getQuestionSets();
             for (QuestionSet s : sets)
                 if (s.getId() == set.getId()) {
                     set = s;
@@ -232,7 +232,7 @@ public class QuestionSetViewController {
         try {
             SetSession session = isStudySetMode
                     ? model.studySetMaker.createStudySetSession(studySet.getId(), user)
-                    : questionTracker.createQuestionSetSession(set.getId(), user);
+                    : QuestionTracker.createQuestionSetSession(set.getId(), user);
             if (session == null) return;
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SetSessionView.fxml"));
@@ -267,9 +267,9 @@ public class QuestionSetViewController {
     }
 
     private void handleDeleteQuestion(Question q) {
-        questionTracker.removeQuestionFromSet(set.getId(), q.getId());
+        QuestionTracker.removeQuestionFromSet(set.getId(), q.getId());
 
-        QuestionSet[] sets = questionTracker.getQuestionSets();
+        QuestionSet[] sets = QuestionTracker.getQuestionSets();
         for (QuestionSet s : sets) {
             if (s.getId() == set.getId()) {
                 set = s;

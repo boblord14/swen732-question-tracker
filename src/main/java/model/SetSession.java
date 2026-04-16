@@ -72,7 +72,7 @@ public class SetSession {
             List<String> tags = currentQuestion.getTags();
             if (tags != null) {
                 user.addWrongQuestion(tags);
-                questionTracker.saveUser(user);
+                QuestionTracker.saveUser(user);
             }
         }
 

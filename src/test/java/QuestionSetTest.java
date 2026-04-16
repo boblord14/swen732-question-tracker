@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
-import model.questionTracker;
+import model.QuestionTracker;
 import user.Question;
 import user.QuestionSet;
 import user.User;
@@ -21,10 +21,10 @@ class QuestionSetTest {
         teacher.setUsername("teacher10");
         teacher.setIsTeacher(true);
 
-        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
-            mocked.when(questionTracker::getQuestionSets).thenReturn(new QuestionSet[0]);
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[0]);
 
-            QuestionSet set = questionTracker.createQuestionSet("Algebra", teacher);
+            QuestionSet set = QuestionTracker.createQuestionSet("Algebra", teacher);
             assertNotNull(set);
             assertEquals("Algebra", set.getName());
             assertEquals(1, set.getId()); // first created id should be 1
@@ -43,10 +43,10 @@ class QuestionSetTest {
 
         QuestionSet set = new QuestionSet(7, "Physics", creator.getUsername());
 
-        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
-            mocked.when(questionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});
 
-            boolean added = questionTracker.addQuestionToSet(7, "What is velocity?", "distance/time", Arrays.asList("physics", "easy"));
+            boolean added = QuestionTracker.addQuestionToSet(7, "What is velocity?", "distance/time", Arrays.asList("physics", "easy"));
             assertTrue(added);
             assertEquals(1, set.getQuestions().size());
             Question q = set.getQuestions().get(0);
@@ -68,10 +68,10 @@ class QuestionSetTest {
         Question q = new Question(1, "What is H2O?", "water");
         set.addQuestion(q);
 
-        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
-            mocked.when(questionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});
 
-            boolean edited = questionTracker.editQuestionInSet(3, 1, "What is CO2?", "carbon dioxide", Arrays.asList("chemistry"));
+            boolean edited = QuestionTracker.editQuestionInSet(3, 1, "What is CO2?", "carbon dioxide", Arrays.asList("chemistry"));
             assertTrue(edited);
             Question updated = set.findQuestionById(1);
             assertNotNull(updated);
@@ -95,15 +95,15 @@ class QuestionSetTest {
 
         QuestionSet set = new QuestionSet(4, "Biology", creator.getUsername());
 
-        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
-            mocked.when(questionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});
 
             // other user (not creator) should not be allowed
-            boolean updatedByOther = questionTracker.updateQuestionSetMetadata(4, other, "New Biology", Arrays.asList("life"));
+            boolean updatedByOther = QuestionTracker.updateQuestionSetMetadata(4, other, "New Biology", Arrays.asList("life"));
             assertFalse(updatedByOther);
 
             // creator can update
-            boolean updatedByCreator = questionTracker.updateQuestionSetMetadata(4, creator, "Advanced Biology", Arrays.asList("life","advanced"));
+            boolean updatedByCreator = QuestionTracker.updateQuestionSetMetadata(4, creator, "Advanced Biology", Arrays.asList("life","advanced"));
             assertTrue(updatedByCreator);
             assertEquals("Advanced Biology", set.getName());
             assertEquals(2, set.getTags().size());

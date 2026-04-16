@@ -14,10 +14,11 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 
-public class questionTracker {
+public class QuestionTracker {
 
-    static Logger logger = Logger.getLogger(questionTracker.class.getName());
+    static Logger logger = Logger.getLogger(QuestionTracker.class.getName());
 
+    public QuestionTracker() {}
 
     public static User logIn(String username, String password){
         User[] users = getUsers();
@@ -79,7 +80,7 @@ public class questionTracker {
         // Save to file
         saveUsers(updatedUsers);
 
-        logger.info("User registered successfully: " + username);
+        logger.info(() -> "User registered successfully: " + username);
         return newUser;
     }
 
@@ -153,7 +154,7 @@ public class questionTracker {
             ex.printStackTrace();
         }
 
-        logger.info("Class created: " + name + " (" + code + ") by " + teacher.getUsername());
+        logger.info(() -> "Class created: " + name + " (" + code + ") by " + teacher.getUsername());
         return newClass;
     }
 
@@ -169,9 +170,9 @@ public class questionTracker {
                 // add student
                 if (c.addStudent(student)){
                     changed = true;
-                    logger.info(student.getUsername() + " joined class " + c.getName());
+                    logger.info(() -> student.getUsername() + " joined class " + c.getName());
                 } else {
-                    logger.info(student.getUsername() + " is already in class " + c.getName());
+                    logger.info(() -> student.getUsername() + " is already in class " + c.getName());
                 }
                 break; // assume codes are unique
             }
@@ -309,7 +310,7 @@ public class questionTracker {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        logger.info("Question set created: " + name + " (id=" + newSet.getId() + ") by " + (creator != null ? creator.getUsername() : "unknown"));
+        logger.info(() -> "Question set created: " + name + " (id=" + newSet.getId() + ") by " + creator.getUsername());
         return newSet;
     }
 

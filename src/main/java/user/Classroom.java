@@ -2,7 +2,7 @@ package user;
 
 import java.util.*;
 
-import model.questionTracker;
+import model.QuestionTracker;
 import teacher.StudySet;
 
 /**
@@ -54,7 +54,7 @@ public class Classroom {
         List<String> classrooms = student.getClassrooms();
         classrooms.add(this.name);
         student.setClassrooms(classrooms);
-        questionTracker.saveUser(student);
+        QuestionTracker.saveUser(student);
         return students.add(student);
     }
 

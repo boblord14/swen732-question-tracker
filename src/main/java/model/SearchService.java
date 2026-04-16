@@ -60,7 +60,7 @@ public class SearchService {
         }
 
         //search question sets too
-        for (QuestionSet s : questionTracker.getQuestionSets()) {
+        for (QuestionSet s : QuestionTracker.getQuestionSets()) {
             if (isValidSet(s)) continue;
             for (Question q : s.getQuestions()) {
                 String key = "question-" + s.getId() + "-" + q.getId();

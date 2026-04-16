@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.SearchService;
 import model.SetSession;
-import model.questionTracker;
+import model.QuestionTracker;
 import model.studySetMaker;
 import teacher.StudySet;
 import user.Question;
@@ -56,7 +56,7 @@ public class StruggleViewController {
 
         List<User> updatedStudentData = new ArrayList<>();
         for(User student: students){
-            User userUpdate = questionTracker.getUserById(student.getId());
+            User userUpdate = QuestionTracker.getUserById(student.getId());
             if (userUpdate == null) {
                 userUpdate = student;
             }
@@ -74,7 +74,7 @@ public class StruggleViewController {
     }
 
     public void setDataStudent(User student){
-        this.user = questionTracker.getUserById(student.getId());
+        this.user = QuestionTracker.getUserById(student.getId());
         if (user != null) { this.user = student; }
 
         this.isTeacherMode = false;

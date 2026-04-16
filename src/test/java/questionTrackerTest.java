@@ -2,7 +2,7 @@
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
-import model.questionTracker;
+import model.QuestionTracker;
 import user.User;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -12,7 +12,7 @@ import static org.mockito.Mockito.*;
  */
 class questionTrackerTest {
 
-    questionTracker qt = new questionTracker();
+    QuestionTracker qt = new QuestionTracker();
 
     /**
      * Test whether logging in with correct credentials allows a user to access the system
@@ -24,11 +24,11 @@ class questionTrackerTest {
 
         User[] mockUsers = {user1};
         // Mockito to use real methods
-        try(MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)){
-            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+        try(MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)){
+            mocked.when(QuestionTracker::getUsers).thenReturn(mockUsers);
 
             // Try to log in with correct information
-            User result1 = questionTracker.logIn("teacher1", "password1");
+            User result1 = QuestionTracker.logIn("teacher1", "password1");
             // Expect to be let in to the system
             assertNotNull(result1);
             assertEquals("teacher1", result1.getUsername());
@@ -47,11 +47,11 @@ class questionTrackerTest {
         User[] mockUsers = {user2};
 
         // Mock the real getUsers method
-        try(MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)){
-            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+        try(MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)){
+            mocked.when(QuestionTracker::getUsers).thenReturn(mockUsers);
 
             // Try to login with incorrect information
-            User result =  questionTracker.logIn("student2", "wrongpassword2");
+            User result =  QuestionTracker.logIn("student2", "wrongpassword2");
             // Expect to not be able to access the system
             assertNull(result);
         }
@@ -66,11 +66,11 @@ class questionTrackerTest {
         User user3 = new User(3, "student3", "password3", false);
         User[] mockUsers = {user3};
 
-        try(MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)){
-            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+        try(MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)){
+            mocked.when(QuestionTracker::getUsers).thenReturn(mockUsers);
 
             // Try to login with completely different user details
-            User result =  questionTracker.logIn("newuser", "password3");
+            User result =  QuestionTracker.logIn("newuser", "password3");
             // Expect to not be able to access the system
             assertNull(result);
         }
@@ -86,11 +86,11 @@ class questionTrackerTest {
         User user2 = new User(2, "student2", "password2", false);
         User[] mockUsers = {user1, user2};
 
-        try(MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)){
-            mocked.when(questionTracker::getUsers).thenReturn(mockUsers);
+        try(MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)){
+            mocked.when(QuestionTracker::getUsers).thenReturn(mockUsers);
 
             // Try to return each of the users that were created
-            User[] result = questionTracker.getUsers();
+            User[] result = QuestionTracker.getUsers();
             // Expect to return both created users with their correct usernames
             assertNotNull(result);
             assertEquals(2, result.length);

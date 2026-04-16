@@ -3,7 +3,7 @@ package app;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import model.SetSession;
-import model.questionTracker;
+import model.QuestionTracker;
 import user.Question;
 import user.User;
 
@@ -142,7 +142,7 @@ public class SetSessionController {
         try {
             if(session.getIsStudySet()){
                 user.addStudySetScore(session.getSetId(), avg);
-                questionTracker.saveUser(user);
+                QuestionTracker.saveUser(user);
             }
         } catch (Exception e) { e.printStackTrace(); }
 

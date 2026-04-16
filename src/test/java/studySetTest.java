@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import model.QuestionMaker;
-import model.questionTracker;
+import model.QuestionTracker;
 import model.studySetMaker;
 import user.Question;
 import teacher.StudySet;
@@ -38,8 +38,8 @@ public class studySetTest {
     public void testCreateStudySet(){
         String username = "admin";
         String password = "admin123";
-        questionTracker.signUp(username, password, true);
-        User user1 = questionTracker.logIn(username, password);
+        QuestionTracker.signUp(username, password, true);
+        User user1 = QuestionTracker.logIn(username, password);
         Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -62,8 +62,8 @@ public class studySetTest {
     public void testCreateStudySetWithTags(){
         String username = "admin";
         String password = "admin123";
-        questionTracker.signUp(username, password, true);
-        User user1 = questionTracker.logIn(username, password);
+        QuestionTracker.signUp(username, password, true);
+        User user1 = QuestionTracker.logIn(username, password);
         Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -86,8 +86,8 @@ public class studySetTest {
     public void testCreateStudySetAddTags(){
         String username = "admin";
         String password = "admin123";
-        questionTracker.signUp(username, password, true);
-        User user1 = questionTracker.logIn(username, password);
+        QuestionTracker.signUp(username, password, true);
+        User user1 = QuestionTracker.logIn(username, password);
         Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -111,8 +111,8 @@ public class studySetTest {
     public void testCreateStudySetAddTagToAnExistingList(){
         String username = "admin";
         String password = "admin123";
-        questionTracker.signUp(username, password, true);
-        User user1 = questionTracker.logIn(username, password);
+        QuestionTracker.signUp(username, password, true);
+        User user1 = QuestionTracker.logIn(username, password);
         Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -141,8 +141,8 @@ public class studySetTest {
     public void testRetreiveStudySet(){
         String username = "admin";
         String password = "admin123";
-        questionTracker.signUp(username, password, true);
-        User user1 = questionTracker.logIn(username, password);
+        QuestionTracker.signUp(username, password, true);
+        User user1 = QuestionTracker.logIn(username, password);
         Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 
@@ -166,8 +166,8 @@ public class studySetTest {
     public void testCreateTwoStudySets(){
         String username = "phantom";
         String password = "admin123";
-        questionTracker.signUp(username, password, true);
-        User user1 = questionTracker.logIn(username, password);
+        QuestionTracker.signUp(username, password, true);
+        User user1 = QuestionTracker.logIn(username, password);
         Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
         Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 

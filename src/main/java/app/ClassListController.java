@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.util.Pair;
 import java.util.Optional;
-import model.questionTracker;
+import model.QuestionTracker;
 import user.User;
 
 import java.io.IOException;
@@ -141,7 +141,7 @@ public class ClassListController {
 
             logger.info("Creating class: " + name + " (" + code + ")");
     
-            questionTracker.createClass(name, code, user);
+            QuestionTracker.createClass(name, code, user);
         });
         loadClasses();
     }
@@ -157,7 +157,7 @@ public class ClassListController {
 
         result.ifPresent(code -> {
             logger.info("Joining class with code: " + code);
-            questionTracker.joinClass(user, code);
+            QuestionTracker.joinClass(user, code);
         });
         loadClasses();
     }

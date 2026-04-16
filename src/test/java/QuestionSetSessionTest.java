@@ -2,7 +2,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import model.SetSession;
-import model.questionTracker;
+import model.QuestionTracker;
 import user.Question;
 import user.QuestionSet;
 import user.User;
@@ -30,13 +30,13 @@ class QuestionSetSessionTest {
         QuestionSet set = new QuestionSet(1, "Simple Math", null);
         set.addQuestion(q1);
 
-        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
             // mock getQuestionSets to return our set
-            mocked.when(questionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});
             // stub saveUser for this specific student to no-op so test does not write files
-            mocked.when(() -> questionTracker.saveUser(any(User.class))).thenAnswer(invocation -> null);
+            mocked.when(() -> QuestionTracker.saveUser(any(User.class))).thenAnswer(invocation -> null);
 
-            SetSession session = questionTracker.createQuestionSetSession(1, student);
+            SetSession session = QuestionTracker.createQuestionSetSession(1, student);
             assertNotNull(session);
             assertTrue(session.hasNext());
 
@@ -49,7 +49,7 @@ class QuestionSetSessionTest {
             assertEquals(Arrays.asList("math", "arithmetic"), student.getWrongQuestionData().get(0));
 
             // verify saveUser called for this student
-            mocked.verify(() -> questionTracker.saveUser(any(User.class)));
+            mocked.verify(() -> QuestionTracker.saveUser(any(User.class)));
         }
     }
 
@@ -70,12 +70,12 @@ class QuestionSetSessionTest {
         set.addQuestion(q1);
         set.addQuestion(q2);
 
-        try (MockedStatic<questionTracker> mocked = mockStatic(questionTracker.class, CALLS_REAL_METHODS)) {
-            mocked.when(questionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[]{set});
             // do not expect saveUser to be called when marking correct
-            mocked.when(() -> questionTracker.saveUser(any(User.class))).thenAnswer(invocation -> null);
+            mocked.when(() -> QuestionTracker.saveUser(any(User.class))).thenAnswer(invocation -> null);
 
-            SetSession session = questionTracker.createQuestionSetSession(2, student);
+            SetSession session = QuestionTracker.createQuestionSetSession(2, student);
             assertNotNull(session);
 
             Question a1 = session.nextQuestion();

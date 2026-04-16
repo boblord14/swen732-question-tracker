@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.BeforeEach;
 
-import model.questionTracker;
+import model.QuestionTracker;
 import user.User;
 import user.Classroom;
 
@@ -33,7 +33,7 @@ public class classroomTest {
         String name = "Classroom Name";
         String code = "1234";
 
-        Classroom classroom = questionTracker.createClass(name, code, user);
+        Classroom classroom = QuestionTracker.createClass(name, code, user);
 
         assertEquals(name, classroom.getName());
         assertEquals(code, classroom.getCode());
@@ -50,7 +50,7 @@ public class classroomTest {
         String name = "Classroom Name";
         String code = "1234";
 
-        Classroom classroom = questionTracker.createClass(name, code, user);
+        Classroom classroom = QuestionTracker.createClass(name, code, user);
 
         assertNull(classroom);
     }
@@ -65,8 +65,8 @@ public class classroomTest {
         String name = "Classroom Name";
         String code = "1234";
 
-        Classroom classroom = questionTracker.createClass(name, code, user);
-        Classroom classroom2 = questionTracker.createClass(name, code, user);
+        Classroom classroom = QuestionTracker.createClass(name, code, user);
+        Classroom classroom2 = QuestionTracker.createClass(name, code, user);
 
         assertNotNull(classroom);
         assertNull(classroom2);
@@ -77,7 +77,7 @@ public class classroomTest {
     void testEmptyClassList() {
         //questionTracker qt = new questionTracker();
 
-        Classroom[] classList = questionTracker.getClasses();
+        Classroom[] classList = QuestionTracker.getClasses();
 
         assertEquals(0, classList.length); //no saved classes, should be empty
     }
@@ -92,9 +92,9 @@ public class classroomTest {
         String name = "Classroom Name";
         String code = "1234";
 
-        questionTracker.createClass(name, code, user);
+        QuestionTracker.createClass(name, code, user);
 
-        Classroom[] classList = questionTracker.getClasses();
+        Classroom[] classList = QuestionTracker.getClasses();
 
         assertEquals(1, classList.length);
         assertEquals(name, classList[0].getName());
@@ -112,13 +112,13 @@ public class classroomTest {
         String name = "Classroom Name";
         String code = "1234";
 
-        questionTracker.createClass(name, code, user);
+        QuestionTracker.createClass(name, code, user);
 
         User student = new User(2, "Student", "test_stu", false);
 
-        boolean success = questionTracker.joinClass(student, code);
+        boolean success = QuestionTracker.joinClass(student, code);
 
-        Classroom[] classList = questionTracker.getClasses();
+        Classroom[] classList = QuestionTracker.getClasses();
 
         assertTrue(success);
         assertEquals(1, classList[0].getStudents().size());
@@ -135,16 +135,16 @@ public class classroomTest {
         String name = "Classroom Name";
         String code = "1234";
 
-        questionTracker.createClass(name, code, user);
+        QuestionTracker.createClass(name, code, user);
 
         String username = "Student";
         User student = new User(2, username, "test_stu", false);
 
         String badCode = "nope!";
 
-        boolean success = questionTracker.joinClass(student, badCode);
+        boolean success = QuestionTracker.joinClass(student, badCode);
 
-        Classroom[] classList = questionTracker.getClasses();
+        Classroom[] classList = QuestionTracker.getClasses();
 
         assertFalse(success);
         assertEquals(0, classList[0].getStudents().size());
@@ -160,15 +160,15 @@ public class classroomTest {
         String name = "Classroom Name";
         String code = "1234";
 
-        questionTracker.createClass(name, code, user);
+        QuestionTracker.createClass(name, code, user);
 
         String username = "Student";
         User student = new User(2, "Student", "test_stu", false);
 
-        boolean firstSuccess = questionTracker.joinClass(student, code);
-        boolean secondSuccess = questionTracker.joinClass(student, code);
+        boolean firstSuccess = QuestionTracker.joinClass(student, code);
+        boolean secondSuccess = QuestionTracker.joinClass(student, code);
 
-        Classroom[] classList = questionTracker.getClasses();
+        Classroom[] classList = QuestionTracker.getClasses();
 
         assertTrue(firstSuccess);
         assertFalse(secondSuccess);

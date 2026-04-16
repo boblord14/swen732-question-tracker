@@ -1,6 +1,5 @@
 package app;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import user.User;
-import model.questionTracker;
+import model.QuestionTracker;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -28,7 +27,7 @@ public class SignupController {
         String username = usernameField.getText();
         String password = passwordField.getText();
         
-        users = questionTracker.getUsers();
+        users = QuestionTracker.getUsers();
         User found = Arrays.stream(users)
                 .filter(u -> u.getUsername().equals(username))
                 .findFirst()
@@ -38,7 +37,7 @@ public class SignupController {
             errorLabel.setText("This username already exists");
             return;
         }
-        User realUser = questionTracker.signUp(username, password, teacherBox.isSelected());
+        User realUser = QuestionTracker.signUp(username, password, teacherBox.isSelected());
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));

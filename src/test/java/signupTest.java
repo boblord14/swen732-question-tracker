@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 
-import model.questionTracker;
+import model.QuestionTracker;
 import user.User;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class signupTest {
         String username = "User0";
         String password = "Password0";
 
-        User signup_info = questionTracker.signUp(username, password, false);
+        User signup_info = QuestionTracker.signUp(username, password, false);
 
         assertEquals(signup_info.getUsername(), "User0");
         assertEquals(signup_info.getPassword(), "Password0");
@@ -41,7 +41,7 @@ public class signupTest {
         String password = "TPassword1";
 
         
-        User signup = questionTracker.signUp(username, password, true);
+        User signup = QuestionTracker.signUp(username, password, true);
 
         assertEquals(signup.getUsername(), "Teacher1");
         assertEquals(signup.getPassword(), "TPassword1");

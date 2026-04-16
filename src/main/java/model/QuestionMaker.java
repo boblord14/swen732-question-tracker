@@ -1,12 +1,10 @@
 package model;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import user.Question;
-import java.util.logging.Logger;
 
 
 public class QuestionMaker {

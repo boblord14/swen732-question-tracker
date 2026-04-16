@@ -13,7 +13,7 @@ import javafx.event.ActionEvent;
 
 import model.BaseSet;
 import model.SetSession;
-import model.questionTracker;
+import model.QuestionTracker;
 import model.studySetMaker;
 import teacher.StudySet;
 import user.Classroom;
@@ -38,7 +38,7 @@ public class ClassViewController {
     private static final  String CSS_SHEET = "/styles/styles.css";
 
     public void setData(String classroomName, User user) {
-        this.classroom = questionTracker.getClassByName(classroomName);
+        this.classroom = QuestionTracker.getClassByName(classroomName);
         this.user = user;
 
         loadClassData();
@@ -92,7 +92,7 @@ public class ClassViewController {
 
         for(User student : students){
             //done since the student in the class and the student object itself can diverge at times
-            User realStudentUser = questionTracker.getUserById(student.getId());
+            User realStudentUser = QuestionTracker.getUserById(student.getId());
             if (realStudentUser == null) realStudentUser = student; //pls dont break k thx
 
             String name = realStudentUser.getUsername();
@@ -122,7 +122,7 @@ public class ClassViewController {
                 String subj = ((StudySet) tset).getSubject();
                 displayName = tset.getName() + (subj != null && !subj.isBlank() ? " (" + subj + ")" : "");
             } else {
-                tset = questionTracker.getQuestionSetById(id);
+                tset = QuestionTracker.getQuestionSetById(id);
                 if (tset == null) continue;
                 displayName = tset.getName() + " (question set)";
             }
@@ -243,7 +243,7 @@ public class ClassViewController {
         // also add to user's owned sets and persist user
         try {
             user.addQuestionSetId(set.getId());
-            questionTracker.saveUser(user);
+            QuestionTracker.saveUser(user);
         } catch (Exception ex) { ex.printStackTrace(); }
 
     }
@@ -252,7 +252,7 @@ public class ClassViewController {
 
     private void assignSetToClass(StudySet set){
         // assign to class and persist
-        boolean assigned = questionTracker.assignStudySetToClass(classroom.getName(), set.getId());
+        boolean assigned = QuestionTracker.assignStudySetToClass(classroom.getName(), set.getId());
         if (assigned) {
             // update local classroom object
             classroom.addAssignedStudySetId(set.getId());

@@ -1,13 +1,12 @@
 package app;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import model.questionTracker;
+import model.QuestionTracker;
 import user.User;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class LoginController {
         String username = usernameField.getText();
         String password = passwordField.getText();
         
-        users = questionTracker.getUsers();
+        users = QuestionTracker.getUsers();
         User found = Arrays.stream(users)
                 .filter(u -> u.getUsername().equals(username) &&
                             u.getPassword().equals(password))
