@@ -1,5 +1,6 @@
 [![codecov](https://codecov.io/github/boblord14/swen732-question-tracker/graph/badge.svg?token=5ALJ2PRTTR)](https://codecov.io/github/boblord14/swen732-question-tracker)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=boblord14_swen732-question-tracker)](https://sonarcloud.io/summary/new_code?id=boblord14_swen732-question-tracker)
 
 ### Project Overview
 
