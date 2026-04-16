@@ -402,16 +402,18 @@ public class questionTracker {
         QuestionSet[] sets = getQuestionSets();
         boolean changed = false;
         for (QuestionSet s : sets){
-            if (s != null && s.getId() == setId){
-                Question q = s.findQuestionById(questionId);
-                if (q != null){
-                    if (newText != null) q.setText(newText);
-                    if (newAnswer != null) q.setAnswer(newAnswer);
-                    if (newTags != null) q.setTags(newTags);
-                    changed = true;
-                }
-                break;
+            if (!(s != null && s.getId() == setId)) {
+                continue;
             }
+            Question q = s.findQuestionById(questionId);
+            if (q == null) {
+                continue;
+            }
+            if (newText != null) q.setText(newText);
+            if (newAnswer != null) q.setAnswer(newAnswer);
+            if (newTags != null) q.setTags(newTags);
+            changed = true;
+            break;
         }
         if (changed) saveQuestionSets(sets);
         return changed;
@@ -425,16 +427,18 @@ public class questionTracker {
         QuestionSet[] sets = getQuestionSets();
         boolean changed = false;
         for (QuestionSet s : sets){
-            if (s != null && s.getId() == setId){
-                if (s.getCreator() == null || !Objects.equals(s.getCreator(), requester.getUsername())){
-                    logger.info("Only the creator may edit this question set.");
-                    return false;
-                }
-                if (newName != null) s.setName(newName);
-                if (newTags != null) s.setTags(newTags);
-                changed = true;
-                break;
+            if (!(s != null && s.getId() == setId)){
+                continue;
             }
+            if (s.getCreator() == null || !Objects.equals(s.getCreator(), requester.getUsername())){
+                logger.info("Only the creator may edit this question set.");
+                return false;
+            }
+            if (newName != null) s.setName(newName);
+            if (newTags != null) s.setTags(newTags);
+            changed = true;
+            break;
+
         }
         if (changed) saveQuestionSets(sets);
         return changed;

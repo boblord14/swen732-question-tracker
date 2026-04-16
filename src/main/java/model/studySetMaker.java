@@ -16,14 +16,13 @@ import user.User;
 
 
 public class studySetMaker {
-    public static void main(String[] args) {
-        
-    }
+
+    private static final String STUDY_SET_PATH = "src/main/sets.json";
 
     //Adds the set to the json file
     private static void saveSet(StudySet set){
         ObjectMapper mapper = new ObjectMapper();
-        File file = new File("src/main/sets.json");
+        File file = new File(STUDY_SET_PATH);
         try {
             StudySet[] existing = new StudySet[0];
 
@@ -44,7 +43,7 @@ public class studySetMaker {
     private static void editTags(StudySet set, String username, String title){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            StudySet[] data = mapper.readValue(new File("src/main/sets.json"), StudySet[].class);
+            StudySet[] data = mapper.readValue(new File(STUDY_SET_PATH), StudySet[].class);
             for (int i = 0; i < data.length; i++) {
                 if (username.equals(data[i].getCreator()) && Objects.equals(title, data[i].getName())) {
                     data[i] = set;   // <-- THIS is the important part
@@ -53,7 +52,7 @@ public class studySetMaker {
             }
 
 
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("src/main/sets.json"), data);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(STUDY_SET_PATH), data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,7 +64,7 @@ public class studySetMaker {
         
         ObjectMapper mapper = new ObjectMapper();
         try {
-            StudySet[] data = mapper.readValue(new File("src/main/sets.json"), StudySet[].class);
+            StudySet[] data = mapper.readValue(new File(STUDY_SET_PATH), StudySet[].class);
             return Arrays.stream(data)
                 .filter(item -> {
                     boolean creatorMatches = username.equals(item.getCreator());
@@ -84,7 +83,7 @@ public class studySetMaker {
     public static StudySet getSetById(int id) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            StudySet[] data = mapper.readValue(new File("src/main/sets.json"), StudySet[].class);
+            StudySet[] data = mapper.readValue(new File(STUDY_SET_PATH), StudySet[].class);
             return Arrays.stream(data)
                 .filter(item -> item.getId() == id)
                 .findFirst()
@@ -98,7 +97,7 @@ public class studySetMaker {
     public static StudySet[] getAllSets() {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            File file = new File("src/main/sets.json");
+            File file = new File(STUDY_SET_PATH);
             if (!file.exists() || file.length() == 0) return new StudySet[0];
             StudySet[] data = mapper.readValue(file, StudySet[].class);
             return data;
@@ -165,7 +164,7 @@ public class studySetMaker {
     public static long getSetCount(String username){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            StudySet[] data = mapper.readValue(new File("src/main/sets.json"), StudySet[].class);
+            StudySet[] data = mapper.readValue(new File(STUDY_SET_PATH), StudySet[].class);
             return Arrays.stream(data)
                 .filter(item -> username.equals(item.getCreator()))
                 .count();
@@ -244,7 +243,7 @@ public class studySetMaker {
     private static void saveAllSets(StudySet[] sets) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("src/main/sets.json"), sets);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(STUDY_SET_PATH), sets);
         } catch (Exception e) { e.printStackTrace(); }
     }
 
