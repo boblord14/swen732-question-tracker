@@ -16,9 +16,13 @@ import user.User;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
+
 
 public class ClassListController {
     private User user;
+    Logger logger = Logger.getLogger(getClass().getName());
+
 
     public void setUser(User user) {
         this.user = user;
@@ -65,7 +69,7 @@ public class ClassListController {
             btn.setMaxWidth(Double.MAX_VALUE); // fill VBox width
 
             btn.setOnAction(e -> {
-                System.out.println("Clicked: " + c);
+                logger.info("Clicked: " + c);
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ClassView.fxml"));
                     Parent root = loader.load();
@@ -135,8 +139,8 @@ public class ClassListController {
         result.ifPresent(data -> {
             String name = data.getKey();
             String code = data.getValue();
-    
-            System.out.println("Creating class: " + name + " (" + code + ")");
+
+            logger.info("Creating class: " + name + " (" + code + ")");
     
             questionTracker.createClass(name, code, user);
         });
@@ -153,7 +157,7 @@ public class ClassListController {
         Optional<String> result = dialog.showAndWait();
 
         result.ifPresent(code -> {
-            System.out.println("Joining class with code: " + code);
+            logger.info("Joining class with code: " + code);
             questionTracker.joinClass(user, code);
         });
         loadClasses();
