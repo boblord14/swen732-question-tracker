@@ -12,7 +12,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import model.questionMaker;
+import model.QuestionMaker;
 import model.questionTracker;
 import model.studySetMaker;
 import user.Question;
@@ -40,8 +40,8 @@ public class studySetTest {
         String password = "admin123";
         questionTracker.signUp(username, password, true);
         User user1 = questionTracker.logIn(username, password);
-        Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
-        Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
+        Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
+        Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
@@ -64,8 +64,8 @@ public class studySetTest {
         String password = "admin123";
         questionTracker.signUp(username, password, true);
         User user1 = questionTracker.logIn(username, password);
-        Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
-        Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
+        Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
+        Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
@@ -88,8 +88,8 @@ public class studySetTest {
         String password = "admin123";
         questionTracker.signUp(username, password, true);
         User user1 = questionTracker.logIn(username, password);
-        Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
-        Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
+        Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
+        Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
@@ -113,8 +113,8 @@ public class studySetTest {
         String password = "admin123";
         questionTracker.signUp(username, password, true);
         User user1 = questionTracker.logIn(username, password);
-        Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
-        Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
+        Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
+        Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
@@ -143,8 +143,8 @@ public class studySetTest {
         String password = "admin123";
         questionTracker.signUp(username, password, true);
         User user1 = questionTracker.logIn(username, password);
-        Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
-        Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
+        Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
+        Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
@@ -168,8 +168,8 @@ public class studySetTest {
         String password = "admin123";
         questionTracker.signUp(username, password, true);
         User user1 = questionTracker.logIn(username, password);
-        Question q1 = questionMaker.createQuestion("What's 2 + 2?", "four");
-        Question q2 = questionMaker.createQuestion("What's 5 + 2?", "seven");
+        Question q1 = QuestionMaker.createQuestion("What's 2 + 2?", "four");
+        Question q2 = QuestionMaker.createQuestion("What's 5 + 2?", "seven");
 
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
