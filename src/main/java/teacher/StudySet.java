@@ -12,9 +12,9 @@ public class StudySet implements BaseSet {
     private String name;
     private String creator;
     private String subject;
-    private ArrayList<String> tags;
+    private List<String> tags;
     @JsonProperty("questionSet")
-    private ArrayList<Question> questionSet;
+    private List<Question> questionSet;
 
     public StudySet() {}
 
@@ -46,11 +46,11 @@ public class StudySet implements BaseSet {
         this.id = id;
     }
 
-    public void setTags(ArrayList<String> tags){
+    public void setTags(List<String> tags){
         this.tags = tags;
     }
 
-    public void setQuestionSet(ArrayList<Question> questionSet){
+    public void setQuestionSet(List<Question> questionSet){
         this.questionSet = questionSet;
     }
 

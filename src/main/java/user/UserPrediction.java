@@ -8,8 +8,8 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.SingularValueDecomposition;
 
 public class UserPrediction {
-    public double[][] userQuestionDataArray;
-    public String[] tags;
+    double[][] userQuestionDataArray;
+    String[] tags;
 
     public UserPrediction(User user){
         List<List<String>> questionData = user.getWrongQuestionData();

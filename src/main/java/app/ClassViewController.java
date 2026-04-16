@@ -14,7 +14,7 @@ import javafx.event.ActionEvent;
 import model.BaseSet;
 import model.SetSession;
 import model.QuestionTracker;
-import model.studySetMaker;
+import model.StudySetMaker;
 import teacher.StudySet;
 import user.Classroom;
 import user.User;
@@ -116,7 +116,7 @@ public class ClassViewController {
         if (ids == null || ids.isEmpty()) return;
         for (Integer id : ids) {
 
-            BaseSet tset = studySetMaker.getSetById(id);
+            BaseSet tset = StudySetMaker.getSetById(id);
             String displayName;
             if (tset != null) {
                 String subj = ((StudySet) tset).getSubject();
@@ -139,7 +139,7 @@ public class ClassViewController {
 
     public void loadTeacherStudySetView(List<Integer> ids){
         //teachers can see all their owned study sets, even unassigned ones
-        StudySet[] allSets = studySetMaker.getAllSets();
+        StudySet[] allSets = StudySetMaker.getAllSets();
         for(StudySet set : allSets) {
             if (!user.getUsername().equals(set.getCreator())) continue;
 
@@ -235,7 +235,7 @@ public class ClassViewController {
         Optional<String> subjOpt = subjDlg.showAndWait();
         String subject = subjOpt.map(String::trim).orElse("");
 
-        teacher.StudySet set = studySetMaker.createSet(new ArrayList<>(), user, title, subject);
+        teacher.StudySet set = StudySetMaker.createSet(new ArrayList<>(), user, title, subject);
 
         classroom.addStudySet(set);
         loadStudySets();

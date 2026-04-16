@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import model.SearchService;
 import model.SetSession;
 import model.QuestionTracker;
-import model.studySetMaker;
+import model.StudySetMaker;
 import teacher.StudySet;
 import user.Question;
 import user.QuestionSet;
@@ -177,7 +177,7 @@ public class StruggleViewController {
         if(struggleVector.isEmpty()){ return; }
 
         //funny name generation function to get the number of struggle sets generated already for a given class
-        StudySet[] existing = studySetMaker.getAllSets();
+        StudySet[] existing = StudySetMaker.getAllSets();
         long count = Arrays.stream(existing)
                 .filter(s -> s != null && user.getUsername().equals(s.getCreator())
                         && s.getName() != null && s.getName().startsWith(classroomName + " Struggle Set"))

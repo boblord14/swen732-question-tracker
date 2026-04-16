@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import model.QuestionMaker;
 import model.QuestionTracker;
-import model.studySetMaker;
+import model.StudySetMaker;
 import user.Question;
 import teacher.StudySet;
 import user.User;
@@ -46,7 +46,7 @@ public class studySetTest {
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math");
+        StudySet set1 = StudySetMaker.createSet(list, user1, "Math test Prep", "Math");
 
         assertNotNull(set1);
 
@@ -75,7 +75,7 @@ public class studySetTest {
         tags.add("Math");
         tags.add("test prep");
 
-        StudySet set1 = studySetMaker.createSet(list, user1, "Math test Prep", "Math", tags);
+        StudySet set1 = StudySetMaker.createSet(list, user1, "Math test Prep", "Math", tags);
 
         ArrayList<String> tagList = (ArrayList<String>) set1.getTags();
         assertEquals(tagList, tags);
@@ -99,8 +99,8 @@ public class studySetTest {
         tags.add("Student Aid");
         tags.add("test prep");
 
-        studySetMaker.createSet(list, user1, "Math test Prep", "Math");
-        StudySet set2 = studySetMaker.addTags(user1.getUsername(), "Math test Prep", tags);
+        StudySetMaker.createSet(list, user1, "Math test Prep", "Math");
+        StudySet set2 = StudySetMaker.addTags(user1.getUsername(), "Math test Prep", tags);
         ArrayList<String> tagList = (ArrayList<String>) set2.getTags();
 
         assertEquals(tagList, tags);
@@ -127,8 +127,8 @@ public class studySetTest {
         ArrayList<String> newTag = new ArrayList<>();
         newTag.add("Math");
 
-        studySetMaker.createSet(list, user1, "Math test Prep", "Math", tags);
-        StudySet set2 = studySetMaker.addTags(user1.getUsername(), "Math test Prep", newTag);
+        StudySetMaker.createSet(list, user1, "Math test Prep", "Math", tags);
+        StudySet set2 = StudySetMaker.addTags(user1.getUsername(), "Math test Prep", newTag);
         ArrayList<String> tagList = (ArrayList<String>) set2.getTags();
 
         System.out.println(tagList.get(2));
@@ -149,8 +149,8 @@ public class studySetTest {
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        studySetMaker.createSet(list, user1, "Math test Prep", "Math");
-        StudySet set2 = studySetMaker.getSet(user1.getUsername(), "Math test Prep");
+        StudySetMaker.createSet(list, user1, "Math test Prep", "Math");
+        StudySet set2 = StudySetMaker.getSet(user1.getUsername(), "Math test Prep");
 
         assertNotNull(set2);
 
@@ -174,10 +174,10 @@ public class studySetTest {
         ArrayList<Question> list = new ArrayList<>();
         list.add(q1);
         list.add(q2);
-        studySetMaker.createSet(list, user1, "Math test Prep", "Math");
-        studySetMaker.createSet(list, user1, "Moth test Prep", "Math");
+        StudySetMaker.createSet(list, user1, "Math test Prep", "Math");
+        StudySetMaker.createSet(list, user1, "Moth test Prep", "Math");
 
-        long count = studySetMaker.getSetCount(user1.getUsername());
+        long count = StudySetMaker.getSetCount(user1.getUsername());
         System.out.println(count);
         assertEquals(count, 2);
     }

@@ -51,7 +51,7 @@ public class SearchService {
         }
 
         //search study sets too
-        for (StudySet s : studySetMaker.getAllSets()) {
+        for (StudySet s : StudySetMaker.getAllSets()) {
             if (isValidSet(s)) continue;
             for (Question q : s.getQuestions()) {
                 String key = "study-" + s.getId() + "-" + q.getId();

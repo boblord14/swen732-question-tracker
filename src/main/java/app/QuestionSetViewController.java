@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.SetSession;
 import model.QuestionTracker;
-import model.studySetMaker;
+import model.StudySetMaker;
 import teacher.StudySet;
 import user.Question;
 import user.QuestionSet;
@@ -92,8 +92,8 @@ public class QuestionSetViewController {
             deleteBtn.setManaged(isOwner);
 
             deleteBtn.setOnAction(e -> {
-                studySetMaker.removeQuestionFromStudySet(studySet.getId(), q.getId());
-                studySet = studySetMaker.getSetById(studySet.getId());
+                StudySetMaker.removeQuestionFromStudySet(studySet.getId(), q.getId());
+                studySet = StudySetMaker.getSetById(studySet.getId());
                 setDataStudySet(studySet, user, returnClassName);
             });
 
@@ -221,8 +221,8 @@ public class QuestionSetViewController {
         dialog.setResultConverter(btn -> btn == addBtn ? Arrays.asList(qField.getText(), aField.getText(), tagsField.getText()) : null);
         dialog.showAndWait().ifPresent(list -> {
             List<String> tags = Arrays.stream(list.get(2).split(",")).map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
-            studySetMaker.addQuestionToStudySet(studySet.getId(), list.get(0), list.get(1), tags);
-            studySet = studySetMaker.getSetById(studySet.getId());
+            StudySetMaker.addQuestionToStudySet(studySet.getId(), list.get(0), list.get(1), tags);
+            studySet = StudySetMaker.getSetById(studySet.getId());
             setDataStudySet(studySet, user, returnClassName);
         });
     }
@@ -231,7 +231,7 @@ public class QuestionSetViewController {
     private void handleTakeSet() {
         try {
             SetSession session = isStudySetMode
-                    ? model.studySetMaker.createStudySetSession(studySet.getId(), user)
+                    ? StudySetMaker.createStudySetSession(studySet.getId(), user)
                     : QuestionTracker.createQuestionSetSession(set.getId(), user);
             if (session == null) return;
 

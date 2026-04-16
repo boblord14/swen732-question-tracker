@@ -18,7 +18,7 @@ public class QuestionTracker {
 
     static Logger logger = Logger.getLogger(QuestionTracker.class.getName());
 
-    public QuestionTracker() {}
+    private QuestionTracker() {}
 
     public static User logIn(String username, String password){
         User[] users = getUsers();
@@ -466,7 +466,7 @@ public class QuestionTracker {
             if (c != null && c.getName() != null && c.getName().equals(className)){
                 // add id to classroom and try to load StudySet for runtime list
                 c.addAssignedStudySetId(setId);
-                teacher.StudySet set = model.studySetMaker.getSetById(setId);
+                teacher.StudySet set = StudySetMaker.getSetById(setId);
                 if (set != null) c.addStudySet(set);
                 changed = true;
                 break;

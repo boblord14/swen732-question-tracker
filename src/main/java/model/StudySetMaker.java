@@ -12,11 +12,11 @@ import teacher.StudySet;
 import user.User;
 
 
-public class studySetMaker {
+public class StudySetMaker {
 
     private static final String STUDY_SET_PATH = "src/main/sets.json";
 
-    private studySetMaker(){}
+    private StudySetMaker(){}
 
     //Adds the set to the json file
     private static void saveSet(StudySet set){
@@ -98,15 +98,14 @@ public class studySetMaker {
         try {
             File file = new File(STUDY_SET_PATH);
             if (!file.exists() || file.length() == 0) return new StudySet[0];
-            StudySet[] data = mapper.readValue(file, StudySet[].class);
-            return data;
+            return mapper.readValue(file, StudySet[].class);
         } catch (Exception e) {
             e.printStackTrace();
             return new StudySet[0];
         }
     }
 
-    public static StudySet addTags(String username, String title, ArrayList<String> newTags){
+    public static StudySet addTags(String username, String title, List<String> newTags){
         StudySet set = getSet(username, title);
         ArrayList<String> tags = (ArrayList<String>) set.getTags();
         
