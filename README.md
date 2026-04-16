@@ -43,5 +43,5 @@ Github for source control
 Branch first, pass tests, pr, merge to main
 
 ### Contact/Report
-Issues function on the repo exists for anything needed here. 
+Issues function on the repo exists for anything needed here 
 
