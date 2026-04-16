@@ -78,77 +78,9 @@ public class ClassViewController {
         List<Integer> ids = classroom.getAssignedStudySetIds();
 
         if (user.getIsTeacher()) {
-            //teachers can see all their owned study sets, even unassigned ones
-            StudySet[] allSets = studySetMaker.getAllSets();
-            for(StudySet set : allSets) {
-                if (!user.getUsername().equals(set.getCreator())) continue;
-
-                VBox rowGroup = new VBox(0);
-
-                HBox row = new HBox(10);
-                Label lbl = new Label(set.getName());
-                lbl.setMaxWidth(Double.MAX_VALUE);
-                HBox.setHgrow(lbl, javafx.scene.layout.Priority.ALWAYS);
-
-                Button editBtn = new Button("Edit");
-                editBtn.setOnAction(e -> openStudySetEditor(set));
-
-                //if already assigned, disable the assign button
-                boolean alreadyAssigned = ids.contains(set.getId());
-                Button assignBtn = new Button(alreadyAssigned ? "Assigned" : "Assign");
-                assignBtn.setDisable(alreadyAssigned);
-
-                StudySet finalS = set;
-                assignBtn.setOnAction(e -> {
-                    assignSetToClass(finalS);
-                    assignBtn.setText("Assigned");
-                    assignBtn.setDisable(true);
-                });
-
-                VBox gradesBox = new VBox(4);
-                gradesBox.setVisible(false);
-                gradesBox.setManaged(false);
-                gradesBox.setStyle("-fx-padding: 4 0 4 16;");
-                buildGradesBox(gradesBox, set.getId());
-
-                Button gradesBtn = new Button("Grades v");
-                boolean isSetAssigned = classroom.getAssignedStudySetIds().contains(set.getId());
-                gradesBtn.setVisible(isSetAssigned);
-                gradesBtn.setManaged(isSetAssigned);
-                gradesBtn.setOnAction(e -> {
-                    boolean nowVisible = !gradesBox.isVisible();
-                    gradesBox.setVisible(nowVisible);
-                    gradesBox.setManaged(nowVisible);
-                    gradesBtn.setText(nowVisible ? "Grades ^" : "Grades v");
-                });
-
-                row.getChildren().addAll(lbl, editBtn, assignBtn, gradesBtn);
-                rowGroup.getChildren().addAll(row, gradesBox);
-                studySetListVBox.getChildren().add(rowGroup);
-            }
+            loadTeacherStudySetView(ids);
         } else {
-            if (ids == null || ids.isEmpty()) return;
-            for (Integer id : ids) {
-
-                BaseSet tset = studySetMaker.getSetById(id);
-                String displayName;
-                if (tset != null) {
-                    String subj = ((StudySet) tset).getSubject();
-                    displayName = tset.getName() + (subj != null && !subj.isBlank() ? " (" + subj + ")" : "");
-                } else {
-                    tset = questionTracker.getQuestionSetById(id);
-                    if (tset == null) continue;
-                    displayName = tset.getName() + " (question set)";
-                }
-
-                HBox row = new HBox(10);
-                Label lbl = new Label(displayName);
-                Button takeBtn = new Button("Take");
-                BaseSet finalTset = tset;
-                takeBtn.setOnAction(e -> startSession(finalTset));
-                row.getChildren().addAll(lbl, takeBtn);
-                studySetListVBox.getChildren().add(row);
-            }
+            loadStudentStudySetView(ids);
         }
     }
 
@@ -178,6 +110,82 @@ public class ClassViewController {
             Label entry = new Label("- " + name + ": " + scoreText);
             entry.setStyle("-fx-font-size: 13px;");
             gradesBox.getChildren().add(entry);
+        }
+    }
+
+    public void loadStudentStudySetView(List<Integer> ids){
+        if (ids == null || ids.isEmpty()) return;
+        for (Integer id : ids) {
+
+            BaseSet tset = studySetMaker.getSetById(id);
+            String displayName;
+            if (tset != null) {
+                String subj = ((StudySet) tset).getSubject();
+                displayName = tset.getName() + (subj != null && !subj.isBlank() ? " (" + subj + ")" : "");
+            } else {
+                tset = questionTracker.getQuestionSetById(id);
+                if (tset == null) continue;
+                displayName = tset.getName() + " (question set)";
+            }
+
+            HBox row = new HBox(10);
+            Label lbl = new Label(displayName);
+            Button takeBtn = new Button("Take");
+            BaseSet finalTset = tset;
+            takeBtn.setOnAction(e -> startSession(finalTset));
+            row.getChildren().addAll(lbl, takeBtn);
+            studySetListVBox.getChildren().add(row);
+        }
+    }
+
+    public void loadTeacherStudySetView(List<Integer> ids){
+        //teachers can see all their owned study sets, even unassigned ones
+        StudySet[] allSets = studySetMaker.getAllSets();
+        for(StudySet set : allSets) {
+            if (!user.getUsername().equals(set.getCreator())) continue;
+
+            VBox rowGroup = new VBox(0);
+
+            HBox row = new HBox(10);
+            Label lbl = new Label(set.getName());
+            lbl.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(lbl, javafx.scene.layout.Priority.ALWAYS);
+
+            Button editBtn = new Button("Edit");
+            editBtn.setOnAction(e -> openStudySetEditor(set));
+
+            //if already assigned, disable the assign button
+            boolean alreadyAssigned = ids.contains(set.getId());
+            Button assignBtn = new Button(alreadyAssigned ? "Assigned" : "Assign");
+            assignBtn.setDisable(alreadyAssigned);
+
+            StudySet finalS = set;
+            assignBtn.setOnAction(e -> {
+                assignSetToClass(finalS);
+                assignBtn.setText("Assigned");
+                assignBtn.setDisable(true);
+            });
+
+            VBox gradesBox = new VBox(4);
+            gradesBox.setVisible(false);
+            gradesBox.setManaged(false);
+            gradesBox.setStyle("-fx-padding: 4 0 4 16;");
+            buildGradesBox(gradesBox, set.getId());
+
+            Button gradesBtn = new Button("Grades v");
+            boolean isSetAssigned = classroom.getAssignedStudySetIds().contains(set.getId());
+            gradesBtn.setVisible(isSetAssigned);
+            gradesBtn.setManaged(isSetAssigned);
+            gradesBtn.setOnAction(e -> {
+                boolean nowVisible = !gradesBox.isVisible();
+                gradesBox.setVisible(nowVisible);
+                gradesBox.setManaged(nowVisible);
+                gradesBtn.setText(nowVisible ? "Grades ^" : "Grades v");
+            });
+
+            row.getChildren().addAll(lbl, editBtn, assignBtn, gradesBtn);
+            rowGroup.getChildren().addAll(row, gradesBox);
+            studySetListVBox.getChildren().add(rowGroup);
         }
     }
 
