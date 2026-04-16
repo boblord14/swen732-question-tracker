@@ -75,10 +75,6 @@
   -fx-text-fill: #1f2937;
 }
 
-.button:focused {
-  -fx-effect: innershadow(two-pass-box, rgba(59,130,246,0.12), 6, 0.0, 0, 0);
-}
-
 /* Inputs */
 .text-field, .text-area {
   background-color: white;
