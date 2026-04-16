@@ -13,15 +13,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class questionTracker {
-    public static void main(String[] args) {
-        User user = logIn("admin", "admin123");
-        if (user != null) {
-            System.out.println("Login successful for user: " + user.getUsername());
-        } else {
-            System.out.println("Login failed.");
-        }
-    }
-
     public int genericAddTest(int a, int b){
         return a + b;
     }
@@ -61,7 +52,6 @@ public class questionTracker {
         // Check if username already exists
         for (User user : users) {
             if (user.getUsername().equals(username)) {
-                System.out.println("Username already exists.");
                 return null;
             }
         }
@@ -86,7 +76,6 @@ public class questionTracker {
         // Save to file
         saveUsers(updatedUsers);
         
-        System.out.println("User registered successfully: " + username);
         return newUser;
     }
 
@@ -133,7 +122,6 @@ public class questionTracker {
      */
     public static Classroom createClass(String name, String code, User teacher){
         if (teacher == null || !teacher.getIsTeacher()){
-            System.out.println("Only teachers can create classes.");
             return null;
         }
 
@@ -141,7 +129,6 @@ public class questionTracker {
         // ensure code uniqueness
         for (Classroom c : classes){
             if (c != null && c.getCode() != null && c.getCode().equals(code)){
-                System.out.println("A class with this code already exists.");
                 return null;
             }
         }
@@ -160,7 +147,6 @@ public class questionTracker {
             ex.printStackTrace();
         }
 
-        System.out.println("Class created: " + name + " (" + code + ") by " + teacher.getUsername());
         return newClass;
     }
 
@@ -176,10 +162,7 @@ public class questionTracker {
                 // add student
                 if (c.addStudent(student)){
                     changed = true;
-                    System.out.println(student.getUsername() + " joined class " + c.getName());
-                } else {
-                    System.out.println(student.getUsername() + " is already in class " + c.getName());
-                }
+                } 
                 break; // assume codes are unique
             }
         }
@@ -310,7 +293,6 @@ public class questionTracker {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        System.out.println("Question set created: " + name + " (id=" + newSet.getId() + ") by " + (creator != null ? creator.getUsername() : "unknown"));
         return newSet;
     }
 
@@ -428,7 +410,6 @@ public class questionTracker {
         for (QuestionSet s : sets){
             if (s != null && s.getId() == setId){
                 if (s.getCreator() == null || !Objects.equals(s.getCreator(), requester.getUsername())){
-                    System.out.println("Only the creator may edit this question set.");
                     return false;
                 }
                 if (newName != null) s.setName(newName);
