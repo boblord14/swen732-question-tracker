@@ -56,11 +56,11 @@ public class StruggleViewController {
 
         List<User> updatedStudentData = new ArrayList<>();
         for(User student: students){
-            User user = questionTracker.getUserById(student.getId());
-            if (user == null) {
-                user = student;
+            User userUpdate = questionTracker.getUserById(student.getId());
+            if (userUpdate == null) {
+                userUpdate = student;
             }
-            updatedStudentData.add(user);
+            updatedStudentData.add(userUpdate);
         }
 
         if (updatedStudentData.isEmpty()) {
@@ -193,9 +193,6 @@ public class StruggleViewController {
             return;
         }
 
-        //ArrayList<user.Question> qList = new ArrayList<>(recommended);
-        //StudySet saved = studySetMaker.createSet(qList, user, setName, "");
-
         new Alert(Alert.AlertType.INFORMATION,
                 "\"" + setName + "\" created and saved to your account. You can assign it to your class in the class window",
                 ButtonType.OK).showAndWait();
@@ -221,8 +218,7 @@ public class StruggleViewController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
                 Parent root = loader.load();
 
-                MainController controller = loader.getController();
-                controller.setUser(user);
+                MainController.setUser(user);
 
                 Stage stage = (Stage) titleLabel.getScene().getWindow();
                 stage.setScene(new Scene(root));

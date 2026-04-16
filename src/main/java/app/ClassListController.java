@@ -11,7 +11,6 @@ import javafx.geometry.Insets;
 import javafx.util.Pair;
 import java.util.Optional;
 import model.questionTracker;
-//import user.Classroom;
 import user.User;
 
 import java.io.IOException;
@@ -50,7 +49,7 @@ public class ClassListController {
             Parent root = loader.load();
 
             MainController controller = loader.getController();
-            controller.setUser(user);
+            MainController.setUser(user);
 
             Stage stage = (Stage) classListBox.getScene().getWindow();
             stage.setScene(new Scene(root));

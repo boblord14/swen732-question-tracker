@@ -43,8 +43,7 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
             Parent root = loader.load();
 
-            MainController controller = loader.getController();
-            controller.setUser(found);
+            MainController.setUser(found);
 
             Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(new Scene(root));

@@ -44,9 +44,8 @@ public class SignupController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
             Parent root = loader.load();
 
-            MainController controller = loader.getController();
             assert realUser != null;
-            controller.setUser(realUser);
+            MainController.setUser(realUser);
 
             Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -55,7 +54,7 @@ public class SignupController {
         }
     }
 
-    public void handleLogin(ActionEvent actionEvent) {
+    public void handleLogin() {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
             Parent root = loader.load();
