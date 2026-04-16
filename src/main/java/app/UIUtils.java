@@ -9,6 +9,10 @@ import javafx.util.Duration;
  */
 public class UIUtils {
 
+    private UIUtils() {
+        /* This utility class should not be instantiated */
+    }
+
     /**
      * Fade in the given root node over the specified milliseconds.
      */

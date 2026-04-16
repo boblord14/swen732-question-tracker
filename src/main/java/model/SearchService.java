@@ -52,7 +52,7 @@ public class SearchService {
 
         //search study sets too
         for (StudySet s : studySetMaker.getAllSets()) {
-            if (s == null || s.getQuestions() == null) continue;
+            if (isValidSet(s)) continue;
             for (Question q : s.getQuestions()) {
                 String key = "study-" + s.getId() + "-" + q.getId();
                 seen.putIfAbsent(key, q);
@@ -61,7 +61,7 @@ public class SearchService {
 
         //search question sets too
         for (QuestionSet s : questionTracker.getQuestionSets()) {
-            if (s == null || s.getQuestions() == null) continue;
+            if (isValidSet(s)) continue;
             for (Question q : s.getQuestions()) {
                 String key = "question-" + s.getId() + "-" + q.getId();
                 seen.putIfAbsent(key, q);
@@ -69,6 +69,10 @@ public class SearchService {
         }
 
         return new ArrayList<>(seen.values());
+    }
+
+    boolean isValidSet(BaseSet s) {
+        return (s == null || s.getQuestions() == null);
     }
 
     /**

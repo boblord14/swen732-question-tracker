@@ -6,8 +6,11 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import user.Question;
+import java.util.logging.Logger;
 
-public class questionMaker {
+
+public class QuestionMaker {
+
     public static Question[] getQuestions(){
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -44,7 +47,7 @@ public class questionMaker {
         return newQuestion;
     }
 
-    public static Question createQuestion(String question, String answer, ArrayList<String> tags){
+    public static Question createQuestion(String question, String answer, List<String> tags){
         Question[] questions = getQuestions();
         int maxId = questions.length;
 
@@ -59,7 +62,7 @@ public class questionMaker {
         return newQuestion;
     }
 
-    public void addTag(Question question, ArrayList<String> newTags){
+    public void addTag(Question question, List<String> newTags){
         List<String> tags = question.getTags();
         for(String tag : newTags){
             if(!tags.contains(tag)){

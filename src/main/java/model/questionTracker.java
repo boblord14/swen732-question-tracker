@@ -11,11 +11,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
+
 
 public class questionTracker {
-    public int genericAddTest(int a, int b){
-        return a + b;
-    }
+
+    static Logger logger = Logger.getLogger(questionTracker.class.getName());
+
 
     public static User logIn(String username, String password){
         User[] users = getUsers();
@@ -52,6 +54,7 @@ public class questionTracker {
         // Check if username already exists
         for (User user : users) {
             if (user.getUsername().equals(username)) {
+                logger.info("Username already exists.");
                 return null;
             }
         }
@@ -75,7 +78,8 @@ public class questionTracker {
         
         // Save to file
         saveUsers(updatedUsers);
-        
+
+        logger.info("User registered successfully: " + username);
         return newUser;
     }
 
@@ -122,6 +126,7 @@ public class questionTracker {
      */
     public static Classroom createClass(String name, String code, User teacher){
         if (teacher == null || !teacher.getIsTeacher()){
+            logger.info("Only teachers can create classes.");
             return null;
         }
 
@@ -129,6 +134,7 @@ public class questionTracker {
         // ensure code uniqueness
         for (Classroom c : classes){
             if (c != null && c.getCode() != null && c.getCode().equals(code)){
+                logger.info("A class with this code already exists.");
                 return null;
             }
         }
@@ -147,6 +153,7 @@ public class questionTracker {
             ex.printStackTrace();
         }
 
+        logger.info("Class created: " + name + " (" + code + ") by " + teacher.getUsername());
         return newClass;
     }
 
@@ -162,7 +169,10 @@ public class questionTracker {
                 // add student
                 if (c.addStudent(student)){
                     changed = true;
-                } 
+                    logger.info(student.getUsername() + " joined class " + c.getName());
+                } else {
+                    logger.info(student.getUsername() + " is already in class " + c.getName());
+                }
                 break; // assume codes are unique
             }
         }
@@ -189,37 +199,7 @@ public class questionTracker {
             // Backwards-compatibility: if centralized file missing but old per-file dir exists, migrate
             File dir = new File("src/main/questionSets");
             if (dir.exists() && dir.isDirectory()){
-                File[] files = dir.listFiles((d, name) -> name.endsWith(".json"));
-                if (files == null || files.length == 0) return new QuestionSet[0];
-                List<QuestionSet> out = new java.util.ArrayList<>();
-                for (File f : files) {
-                    try {
-                        QuestionSet s = mapper.readValue(f, QuestionSet.class);
-                        out.add(s);
-                    } catch (Exception ex) {
-                        // skip malformed file but continue
-                        ex.printStackTrace();
-                    }
-                }
-                // persist centralized file for future runs
-                QuestionSet[] arr = out.toArray(new QuestionSet[0]);
-                saveQuestionSets(arr);
-                // attempt to remove old per-set files and directory to avoid duplicate storage
-                try {
-                    for (File old : files) {
-                        if(!old.delete()){
-                            throw new IOException("Could not delete file: " + old.getAbsolutePath());
-                        }
-                    }
-                    File[] remaining = dir.listFiles();
-                    if ((remaining == null || remaining.length == 0) && !dir.delete()){
-                            throw new IOException("Could not delete directory: " + dir.getAbsolutePath());
-                    }
-                } catch (Exception cleanupEx) {
-                    // don't fail migration on cleanup errors
-                    cleanupEx.printStackTrace();
-                }
-                return arr;
+                return backwardsCompatabilityGetQuestionSets(dir);
             }
 
             return new QuestionSet[0];
@@ -227,6 +207,42 @@ public class questionTracker {
             e.printStackTrace();
             return new QuestionSet[0];
         }
+    }
+
+    private static QuestionSet[] backwardsCompatabilityGetQuestionSets(File dir){
+        ObjectMapper mapper = new ObjectMapper();
+
+        File[] files = dir.listFiles((d, name) -> name.endsWith(".json"));
+        if (files == null || files.length == 0) return new QuestionSet[0];
+        List<QuestionSet> out = new java.util.ArrayList<>();
+        for (File f : files) {
+            try {
+                QuestionSet s = mapper.readValue(f, QuestionSet.class);
+                out.add(s);
+            } catch (Exception ex) {
+                // skip malformed file but continue
+                ex.printStackTrace();
+            }
+        }
+        // persist centralized file for future runs
+        QuestionSet[] arr = out.toArray(new QuestionSet[0]);
+        saveQuestionSets(arr);
+        // attempt to remove old per-set files and directory to avoid duplicate storage
+        try {
+            for (File old : files) {
+                if(!old.delete()){
+                    throw new IOException("Could not delete file: " + old.getAbsolutePath());
+                }
+            }
+            File[] remaining = dir.listFiles();
+            if ((remaining == null || remaining.length == 0) && !dir.delete()){
+                throw new IOException("Could not delete directory: " + dir.getAbsolutePath());
+            }
+        } catch (Exception cleanupEx) {
+            // don't fail migration on cleanup errors
+            cleanupEx.printStackTrace();
+        }
+        return arr;
     }
 
     private static void saveQuestionSets(QuestionSet[] sets){
@@ -293,6 +309,7 @@ public class questionTracker {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        logger.info("Question set created: " + name + " (id=" + newSet.getId() + ") by " + (creator != null ? creator.getUsername() : "unknown"));
         return newSet;
     }
 
@@ -410,6 +427,7 @@ public class questionTracker {
         for (QuestionSet s : sets){
             if (s != null && s.getId() == setId){
                 if (s.getCreator() == null || !Objects.equals(s.getCreator(), requester.getUsername())){
+                    logger.info("Only the creator may edit this question set.");
                     return false;
                 }
                 if (newName != null) s.setName(newName);
