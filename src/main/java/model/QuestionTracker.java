@@ -403,21 +403,22 @@ public class QuestionTracker {
         QuestionSet[] sets = getQuestionSets();
         boolean changed = false;
         for (QuestionSet s : sets){
-            if (!(s != null && s.getId() == setId)) {
-                continue;
+            if (s != null && s.getId() == setId && applyEdits(s, questionId, newText, newAnswer, newTags)) {
+                changed = true;
+                break;
             }
-            Question q = s.findQuestionById(questionId);
-            if (q == null) {
-                continue;
-            }
-            if (newText != null) q.setText(newText);
-            if (newAnswer != null) q.setAnswer(newAnswer);
-            if (newTags != null) q.setTags(newTags);
-            changed = true;
-            break;
         }
         if (changed) saveQuestionSets(sets);
         return changed;
+    }
+
+    private static boolean applyEdits(QuestionSet s, int questionId, String newText, String newAnswer, List<String> newTags){
+        Question q = s.findQuestionById(questionId);
+        if (q == null) return false;
+        if (newText != null) q.setText(newText);
+        if (newAnswer != null) q.setAnswer(newAnswer);
+        if (newTags != null) q.setTags(newTags);
+        return true;
     }
 
     /**
@@ -428,21 +429,23 @@ public class QuestionTracker {
         QuestionSet[] sets = getQuestionSets();
         boolean changed = false;
         for (QuestionSet s : sets){
-            if (!(s != null && s.getId() == setId)){
-                continue;
+            if (s != null && s.getId() == setId && applyMetadataEdits(s, requester, newName, newTags)) {
+                changed = true;
+                break;
             }
-            if (s.getCreator() == null || !Objects.equals(s.getCreator(), requester.getUsername())){
-                logger.info("Only the creator may edit this question set.");
-                return false;
-            }
-            if (newName != null) s.setName(newName);
-            if (newTags != null) s.setTags(newTags);
-            changed = true;
-            break;
-
         }
         if (changed) saveQuestionSets(sets);
         return changed;
+    }
+
+    private static boolean applyMetadataEdits(QuestionSet s, User requester, String newName, List<String> newTags){
+        if (s.getCreator() == null || !Objects.equals(s.getCreator(), requester.getUsername())){
+            logger.info("Only the creator may edit this question set.");
+            return false;
+        }
+        if (newName != null) s.setName(newName);
+        if (newTags != null) s.setTags(newTags);
+        return true;
     }
 
     /**

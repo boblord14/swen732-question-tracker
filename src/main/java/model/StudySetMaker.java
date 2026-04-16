@@ -135,7 +135,7 @@ public class StudySetMaker {
         }
     }
 
-    public static StudySet createSet(ArrayList<Question> questions, User user, String title, String subject){
+    public static StudySet createSet(List<Question> questions, User user, String title, String subject){
         StudySet set = new StudySet();
         set.setId(nextId());
         set.setCreator(user.getUsername());
@@ -146,7 +146,7 @@ public class StudySetMaker {
         return set;
     }
 
-    public static StudySet createSet(ArrayList<Question> questions, User user, String title, String subject, ArrayList<String> tags){
+    public static StudySet createSet(List<Question> questions, User user, String title, String subject, List<String> tags){
         StudySet set = createSet(questions, user, title, subject);
         set.setTags(new ArrayList<>(tags));
 
