@@ -133,6 +133,7 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
+                    <include>**/*.css</include>
                     <include>**/*.fxml</include>
                     <include>**/*.json</include>
                 </includes>
