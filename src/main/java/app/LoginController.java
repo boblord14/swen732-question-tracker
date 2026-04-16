@@ -68,7 +68,7 @@ public class LoginController {
         }
     }
 
-    public void handleSignup(ActionEvent actionEvent) {
+    public void handleSignup() {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SignupView.fxml"));
             Parent root = loader.load();

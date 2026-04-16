@@ -37,7 +37,7 @@ public class ClassViewController {
 
     private Classroom classroom;
     private User user;
-    private final String cssSheet = "/styles/styles.css";
+    private final static String cssSheet = "/styles/styles.css";
 
     public void setData(String classroomName, User user) {
         this.classroom = questionTracker.getClassByName(classroomName);

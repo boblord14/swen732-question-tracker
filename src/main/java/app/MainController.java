@@ -30,14 +30,15 @@ public class MainController {
     @FXML
     private Label usernameLabel;
 
+    private static final String cssSheet = "/styles/styles.css";
+
     public void setUser(User user) {
-        this.user = user;
+        MainController.user = user;
         this.usernameLabel.setText("Welcome, " + user.getUsername() + "!");
     }
 
     @FXML
     public void handleLoad() {
-        //User teacher = new User(1, "admin", "admin123", true);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ClassListView.fxml"));
             Parent root = loader.load();
@@ -46,7 +47,7 @@ public class MainController {
 
             Stage stage = (Stage) classListButton.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(cssSheet).toExternalForm());
             stage.setScene(scene);
             // apply a small fade animation on scene load
             app.UIUtils.fadeIn(root);
@@ -65,7 +66,7 @@ public class MainController {
 
             Stage stage = (Stage) questionSetsButton.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(cssSheet).toExternalForm());
             stage.setScene(scene);
             // subtle fade in
             app.UIUtils.fadeIn(root);
@@ -98,11 +99,11 @@ public class MainController {
 
             Stage stage = (Stage) userStruggleButton.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(cssSheet).toExternalForm());
             stage.setScene(scene);
             app.UIUtils.fadeIn(root);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }
