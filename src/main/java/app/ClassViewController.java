@@ -37,6 +37,7 @@ public class ClassViewController {
 
     private Classroom classroom;
     private User user;
+    private final String cssSheet = "/styles/styles.css";
 
     public void setData(String classroomName, User user) {
         this.classroom = questionTracker.getClassByName(classroomName);
@@ -199,7 +200,7 @@ public class ClassViewController {
             SetSessionController ctrl = loader.getController();
             Stage stage = (Stage) classNameLabel.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(cssSheet).toExternalForm());
             stage.setScene(scene);
 
             ctrl.setSession(session, user, () -> {
@@ -279,11 +280,11 @@ public class ClassViewController {
 
             Stage stage = (Stage) classNameLabel.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("cssSheet").toExternalForm());
             stage.setScene(scene);
             app.UIUtils.fadeIn(root);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -298,7 +299,7 @@ public class ClassViewController {
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(cssSheet).toExternalForm());
             stage.setScene(scene);
 
         } catch (Exception e) {
@@ -314,7 +315,7 @@ public class ClassViewController {
             controller.setDataStudySet(set, user, classroom.getName());
             Stage stage = (Stage) classNameLabel.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(cssSheet).toExternalForm());
             stage.setScene(scene);
         } catch (IOException ex) {
             ex.printStackTrace();
