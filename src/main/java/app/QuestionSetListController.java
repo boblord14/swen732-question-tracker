@@ -34,9 +34,9 @@ public class QuestionSetListController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
             Parent root = loader.load();
-
+            
             MainController.setUser(user);
-
+            
             Stage stage = (Stage) setListVBox.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (IOException e) {

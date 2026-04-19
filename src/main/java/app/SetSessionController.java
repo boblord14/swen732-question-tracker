@@ -150,7 +150,10 @@ public class SetSessionController {
         handleBack();
     }
 
+    @FXML
     private void handleBack() {
         if (onBack != null) onBack.run();
     }
+
+    
 }
