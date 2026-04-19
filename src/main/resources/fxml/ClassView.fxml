@@ -9,7 +9,7 @@
             prefWidth="960" prefHeight="540">
 
     <children>
-        <VBox spacing="20" layoutX="200" layoutY="40" prefWidth="560">
+        <VBox spacing="7" layoutX="200" layoutY="40" prefWidth="560">
 
          <Label fx:id="classNameLabel" styleClass="title" />
 
@@ -17,7 +17,7 @@
 
 
             <Label text="Study Sets in this Class:" style="-fx-font-weight: bold;"/>
-            <ScrollPane prefHeight="150" fitToWidth="true">
+            <ScrollPane prefHeight="100" fitToWidth="true">
                 <content>
                     <VBox fx:id="studySetListVBox" spacing="8">
                         <padding>
@@ -40,7 +40,7 @@
                 <Label text="Students in Class:"
                        style="-fx-font-weight: bold;"/>
 
-                <ScrollPane prefHeight="200" fitToWidth="true">
+                <ScrollPane prefHeight="100" fitToWidth="true">
                     <content>
                         <VBox fx:id="studentListVBox" spacing="8">
                             <padding>
