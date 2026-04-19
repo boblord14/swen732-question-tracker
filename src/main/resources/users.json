@@ -63,4 +63,24 @@
   "classrooms" : [ "bobclass" ],
   "questionSetIds" : [ 8, 3 ],
   "wrongQuestionData" : [ ]
+}, {
+  "id" : 8,
+  "username" : "rayteach",
+  "password" : "joemama",
+  "isTeacher" : true,
+  "studySetAvg" : { },
+  "classrooms" : [ "rayclass" ],
+  "questionSetIds" : [ 10 ],
+  "wrongQuestionData" : [ ]
+}, {
+  "id" : 9,
+  "username" : "raystu",
+  "password" : "joemama",
+  "isTeacher" : false,
+  "studySetAvg" : {
+    "10" : 0.3333333333333333
+  },
+  "classrooms" : [ "rayclass" ],
+  "questionSetIds" : [ ],
+  "wrongQuestionData" : [ [ "hard", "stuff" ], [ "easy", "stuff" ], [ "6" ], [ "3" ], [ "9" ] ]
 } ]
