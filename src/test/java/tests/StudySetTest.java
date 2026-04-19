@@ -3,7 +3,10 @@ package tests;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import model.QuestionMaker;
 import model.QuestionTracker;
+import model.SetSession;
 import model.StudySetMaker;
 import user.Question;
 import teacher.StudySet;
@@ -177,5 +181,137 @@ class StudySetTest {
         long count = StudySetMaker.getSetCount(user1.getUsername());
         System.out.println(count);
         assertEquals(2, count);
+    }
+
+    @Test
+    void testGetSetByIdNotFound() {
+        StudySet result = StudySetMaker.getSetById(999);
+
+        assertNull(result);
+    }
+
+    @Test
+    void testGetAllSetsEmpty() {
+        StudySet[] sets = StudySetMaker.getAllSets();
+
+        assertNotNull(sets);
+        assertEquals(0, sets.length);
+    }
+    
+    @Test
+    void testAddQuestionToStudySet() {
+
+        String username = "u1";
+        String password = "p1";
+
+        QuestionTracker.signUp(username, password, true);
+        User user = QuestionTracker.logIn(username, password);
+
+        ArrayList<Question> qs = new ArrayList<>();
+        StudySet set = StudySetMaker.createSet(qs, user, "Set1", "Math");
+
+        boolean result = StudySetMaker.addQuestionToStudySet(
+                set.getId(),
+                "Q1",
+                "A1",
+                null
+        );
+
+        assertTrue(result);
+
+        StudySet updated = StudySetMaker.getSetById(set.getId());
+        assertEquals(1, updated.getQuestions().size());
+    }
+
+    @Test
+    void testRemoveQuestionFromStudySet() {
+
+        String username = "u2";
+        String password = "p2";
+
+        QuestionTracker.signUp(username, password, true);
+        User user = QuestionTracker.logIn(username, password);
+
+        ArrayList<Question> qs = new ArrayList<>();
+        StudySet set = StudySetMaker.createSet(qs, user, "Set2", "Math");
+
+        StudySetMaker.addQuestionToStudySet(set.getId(), "Q1", "A1", null);
+
+        StudySet updated = StudySetMaker.getSetById(set.getId());
+        int qId = updated.getQuestions().get(0).getId();
+
+        boolean removed = StudySetMaker.removeQuestionFromStudySet(set.getId(), qId);
+
+        assertTrue(removed);
+
+        StudySet after = StudySetMaker.getSetById(set.getId());
+        assertEquals(0, after.getQuestions().size());
+    }
+
+    @Test
+    void testRemoveQuestionFromStudySetFail() {
+
+        boolean result = StudySetMaker.removeQuestionFromStudySet(999, 999);
+
+        assertFalse(result);
+    }
+
+    @Test
+    void testCreateSetWithTags() {
+
+        String username = "u3";
+        String password = "p3";
+
+        QuestionTracker.signUp(username, password, true);
+        User user = QuestionTracker.logIn(username, password);
+
+        ArrayList<Question> qs = new ArrayList<>();
+        ArrayList<String> tags = new ArrayList<>();
+        tags.add("math");
+
+        StudySet set = StudySetMaker.createSet(qs, user, "TaggedSet", "Math", tags);
+
+        assertNotNull(set);
+        assertEquals(tags, set.getTags());
+    }
+
+    @Test
+    void testGetSetCount() {
+
+        String username = "u4";
+        String password = "p4";
+
+        QuestionTracker.signUp(username, password, true);
+        User user = QuestionTracker.logIn(username, password);
+
+        StudySetMaker.createSet(new ArrayList<>(), user, "S1", "Math");
+        StudySetMaker.createSet(new ArrayList<>(), user, "S2", "Math");
+
+        long count = StudySetMaker.getSetCount(username);
+
+        assertEquals(2, count);
+    }
+
+    @Test
+    void testCreateStudySetSessionNull() {
+        SetSession session = StudySetMaker.createStudySetSession(999, new User(1, "x", "y", true));
+
+        assertNull(session);
+    }
+
+    @Test
+    void testCreateStudySetSessionSuccess() {
+
+        String username = "u5";
+        String password = "p5";
+
+        QuestionTracker.signUp(username, password, true);
+        User user = QuestionTracker.logIn(username, password);
+
+        StudySet set = StudySetMaker.createSet(new ArrayList<>(), user, "SessionSet", "Math");
+
+        SetSession session = StudySetMaker.createStudySetSession(set.getId(), user);
+
+        assertNotNull(session);
     }
 }

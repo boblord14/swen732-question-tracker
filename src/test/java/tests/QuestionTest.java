@@ -88,4 +88,88 @@ class QuestionTest {
         assertNull(q.getText());
         assertNull(q.getAnswer());
     }
+    
+    @Test
+    void testConstructorIdText() {
+        Question q = new Question(5, "What is Java?");
+
+        assertEquals(5, q.getId());
+        assertEquals("What is Java?", q.getText());
+        assertEquals("", q.getAnswer());
+        assertNotNull(q.getTags());
+        assertTrue(q.getTags().isEmpty());
+    }
+
+    @Test
+    void testConstructorIdTextAnswer() {
+        Question q = new Question(10, "2+2?", "4");
+
+        assertEquals(10, q.getId());
+        assertEquals("2+2?", q.getText());
+        assertEquals("4", q.getAnswer());
+        assertNotNull(q.getTags());
+        assertTrue(q.getTags().isEmpty());
+    }
+
+    @Test
+    void testAddTag() {
+        Question q = new Question(10, "2+2?", "4");
+
+        q.addTag("math");
+        q.addTag("algebra");
+
+        assertEquals(2, q.getTags().size());
+        assertTrue(q.getTags().contains("math"));
+        assertTrue(q.getTags().contains("algebra"));
+    }
+
+    @Test
+    void testRemoveTag() {
+        Question q = new Question(10, "2+2?", "4");
+
+        q.addTag("math");
+        q.addTag("algebra");
+
+        q.removeTag("math");
+
+        assertEquals(1, q.getTags().size());
+        assertFalse(q.getTags().contains("math"));
+        assertTrue(q.getTags().contains("algebra"));
+    }
+
+    @Test
+    void testRemoveNonexistentTag() {
+        Question q = new Question(10, "2+2?", "4");
+
+        q.addTag("math");
+        q.removeTag("science");
+
+        assertEquals(1, q.getTags().size());
+    }
+
+    @Test
+    void testToString() {
+        Question q = new Question(1, "Q?", "A");
+        q.addTag("tag1");
+
+        String result = q.toString();
+
+        assertTrue(result.contains("1"));
+        assertTrue(result.contains("Q?"));
+        assertTrue(result.contains("A"));
+        assertTrue(result.contains("tag1"));
+    }
+
+    @Test
+    void testTagIndependence() {
+        Question q = new Question(1, "Q?", "A");
+
+        ArrayList<String> tags = new ArrayList<>();
+        tags.add("math");
+
+        q.setTags(tags);
+        tags.add("physics");
+
+        assertEquals(2, q.getTags().size());
+    }
 }

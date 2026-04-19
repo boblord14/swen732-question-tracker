@@ -112,9 +112,6 @@
                         <configuration>
                             <excludes>
                                 <exclude>app/**</exclude>
-                                <exclude>user/**</exclude>
-                                <exclude>teacher/**</exclude>
-                                <exclude>question/**</exclude>
                             </excludes>
                         </configuration>
                     </execution>
