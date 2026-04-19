@@ -1,16 +1,19 @@
 package app;
 
+import java.io.IOException;
+import java.util.Arrays;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.QuestionTracker;
 import user.User;
-
-import java.io.IOException;
-import java.util.Arrays;
 
 public class LoginController {
 
@@ -42,10 +45,13 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
             Parent root = loader.load();
 
-            MainController.setUser(found);
+            MainController controller = loader.getController();
+            controller.setUser(found);
 
             Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            stage.setScene(scene);
         } catch (Exception e) {
             e.printStackTrace();
         }

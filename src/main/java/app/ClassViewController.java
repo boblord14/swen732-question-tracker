@@ -207,7 +207,9 @@ public class ClassViewController {
                     Parent backRoot = back.load();
                     ClassViewController backCtrl = back.getController();
                     backCtrl.setData(classroom.getName(), user);
-                    stage.setScene(new Scene(backRoot));
+                    Scene backScene = new Scene(backRoot);
+                    backScene.getStylesheets().add(getClass().getResource(CSS_SHEET).toExternalForm());
+                    stage.setScene(backScene);
                 } catch (IOException e) { e.printStackTrace(); }
             });
 
@@ -278,7 +280,7 @@ public class ClassViewController {
 
             Stage stage = (Stage) classNameLabel.getScene().getWindow();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("CSS_SHEET").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(CSS_SHEET).toExternalForm());
             stage.setScene(scene);
             app.UIUtils.fadeIn(root);
         } catch (IOException e) {

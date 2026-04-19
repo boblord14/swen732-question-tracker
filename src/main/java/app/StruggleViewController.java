@@ -1,5 +1,13 @@
 package app;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,19 +21,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.QuestionTracker;
 import model.SearchService;
 import model.SetSession;
-import model.QuestionTracker;
 import model.StudySetMaker;
 import teacher.StudySet;
 import user.Question;
 import user.QuestionSet;
 import user.User;
 import user.UserPrediction;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public class StruggleViewController {
 
@@ -213,15 +217,20 @@ public class StruggleViewController {
                 ClassViewController ctrl = loader.getController();
                 ctrl.setData(classroomName, user);
                 Stage stage = (Stage) titleLabel.getScene().getWindow();
-                stage.setScene(new Scene(root));
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+                stage.setScene(scene);
             }else{
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
                 Parent root = loader.load();
 
-                MainController.setUser(user);
+                MainController controller = loader.getController();
+                controller.setUser(user);
 
                 Stage stage = (Stage) titleLabel.getScene().getWindow();
-                stage.setScene(new Scene(root));
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+                stage.setScene(scene);
             }
 
         } catch (IOException e) {

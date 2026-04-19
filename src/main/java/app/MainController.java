@@ -25,13 +25,13 @@ public class MainController {
     @FXML
     private Button logoutButton;
     @FXML
-    private static Label usernameLabel;
+    private Label usernameLabel;
 
     private static final String CSS_SHEET = "/styles/styles.css";
 
-    public static void setUser(User user) {
+    public void setUser(User user) {
         MainController.user = user;
-        MainController.usernameLabel.setText("Welcome, " + user.getUsername() + "!");
+        usernameLabel.setText("Welcome, " + user.getUsername() + "!");
     }
 
     @FXML
@@ -79,7 +79,9 @@ public class MainController {
             Parent root2 = loader2.load();
 
             Stage stage2 = (Stage) logoutButton.getScene().getWindow();
-            stage2.setScene(new Scene(root2));
+            Scene scene = new Scene(root2);
+            scene.getStylesheets().add(getClass().getResource(CSS_SHEET).toExternalForm());
+            stage2.setScene(scene);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
