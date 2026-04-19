@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" prefHeight="960" prefWidth="540" spacing="10" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.LoginController">
-    <Label style="-fx-font-size: 20;" text="Welcome to Question-Tracker!" />
-    <Label style="-fx-font-size: 20;" text="Log In" />
+<VBox alignment="CENTER" 
+      prefHeight="540" prefWidth="960" spacing="10"
+      fx:controller="app.LoginController"
+      xmlns:fx="http://javafx.com/fxml">
+   <Label style="-fx-font-size: 20;" text="Welcome to Question-Tracker!" />
+   <Label style="-fx-font-size: 20;" text="Log In" />
 
-    <TextField fx:id="usernameField" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" promptText="Username" />
-    <PasswordField fx:id="passwordField" maxWidth="-Infinity" promptText="Password" />
+   <TextField fx:id="usernameField" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" promptText="Username" />
+   <PasswordField fx:id="passwordField" maxWidth="-Infinity" promptText="Password" />
 
-    <Button onAction="#handleLogin" text="Login" />
-    <Label fx:id="errorLabel" textFill="red" />
+   <Button onAction="#handleLogin" text="Login" />
+   <Label fx:id="errorLabel" textFill="red" />
    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
       <children>
          <Label text="Not a registered user? " />
@@ -23,3 +22,4 @@
       </children>
    </HBox>
 </VBox>
+
