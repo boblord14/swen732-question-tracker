@@ -85,6 +85,12 @@ public class Classroom {
 
     public List<Map<String, Double>> classStruggleVector() {
         List<Map<String, Double>> struggleVectors = new ArrayList<>();
+        
+        if (students == null || students.isEmpty()) {
+            return struggleVectors;
+        }
+
+
         struggleVectors.add(UserPrediction.generateUserStruggleVector(this.students));
         for (User student : students) {
             UserPrediction up = new UserPrediction(student);

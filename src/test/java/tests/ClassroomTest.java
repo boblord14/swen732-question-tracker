@@ -1,6 +1,7 @@
 package tests;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import model.QuestionTracker;
 import user.User;
@@ -10,6 +11,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -168,5 +173,104 @@ class ClassroomTest {
         assertFalse(secondSuccess);
         assertEquals(1, classList[0].getStudents().size());
         assertEquals(username, classList[0].getStudents().get(0).getUsername());
+    }
+
+    @Test
+    void testRemoveStudent() {
+
+        User teacher = new User(1, "teacher", "pass", true);
+        Classroom classroom = new Classroom("Math", "1234", teacher);
+
+        User student = new User(2, "student", "pass", false);
+
+        classroom.addStudent(student);
+        boolean removed = classroom.removeStudent(student);
+
+        assertTrue(removed);
+        assertEquals(0, classroom.getStudents().size());
+    }
+
+    @Test
+    void testAddStudySetNull() {
+
+        Classroom classroom = new Classroom();
+
+        boolean result = classroom.addStudySet(null);
+
+        assertFalse(result);
+        assertEquals(0, classroom.getAssignedStudySets().size());
+    }
+
+    @Test
+    void testAddAssignedStudySetIdDuplicate() {
+
+        Classroom classroom = new Classroom();
+
+        boolean first = classroom.addAssignedStudySetId(1);
+        boolean second = classroom.addAssignedStudySetId(1);
+
+        assertTrue(first);
+        assertFalse(second);
+    }
+
+    @Test
+    void testCheckCodeNullCases() {
+
+        Classroom classroom = new Classroom("Math", "1234", new User(1, "t", "p", true));
+
+        assertFalse(classroom.checkCode(null));
+
+        Classroom nullCodeClass = new Classroom();
+        assertFalse(nullCodeClass.checkCode("1234"));
+    }
+
+    @Test
+    void testStudentStruggleVectorNotFound() {
+
+        Classroom classroom = new Classroom("Math", "1234", new User(1, "t", "p", true));
+
+        Map<String, Double> result = classroom.studentStruggleVector(999);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testStudentsSetScores() {
+
+        Classroom classroom = new Classroom("Math", "1234", new User(1, "t", "p", true));
+
+        User student = new User(2, "s", "p", false);
+
+        Map<Integer, Double> mockScores = new HashMap<>();
+        mockScores.put(1, 90.0);
+
+        student.setStudySetAvg(mockScores);
+        classroom.addStudent(student);
+
+        List<Map<Integer, Double>> result = classroom.studentsSetScores();
+
+        assertEquals(1, result.size());
+        assertEquals(90.0, result.get(0).get(1));
+    }
+
+    @Test
+    void testDefaultConstructor() {
+
+        Classroom classroom = new Classroom();
+
+        assertNotNull(classroom.getStudents());
+        assertNotNull(classroom.getAssignedStudySets());
+        assertNotNull(classroom.getAssignedStudySetIds());
+    }
+
+    @Test
+    void testAddNullStudent() {
+
+        Classroom classroom = new Classroom();
+
+        boolean result = classroom.addStudent(null);
+
+        assertFalse(result);
     }
 }
