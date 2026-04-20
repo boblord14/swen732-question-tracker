@@ -3,13 +3,17 @@ package tests;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import model.SearchService;
+import model.QuestionTracker;
+import model.StudySetMaker;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.MockedStatic;
 import user.Question;
 import teacher.StudySet;
 import user.User;
+import user.QuestionSet;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +25,8 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static tests.SearchServiceTest.TestableSearchService.makeQuestion;
 import static tests.SearchServiceTest.TestableSearchService.makeStudySet;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.mockStatic;
 
 class SearchServiceTest {
 
@@ -463,4 +469,202 @@ class SearchServiceTest {
         assertEquals("Java Q", results.get(0).getText());
         assertEquals("OOP Q", results.get(1).getText());
     }
+
+    @Test
+    void defaultConstructor_createsService() {
+        SearchService service = new SearchService();
+
+        assertNotNull(service);
+    }
+
+    @Test
+    void loadAllQuestions_returnsQuestionsEvenWhenJsonFileMissing() {
+        SearchService service = new SearchService(
+                tempDir.resolve("does-not-exist.json").toString(),
+                studySetsFolder.getAbsolutePath(),
+                objectMapper
+        );
+
+        List<Question> results = service.loadAllQuestions();
+
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
+    }
+
+    @Test
+    void loadAllQuestions_mergesQuestionsFromJsonStudySetsAndQuestionSets() throws IOException {
+        Question jsonQuestion = new Question();
+        jsonQuestion.setId(1);
+        jsonQuestion.setText("JSON question");
+        jsonQuestion.setAnswer("A");
+        jsonQuestion.setTags(new ArrayList<>(List.of("json")));
+
+        objectMapper.writeValue(questionsFile, List.of(jsonQuestion));
+
+        Question studyQuestion = new Question();
+        studyQuestion.setId(2);
+        studyQuestion.setText("StudySet question");
+        studyQuestion.setAnswer("B");
+        studyQuestion.setTags(new ArrayList<>(List.of("study")));
+
+        StudySet studySet = new StudySet();
+        studySet.setId(10);
+        studySet.setName("Study");
+        studySet.setCreator("teacher");
+        studySet.setQuestionSet(new ArrayList<>(List.of(studyQuestion)));
+
+        Question questionSetQuestion = new Question();
+        questionSetQuestion.setId(3);
+        questionSetQuestion.setText("QuestionSet question");
+        questionSetQuestion.setAnswer("C");
+        questionSetQuestion.setTags(new ArrayList<>(List.of("qset")));
+
+        QuestionSet questionSet = new QuestionSet(20, "QSet", "teacher");
+        questionSet.setQuestions(new ArrayList<>(List.of(questionSetQuestion)));
+
+        try (MockedStatic<StudySetMaker> studySetMock = mockStatic(StudySetMaker.class);
+             MockedStatic<QuestionTracker> trackerMock = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+
+            studySetMock.when(StudySetMaker::getAllSets).thenReturn(new StudySet[]{studySet});
+            trackerMock.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[]{questionSet});
+
+            List<Question> results = searchService.loadAllQuestions();
+
+            assertEquals(3, results.size());
+            assertTrue(results.stream().anyMatch(q -> "JSON question".equals(q.getText())));
+            assertTrue(results.stream().anyMatch(q -> "StudySet question".equals(q.getText())));
+            assertTrue(results.stream().anyMatch(q -> "QuestionSet question".equals(q.getText())));
+        }
+    }
+
+    @Test
+    void loadAllQuestions_skipsNullAndInvalidSets() throws IOException {
+        Question jsonQuestion = new Question();
+        jsonQuestion.setId(1);
+        jsonQuestion.setText("JSON question");
+        jsonQuestion.setAnswer("A");
+        jsonQuestion.setTags(new ArrayList<>(List.of("json")));
+
+        objectMapper.writeValue(questionsFile, List.of(jsonQuestion));
+
+        StudySet nullStudySet = null;
+
+        StudySet invalidStudySet = new StudySet();
+        invalidStudySet.setId(10);
+        invalidStudySet.setName("Invalid");
+        invalidStudySet.setQuestionSet(null);
+
+        QuestionSet nullQuestionSet = null;
+
+        QuestionSet invalidQuestionSet = new QuestionSet(20, "Invalid QSet", "teacher");
+        invalidQuestionSet.setQuestions(null);
+
+        try (MockedStatic<StudySetMaker> studySetMock = mockStatic(StudySetMaker.class);
+             MockedStatic<QuestionTracker> trackerMock = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+
+            studySetMock.when(StudySetMaker::getAllSets).thenReturn(new StudySet[]{nullStudySet, invalidStudySet});
+            trackerMock.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[]{nullQuestionSet, invalidQuestionSet});
+
+            List<Question> results = searchService.loadAllQuestions();
+
+            assertEquals(1, results.size());
+            assertEquals("JSON question", results.get(0).getText());
+        }
+    }
+
+    @Test
+    void loadAllQuestions_deduplicatesRepeatedJsonQuestionIds() throws IOException {
+        Question q1 = new Question();
+        q1.setId(1);
+        q1.setText("Original");
+        q1.setAnswer("A");
+
+        Question q2 = new Question();
+        q2.setId(1);
+        q2.setText("Duplicate");
+        q2.setAnswer("B");
+
+        objectMapper.writeValue(questionsFile, List.of(q1, q2));
+
+        try (MockedStatic<StudySetMaker> studySetMock = mockStatic(StudySetMaker.class);
+             MockedStatic<QuestionTracker> trackerMock = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+
+            studySetMock.when(StudySetMaker::getAllSets).thenReturn(new StudySet[0]);
+            trackerMock.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[0]);
+
+            List<Question> results = searchService.loadAllQuestions();
+
+            assertEquals(1, results.size());
+            assertEquals("Duplicate", results.get(0).getText());
+        }
+    }
+
+    @Test
+    void loadAllQuestions_keepsSameQuestionIdFromDifferentSources() throws IOException {
+        Question jsonQuestion = new Question();
+        jsonQuestion.setId(1);
+        jsonQuestion.setText("JSON version");
+        jsonQuestion.setAnswer("A");
+
+        objectMapper.writeValue(questionsFile, List.of(jsonQuestion));
+
+        Question studyQuestion = new Question();
+        studyQuestion.setId(1);
+        studyQuestion.setText("StudySet version");
+        studyQuestion.setAnswer("B");
+
+        StudySet studySet = new StudySet();
+        studySet.setId(10);
+        studySet.setName("Study");
+        studySet.setCreator("teacher");
+        studySet.setQuestionSet(new ArrayList<>(List.of(studyQuestion)));
+
+        Question questionSetQuestion = new Question();
+        questionSetQuestion.setId(1);
+        questionSetQuestion.setText("QuestionSet version");
+        questionSetQuestion.setAnswer("C");
+
+        QuestionSet questionSet = new QuestionSet(20, "QSet", "teacher");
+        questionSet.setQuestions(new ArrayList<>(List.of(questionSetQuestion)));
+
+        try (MockedStatic<StudySetMaker> studySetMock = mockStatic(StudySetMaker.class);
+             MockedStatic<QuestionTracker> trackerMock = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+
+            studySetMock.when(StudySetMaker::getAllSets).thenReturn(new StudySet[]{studySet});
+            trackerMock.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[]{questionSet});
+
+            List<Question> results = searchService.loadAllQuestions();
+
+            assertEquals(3, results.size());
+            assertTrue(results.stream().anyMatch(q -> "JSON version".equals(q.getText())));
+            assertTrue(results.stream().anyMatch(q -> "StudySet version".equals(q.getText())));
+            assertTrue(results.stream().anyMatch(q -> "QuestionSet version".equals(q.getText())));
+        }
+    }
+
+    @Test
+    void loadAllStudySets_returnsEmptyWhenFolderDoesNotExist() {
+        SearchService service = new SearchService(
+                questionsFile.getAbsolutePath(),
+                tempDir.resolve("missing-folder").toString(),
+                objectMapper
+        );
+
+        List<StudySet> results = service.loadAllStudySets();
+
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
+    }
+
+    @Test
+    void loadAllStudySets_skipsInvalidJsonFiles() throws IOException {
+        Files.writeString(studySetsFolder.toPath().resolve("broken.json"), "{ not valid json }");
+
+        List<StudySet> results = searchService.loadAllStudySets();
+
+        assertEquals(3, results.size());
+        assertTrue(results.stream().anyMatch(s -> "Java Basics".equals(s.getName())));
+    }
+
+
 }
