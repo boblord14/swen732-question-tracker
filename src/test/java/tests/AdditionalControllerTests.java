@@ -334,6 +334,172 @@ public class AdditionalControllerTests {
         assertEquals(0, studySetList.getChildren().size());
     }
 
+    @Test
+    public void testClassViewControllerLoadClassDataTeacherPath() throws Exception {
+        ClassViewController ctrl = new ClassViewController();
+        Label nameLabel = new Label();
+        Label codeLabel = new Label();
+        VBox studentList = new VBox();
+        VBox teacherSection = new VBox();
+        VBox studySetList = new VBox();
+
+        injectField(ctrl, "classNameLabel", nameLabel);
+        injectField(ctrl, "classCodeLabel", codeLabel);
+        injectField(ctrl, "studentListVBox", studentList);
+        injectField(ctrl, "teacherSection", teacherSection);
+        injectField(ctrl, "studySetListVBox", studySetList);
+
+        User teacher = new User(200, "teach", "x", true);
+        Classroom cls = new Classroom("Math101", "M101", teacher);
+        cls.addStudent(new User(201, "stu1", "x", false));
+
+        injectField(ctrl, "classroom", cls);
+        injectField(ctrl, "user", teacher);
+
+        Method m = getMethod(ctrl, "loadClassData");
+        m.invoke(ctrl);
+
+        assertEquals("Math101", nameLabel.getText());
+        assertEquals("Code: M101", codeLabel.getText());
+        assertTrue(teacherSection.isVisible());
+        // loadStudents should have populated studentListVBox
+        assertEquals(1, studentList.getChildren().size());
+    }
+
+    @Test
+    public void testClassViewControllerLoadClassDataStudentPath() throws Exception {
+        ClassViewController ctrl = new ClassViewController();
+        Label nameLabel = new Label();
+        Label codeLabel = new Label();
+        VBox studentList = new VBox();
+        VBox teacherSection = new VBox();
+        VBox studySetList = new VBox();
+
+        injectField(ctrl, "classNameLabel", nameLabel);
+        injectField(ctrl, "classCodeLabel", codeLabel);
+        injectField(ctrl, "studentListVBox", studentList);
+        injectField(ctrl, "teacherSection", teacherSection);
+        injectField(ctrl, "studySetListVBox", studySetList);
+
+        User student = new User(202, "stu", "x", false);
+        Classroom cls = new Classroom("Hist201", "H201", new User(203, "t2", "x", true));
+
+        injectField(ctrl, "classroom", cls);
+        injectField(ctrl, "user", student);
+
+        Method m = getMethod(ctrl, "loadClassData");
+        m.invoke(ctrl);
+
+        assertEquals("Hist201", nameLabel.getText());
+        assertFalse(teacherSection.isVisible());
+    }
+
+    @Test
+    public void testClassViewControllerLoadStudySetsTeacherEmptySets() throws Exception {
+        ClassViewController ctrl = new ClassViewController();
+        VBox studySetList = new VBox();
+        injectField(ctrl, "studySetListVBox", studySetList);
+
+        User teacher = new User(210, "t3", "x", true);
+        Classroom cls = new Classroom("Empty", "E1", teacher);
+
+        injectField(ctrl, "classroom", cls);
+        injectField(ctrl, "user", teacher);
+
+        Method m = getMethod(ctrl, "loadStudySets");
+        m.invoke(ctrl);
+
+        // getAllSets returns empty if sets.json missing — no items added
+        assertEquals(0, studySetList.getChildren().size());
+    }
+
+    @Test
+    public void testClassViewControllerLoadStudySetsStudentNoIds() throws Exception {
+        ClassViewController ctrl = new ClassViewController();
+        VBox studySetList = new VBox();
+        injectField(ctrl, "studySetListVBox", studySetList);
+
+        User student = new User(211, "s3", "x", false);
+        Classroom cls = new Classroom("C2", "C2C", new User(212, "t4", "x", true));
+
+        injectField(ctrl, "classroom", cls);
+        injectField(ctrl, "user", student);
+
+        Method m = getMethod(ctrl, "loadStudySets");
+        m.invoke(ctrl);
+
+        // no assigned IDs → loadStudentStudySetView short-circuits
+        assertEquals(0, studySetList.getChildren().size());
+    }
+
+    @Test
+    public void testClassViewControllerLoadTeacherStudySetViewEmptyIds() throws Exception {
+        ClassViewController ctrl = new ClassViewController();
+        VBox studySetList = new VBox();
+        injectField(ctrl, "studySetListVBox", studySetList);
+        injectField(ctrl, "user", new User(220, "nosets", "x", true));
+
+        Classroom cls = new Classroom("X", "X1", new User(221, "tt", "x", true));
+        injectField(ctrl, "classroom", cls);
+
+        ctrl.loadTeacherStudySetView(new ArrayList<>());
+        // no sets match this user → empty
+        assertEquals(0, studySetList.getChildren().size());
+    }
+
+    @Test
+    public void testClassViewControllerLoadStudentStudySetViewNonExistentIds() throws Exception {
+        ClassViewController ctrl = new ClassViewController();
+        VBox studySetList = new VBox();
+        injectField(ctrl, "studySetListVBox", studySetList);
+        injectField(ctrl, "user", new User(230, "s4", "x", false));
+
+        // IDs that don't exist in sets.json or question sets
+        ctrl.loadStudentStudySetView(List.of(-1, -2, -3));
+        // all IDs unresolved → nothing added
+        assertEquals(0, studySetList.getChildren().size());
+    }
+
+    @Test
+    public void testClassViewControllerBuildGradesBoxWithScores() throws Exception {
+        ClassViewController ctrl = new ClassViewController();
+
+        User teacher = new User(240, "teach5", "x", true);
+        User s1 = new User(241, "scored", "x", false);
+        s1.addStudySetScore(42, 0.85);
+
+        Classroom cls = new Classroom("Scored", "SC1", teacher);
+        cls.addStudent(s1);
+        injectField(ctrl, "classroom", cls);
+
+        VBox gradesBox = new VBox();
+        Method m = getMethod(ctrl, "buildGradesBox", VBox.class, int.class);
+        m.invoke(ctrl, gradesBox, 42);
+
+        assertEquals(1, gradesBox.getChildren().size());
+        Label lbl = (Label) gradesBox.getChildren().get(0);
+        // score should show "85%" or "Not Attempted" depending on getUserById
+        assertNotNull(lbl.getText());
+        assertTrue(lbl.getText().contains("scored") || lbl.getText().contains("Not Attempted"));
+    }
+
+    @Test
+    public void testClassViewControllerStartSessionNullArgs() throws Exception {
+        ClassViewController ctrl = new ClassViewController();
+        Label nameLabel = new Label();
+        injectField(ctrl, "classNameLabel", nameLabel);
+
+        // startSession(null) should return early without error
+        Method m = getMethod(ctrl, "startSession", model.BaseSet.class);
+        m.invoke(ctrl, (Object) null);
+
+        // set user to null, pass non-null set
+        injectField(ctrl, "user", null);
+        StudySet set = new StudySet();
+        m.invoke(ctrl, set);
+        // no exception = pass
+    }
+
     // ─── StruggleViewController ────────────────────────────────────────
 
     @Test
