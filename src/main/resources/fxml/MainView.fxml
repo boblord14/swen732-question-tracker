@@ -10,9 +10,9 @@
            xmlns="http://javafx.com/javafx/25"
            fx:controller="app.MainController">
     <children>
-      <VBox alignment="CENTER" prefHeight="300.0" prefWidth="574.0" spacing="10.0">
+      <VBox alignment="TOP_CENTER" prefHeight="540.0" prefWidth="960.0" spacing="10.0">
          <children>
-            <Label alignment="CENTER" styleClass="title" text="Question Tracker">
+            <Label alignment="TOP_CENTER" styleClass="title" text="Question Tracker">
                <font>
                   <Font size="24.0" />
                </font>

@@ -14,7 +14,9 @@ import user.User;
 
 public class MainController {
 
-    private static User user;
+    private static User currentUser;
+
+    private static MainController instance;
 
     @FXML
     private Button classListButton;
@@ -27,11 +29,22 @@ public class MainController {
     @FXML
     private Label usernameLabel;
 
+    @FXML
+    public void initialize() {
+        instance = this;
+
+        if (currentUser != null) {
+            usernameLabel.setText("Welcome, " + currentUser.getUsername() + "!");
+        }
+    }
+
     private static final String CSS_SHEET = "/styles/styles.css";
 
-    public void setUser(User user) {
-        MainController.user = user;
-        usernameLabel.setText("Welcome, " + user.getUsername() + "!");
+    public static void setUser(User user) {
+        currentUser = user;
+        if (instance != null && instance.usernameLabel != null) {
+            instance.usernameLabel.setText("Welcome, " + currentUser.getUsername() + "!");
+        }
     }
 
     @FXML
@@ -40,7 +53,7 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ClassListView.fxml"));
             Parent root = loader.load();
             ClassListController controller = loader.getController();
-            controller.setUser(user);
+            controller.setUser(currentUser);
 
             Stage stage = (Stage) classListButton.getScene().getWindow();
             Scene scene = new Scene(root);
@@ -59,7 +72,7 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/QuestionSetListView.fxml"));
             Parent root = loader.load();
             QuestionSetListController controller = loader.getController();
-            controller.setUser(user);
+            controller.setUser(currentUser);
 
             Stage stage = (Stage) questionSetsButton.getScene().getWindow();
             Scene scene = new Scene(root);
@@ -94,7 +107,7 @@ public class MainController {
             Parent root = loader.load();
             StruggleViewController ctrl = loader.getController();
 
-            ctrl.setDataStudent(user);
+            ctrl.setDataStudent(currentUser);
 
             Stage stage = (Stage) userStruggleButton.getScene().getWindow();
             Scene scene = new Scene(root);

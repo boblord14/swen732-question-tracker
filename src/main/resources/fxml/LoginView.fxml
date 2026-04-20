@@ -3,12 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" 
-      prefHeight="540" prefWidth="960" spacing="10"
-      fx:controller="app.LoginController"
-      xmlns:fx="http://javafx.com/fxml">
-   <Label style="-fx-font-size: 20;" text="Welcome to Question-Tracker!" />
-   <Label style="-fx-font-size: 20;" text="Log In" />
+<VBox alignment="CENTER" prefHeight="540" prefWidth="960" spacing="10" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.LoginController">
+    <Label style="-fx-font-size: 20;" text="Welcome to Question-Tracker!" />
+    <Label style="-fx-font-size: 20;" text="Log In" />
 
    <TextField fx:id="usernameField" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" promptText="Username" />
    <PasswordField fx:id="passwordField" maxWidth="-Infinity" promptText="Password" />

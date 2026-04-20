@@ -27,5 +27,9 @@
          <Button fx:id="submitButton" text="Submit" onAction="#handleSubmit"/>
       </HBox>
 
+      <HBox alignment="CENTER" spacing="10">
+         <Button fx:id="showBackButton" text="Home" onAction="#handleBack"/>
+      </HBox>
+
    </VBox>
 </AnchorPane>
