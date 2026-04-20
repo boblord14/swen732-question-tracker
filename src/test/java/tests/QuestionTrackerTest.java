@@ -6,6 +6,8 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.MockedStatic;
 
 import model.QuestionTracker;
+import user.Classroom;
+import user.QuestionSet;
 import user.User;
 
 import java.io.File;
@@ -858,5 +860,233 @@ class QuestionTrackerTest {
                 assertTrue(classroom.getAssignedStudySets().contains(studySet));
             }
         }
+    }
+
+    private void invokeSaveQuestionSets(user.QuestionSet[] sets) throws Exception {
+        Method method = QuestionTracker.class.getDeclaredMethod("saveQuestionSets", user.QuestionSet[].class);
+        method.setAccessible(true);
+        method.invoke(null, (Object) sets);
+    }
+
+    private void invokeSaveUsers(User[] users) throws Exception {
+        Method method = QuestionTracker.class.getDeclaredMethod("saveUsers", User[].class);
+        method.setAccessible(true);
+        method.invoke(null, (Object) users);
+    }
+
+    private void invokeSaveClasses(user.Classroom[] classes) throws Exception {
+        Method method = QuestionTracker.class.getDeclaredMethod("saveClasses", user.Classroom[].class);
+        method.setAccessible(true);
+        method.invoke(null, (Object) classes);
+    }
+
+    @Test
+    void testGetQuestionSetsReturnsEmptyWhenCentralFileMissingAndOldDirMissing() throws IOException {
+        Files.deleteIfExists(Path.of("src", "main", "questionSets.json"));
+        Path oldDir = Path.of("src", "main", "questionSets");
+        if (Files.exists(oldDir)) {
+            try (var walk = Files.walk(oldDir)) {
+                walk.sorted(java.util.Comparator.reverseOrder())
+                        .forEach(path -> {
+                            try { Files.deleteIfExists(path); } catch (IOException ignored) {}
+                        });
+            }
+        }
+
+        QuestionSet[] result = QuestionTracker.getQuestionSets();
+
+        assertNotNull(result);
+        assertEquals(0, result.length);
+    }
+
+    @Test
+    void testGetQuestionSetsReadsCentralizedFile() throws IOException {
+        Path file = Path.of("src", "main", "questionSets.json");
+        Files.createDirectories(file.getParent());
+
+        String json = """
+        [
+          {
+            "id": 11,
+            "name": "Central Set",
+            "creator": "teacher1",
+            "questions": [],
+            "tags": []
+          }
+        ]
+        """;
+
+        Files.writeString(file, json);
+
+        QuestionSet[] result = QuestionTracker.getQuestionSets();
+
+        assertEquals(1, result.length);
+        assertEquals(11, result[0].getId());
+        assertEquals("Central Set", result[0].getName());
+    }
+
+    @Test
+    void testGetQuestionSetsReturnsEmptyWhenCentralizedFileMalformed() throws IOException {
+        Path file = Path.of("src", "main", "questionSets.json");
+        Files.createDirectories(file.getParent());
+        Files.writeString(file, "{ not valid json }");
+
+        QuestionSet[] result = QuestionTracker.getQuestionSets();
+
+        assertNotNull(result);
+        assertEquals(0, result.length);
+    }
+
+    @Test
+    void testGetClassesReturnsEmptyWhenMalformedJson() throws IOException {
+        Path file = Path.of("src", "main", "classes.json");
+        Files.createDirectories(file.getParent());
+        Files.writeString(file, "{ bad json }");
+
+        Classroom[] result = QuestionTracker.getClasses();
+
+        assertNotNull(result);
+        assertEquals(0, result.length);
+    }
+
+    @Test
+    void testGetClassesReadsSavedFile() throws Exception {
+        User teacher = new User(1, "teacher", "pass", true);
+        Classroom classroom = new Classroom("Physics", "7777", teacher);
+
+        invokeSaveClasses(new Classroom[]{classroom});
+
+        Classroom[] result = QuestionTracker.getClasses();
+
+        assertEquals(1, result.length);
+        assertEquals("Physics", result[0].getName());
+        assertEquals("7777", result[0].getCode());
+    }
+
+    @Test
+    void testCreateClassReturnsNullForNullTeacher() {
+        Classroom result = QuestionTracker.createClass("Math", "1234", null);
+
+        assertNull(result);
+    }
+
+    @Test
+    void testGetClassByNameSkipsNullAndNullNameEntries() {
+        Classroom good = new Classroom("Biology", "2222", new User(1, "teacher", "pass", true));
+        Classroom unnamed = new Classroom();
+        unnamed.setName(null);
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getClasses).thenReturn(new Classroom[]{null, unnamed, good});
+
+            Classroom result = QuestionTracker.getClassByName("Biology");
+
+            assertNotNull(result);
+            assertEquals("Biology", result.getName());
+        }
+    }
+
+    @Test
+    void testCreateQuestionSetSkipsNullEntriesWhenFindingNextId() {
+        User creator = new User(10, "teacherA", "pass", true);
+        QuestionSet existing = new QuestionSet(4, "Existing", "teacherA");
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[]{null, existing});
+            mocked.when(() -> QuestionTracker.saveUser(any(User.class))).thenAnswer(invocation -> null);
+
+            QuestionSet created = QuestionTracker.createQuestionSet("Brand New", creator);
+
+            assertNotNull(created);
+            assertEquals(5, created.getId());
+            assertTrue(creator.getQuestionSetIds().contains(5));
+        }
+    }
+
+    @Test
+    void testGetQuestionSetByIdReturnsNullWhenArrayIsNull() {
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(null);
+
+            QuestionSet result = QuestionTracker.getQuestionSetById(1);
+
+            assertNull(result);
+        }
+    }
+
+    @Test
+    void testGetQuestionSetByIdSkipsNullEntries() {
+        QuestionSet set = new QuestionSet(3, "Target", "teacher");
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new QuestionSet[]{null, set});
+
+            QuestionSet result = QuestionTracker.getQuestionSetById(3);
+
+            assertNotNull(result);
+            assertEquals("Target", result.getName());
+        }
+    }
+
+    @Test
+    void testCreateQuestionSetSessionReturnsNullWhenSetMissing() {
+        User user = new User(1, "student", "pass", false);
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(() -> QuestionTracker.getQuestionSetById(77)).thenReturn(null);
+
+            model.SetSession session = QuestionTracker.createQuestionSetSession(77, user);
+
+            assertNull(session);
+        }
+    }
+
+    @Test
+    void testSaveQuestionSetsSkipsNullEntries() throws Exception {
+        Files.deleteIfExists(Path.of("src", "main", "questionSets.json"));
+
+        QuestionSet keep = new QuestionSet(9, "Keep Me", "teacher");
+        invokeSaveQuestionSets(new QuestionSet[]{null, keep});
+
+        QuestionSet[] loaded = QuestionTracker.getQuestionSets();
+
+        assertEquals(1, loaded.length);
+        assertEquals(9, loaded[0].getId());
+        assertEquals("Keep Me", loaded[0].getName());
+    }
+
+    @Test
+    void testSaveUsersWritesUsersFile() throws Exception {
+        Path file = Path.of("src", "main", "resources", "users.json");
+        Files.createDirectories(file.getParent());
+        Files.deleteIfExists(file);
+
+        User u1 = new User(1, "alice", "pw1", false);
+        User u2 = new User(2, "bob", "pw2", true);
+
+        invokeSaveUsers(new User[]{u1, u2});
+
+        User[] loaded = QuestionTracker.getUsers();
+
+        assertEquals(2, loaded.length);
+        assertEquals("alice", loaded[0].getUsername());
+        assertEquals("bob", loaded[1].getUsername());
+    }
+
+    @Test
+    void testSaveClassesWritesClassesFile() throws Exception {
+        Path file = Path.of("src", "main", "classes.json");
+        Files.createDirectories(file.getParent());
+        Files.deleteIfExists(file);
+
+        Classroom classroom = new Classroom("Chemistry", "5555", new User(1, "teacher", "pass", true));
+
+        invokeSaveClasses(new Classroom[]{classroom});
+
+        Classroom[] loaded = QuestionTracker.getClasses();
+
+        assertEquals(1, loaded.length);
+        assertEquals("Chemistry", loaded[0].getName());
+        assertEquals("5555", loaded[0].getCode());
     }
 }
