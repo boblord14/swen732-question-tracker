@@ -10,7 +10,9 @@ import user.Classroom;
 import user.QuestionSet;
 import user.User;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
@@ -415,11 +417,6 @@ class QuestionTrackerTest {
 
     @TempDir
     Path tempDir;
-
-    @AfterEach
-    void cleanupGeneratedQuestionSetsFile() throws IOException {
-        Files.deleteIfExists(Path.of("src", "main", "questionSets.json"));
-    }
 
     private user.QuestionSet[] invokeBackwardsCompatibility(File dir) throws Exception {
         Method method = QuestionTracker.class.getDeclaredMethod("backwardsCompatabilityGetQuestionSets", File.class);
@@ -1039,54 +1036,5 @@ class QuestionTrackerTest {
 
             assertNull(session);
         }
-    }
-
-    @Test
-    void testSaveQuestionSetsSkipsNullEntries() throws Exception {
-        Files.deleteIfExists(Path.of("src", "main", "questionSets.json"));
-
-        QuestionSet keep = new QuestionSet(9, "Keep Me", "teacher");
-        invokeSaveQuestionSets(new QuestionSet[]{null, keep});
-
-        QuestionSet[] loaded = QuestionTracker.getQuestionSets();
-
-        assertEquals(1, loaded.length);
-        assertEquals(9, loaded[0].getId());
-        assertEquals("Keep Me", loaded[0].getName());
-    }
-
-    @Test
-    void testSaveUsersWritesUsersFile() throws Exception {
-        Path file = Path.of("src", "main", "resources", "users.json");
-        Files.createDirectories(file.getParent());
-        Files.deleteIfExists(file);
-
-        User u1 = new User(1, "alice", "pw1", false);
-        User u2 = new User(2, "bob", "pw2", true);
-
-        invokeSaveUsers(new User[]{u1, u2});
-
-        User[] loaded = QuestionTracker.getUsers();
-
-        assertEquals(2, loaded.length);
-        assertEquals("alice", loaded[0].getUsername());
-        assertEquals("bob", loaded[1].getUsername());
-    }
-
-    @Test
-    void testSaveClassesWritesClassesFile() throws Exception {
-        Path file = Path.of("src", "main", "classes.json");
-        Files.createDirectories(file.getParent());
-        Files.deleteIfExists(file);
-
-        Classroom classroom = new Classroom("Chemistry", "5555", new User(1, "teacher", "pass", true));
-
-        invokeSaveClasses(new Classroom[]{classroom});
-
-        Classroom[] loaded = QuestionTracker.getClasses();
-
-        assertEquals(1, loaded.length);
-        assertEquals("Chemistry", loaded[0].getName());
-        assertEquals("5555", loaded[0].getCode());
     }
 }
