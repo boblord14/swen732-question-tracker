@@ -314,4 +314,104 @@ class StudySetTest {
 
         assertNotNull(session);
     }
+
+    @Test
+    void testDefaultConstructorAndSetters() {
+        StudySet set = new StudySet();
+
+        set.setId(42);
+        set.setName("Biology Review");
+        set.setCreator("teacher1");
+        set.setSubject("Biology");
+
+        ArrayList<String> tags = new ArrayList<>();
+        tags.add("bio");
+        tags.add("review");
+        set.setTags(tags);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        Question q = new Question(1, "What is DNA?", "Deoxyribonucleic acid");
+        questions.add(q);
+        set.setQuestionSet(questions);
+
+        assertEquals(42, set.getId());
+        assertEquals("Biology Review", set.getName());
+        assertEquals("teacher1", set.getCreator());
+        assertEquals("Biology", set.getSubject());
+        assertEquals(tags, set.getTags());
+        assertEquals(questions, set.getQuestions());
+    }
+
+    @Test
+    void testParameterizedConstructorInitializesLists() {
+        StudySet set = new StudySet(10, "Set A", "creatorA");
+
+        assertEquals(10, set.getId());
+        assertEquals("Set A", set.getName());
+        assertEquals("creatorA", set.getCreator());
+        assertNotNull(set.getQuestions());
+        assertNotNull(set.getTags());
+        assertEquals(0, set.getQuestions().size());
+        assertEquals(0, set.getTags().size());
+    }
+
+    @Test
+    void testGetTagsReturnsEmptyListWhenTagsNull() {
+        StudySet set = new StudySet();
+        set.setTags(null);
+
+        assertNotNull(set.getTags());
+        assertTrue(set.getTags().isEmpty());
+    }
+
+    @Test
+    void testAddQuestionReturnsFalseForNullQuestion() {
+        StudySet set = new StudySet(1, "Test Set", "creator");
+
+        boolean result = set.addQuestion(null);
+
+        assertFalse(result);
+        assertEquals(0, set.getQuestions().size());
+    }
+
+    @Test
+    void testAddQuestionReturnsTrueForValidQuestion() {
+        StudySet set = new StudySet(1, "Test Set", "creator");
+        Question q = new Question(100, "What is 2+2?", "4");
+
+        boolean result = set.addQuestion(q);
+
+        assertTrue(result);
+        assertEquals(1, set.getQuestions().size());
+        assertEquals(q, set.getQuestions().get(0));
+    }
+
+    @Test
+    void testRemoveQuestionByIdReturnsTrueWhenQuestionExists() {
+        StudySet set = new StudySet(1, "Test Set", "creator");
+        Question q1 = new Question(1, "Q1", "A1");
+        Question q2 = new Question(2, "Q2", "A2");
+
+        set.addQuestion(q1);
+        set.addQuestion(q2);
+
+        boolean removed = set.removeQuestionById(1);
+
+        assertTrue(removed);
+        assertEquals(1, set.getQuestions().size());
+        assertEquals(2, set.getQuestions().get(0).getId());
+    }
+
+    @Test
+    void testRemoveQuestionByIdReturnsFalseWhenQuestionDoesNotExist() {
+        StudySet set = new StudySet(1, "Test Set", "creator");
+        Question q1 = new Question(1, "Q1", "A1");
+
+        set.addQuestion(q1);
+
+        boolean removed = set.removeQuestionById(999);
+
+        assertFalse(removed);
+        assertEquals(1, set.getQuestions().size());
+    }
 }

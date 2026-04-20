@@ -4,8 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import model.QuestionTracker;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
+import teacher.StudySet;
 import user.User;
 import user.Classroom;
+import user.UserPrediction;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class ClassroomTest {
     private final Path classFile = Paths.get("src/main/classes.json");
@@ -272,5 +277,75 @@ class ClassroomTest {
         boolean result = classroom.addStudent(null);
 
         assertFalse(result);
+    }
+
+    @Test
+    void testRemoveStudentReturnsFalseForNullStudent() {
+        Classroom classroom = new Classroom("Math", "1234", new User(1, "t", "p", true));
+
+        boolean removed = classroom.removeStudent(null);
+
+        assertFalse(removed);
+    }
+
+    @Test
+    void testRemoveStudentReturnsFalseWhenStudentNotPresent() {
+        Classroom classroom = new Classroom("Math", "1234", new User(1, "t", "p", true));
+        User student = new User(2, "student", "pass", false);
+
+        boolean removed = classroom.removeStudent(student);
+
+        assertFalse(removed);
+        assertTrue(classroom.getStudents().isEmpty());
+    }
+
+    @Test
+    void testAddAssignedStudySetIdInitializesListWhenNull() {
+        Classroom classroom = new Classroom();
+        classroom.setAssignedStudySetIds(null);
+
+        boolean result = classroom.addAssignedStudySetId(42);
+
+        assertTrue(result);
+        assertNotNull(classroom.getAssignedStudySetIds());
+        assertTrue(classroom.getAssignedStudySetIds().contains(42));
+    }
+
+    @Test
+    void testAddStudySetSuccess() {
+        Classroom classroom = new Classroom();
+        StudySet studySet = new StudySet(1, "Algebra", "teacher");
+
+        boolean result = classroom.addStudySet(studySet);
+
+        assertTrue(result);
+        assertEquals(1, classroom.getAssignedStudySets().size());
+        assertEquals(studySet, classroom.getAssignedStudySets().get(0));
+    }
+
+    @Test
+    void testCheckCodeTrimsInput() {
+        Classroom classroom = new Classroom("Math", "1234", new User(1, "t", "p", true));
+
+        assertTrue(classroom.checkCode(" 1234 "));
+    }
+
+    @Test
+    void testClassStruggleVectorReturnsEmptyWhenNoStudents() {
+        Classroom classroom = new Classroom("Math", "1234", new User(1, "t", "p", true));
+
+        List<Map<String, Double>> result = classroom.classStruggleVector();
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testParameterizedConstructorAddsClassroomNameToTeacher() {
+        User teacher = new User(1, "teacher", "pass", true);
+
+        Classroom classroom = new Classroom("Physics", "9999", teacher);
+
+        assertTrue(teacher.getClassrooms().contains("Physics"));
     }
 }

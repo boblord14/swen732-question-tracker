@@ -115,4 +115,203 @@ class QuestionSetSessionTest {
         // most recent should be the last 100 entries (i = 5..104)
         assertEquals(Arrays.asList("tag104"), u.getWrongQuestionData().get(99));
     }
+
+    @Test
+    void testGettersAndHasNextBecomeFalseAtEnd() {
+        User student = new User();
+        student.setId(700);
+        student.setUsername("student700");
+        student.setIsTeacher(false);
+
+        Question q1 = new Question(10, "A?", "a");
+        q1.setTags(Arrays.asList("tag1"));
+
+        QuestionSet set = new QuestionSet(99, "Getter Test Set", null);
+        set.addQuestion(q1);
+
+        SetSession session = new SetSession(set, student, false);
+
+        assertEquals(99, session.getSetId());
+        assertFalse(session.getIsStudySet());
+        assertEquals(1, session.getTotalQuestions());
+        assertEquals(0, session.getCurrentIndex());
+        assertTrue(session.hasNext());
+
+        Question returned = session.nextQuestion();
+        assertEquals(q1, returned);
+        assertEquals(1, session.getCurrentIndex());
+
+        assertFalse(session.hasNext());
+    }
+
+    @Test
+    void testNextQuestionReturnsNullWhenExhausted() {
+        User student = new User();
+        student.setId(701);
+        student.setUsername("student701");
+        student.setIsTeacher(false);
+
+        Question q1 = new Question(11, "B?", "b");
+        q1.setTags(Arrays.asList("tag2"));
+
+        QuestionSet set = new QuestionSet(100, "Exhausted Set", null);
+        set.addQuestion(q1);
+
+        SetSession session = new SetSession(set, student, true);
+
+        assertNotNull(session.nextQuestion());
+        assertNull(session.nextQuestion());
+        assertTrue(session.getIsStudySet());
+    }
+
+    @Test
+    void testSubmitAnswerReturnsFalseWhenNoCurrentQuestion() {
+        User student = new User();
+        student.setId(702);
+        student.setUsername("student702");
+        student.setIsTeacher(false);
+
+        QuestionSet set = new QuestionSet(101, "No Current Question Set", null);
+        set.addQuestion(new Question(12, "C?", "c"));
+
+        SetSession session = new SetSession(set, student, false);
+
+        assertFalse(session.submitAnswer("c"));
+        assertTrue(session.getResults().isEmpty());
+    }
+
+    @Test
+    void testSubmitAnswerReturnsFalseWhenUserAnswerIsNull() {
+        User student = new User();
+        student.setId(703);
+        student.setUsername("student703");
+        student.setIsTeacher(false);
+
+        Question q1 = new Question(13, "D?", "d");
+        q1.setTags(Arrays.asList("tag3"));
+
+        QuestionSet set = new QuestionSet(102, "Null Answer Set", null);
+        set.addQuestion(q1);
+
+        SetSession session = new SetSession(set, student, false);
+        session.nextQuestion();
+
+        assertFalse(session.submitAnswer(null));
+        assertTrue(session.getResults().isEmpty());
+    }
+
+    @Test
+    void testSubmitAnswerFlashcardCorrectAlwaysMarksTrue() {
+        User student = new User();
+        student.setId(704);
+        student.setUsername("student704");
+        student.setIsTeacher(false);
+
+        Question q1 = new Question(14, "Reveal card", "anything");
+        q1.setTags(Arrays.asList("flash"));
+
+        QuestionSet set = new QuestionSet(103, "Flashcard Correct Set", null);
+        set.addQuestion(q1);
+
+        SetSession session = new SetSession(set, student, false);
+        session.nextQuestion();
+
+        assertTrue(session.submitAnswer("FLASHCARD_CORRECT"));
+        assertTrue(session.getResults().get(14));
+        assertEquals(0, student.getWrongQuestionData().size());
+    }
+
+    @Test
+    void testSubmitAnswerFlashcardWrongMarksFalseAndLogsTags() {
+        User student = new User();
+        student.setId(705);
+        student.setUsername("student705");
+        student.setIsTeacher(false);
+
+        Question q1 = new Question(15, "Reveal card", "anything");
+        q1.setTags(Arrays.asList("flash", "practice"));
+
+        QuestionSet set = new QuestionSet(104, "Flashcard Wrong Set", null);
+        set.addQuestion(q1);
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(() -> QuestionTracker.saveUser(any(User.class))).thenAnswer(invocation -> null);
+
+            SetSession session = new SetSession(set, student, false);
+            session.nextQuestion();
+
+            assertFalse(session.submitAnswer("FLASHCARD_WRONG"));
+            assertFalse(session.getResults().get(15));
+            assertEquals(1, student.getWrongQuestionData().size());
+            assertEquals(Arrays.asList("flash", "practice"), student.getWrongQuestionData().get(0));
+
+            mocked.verify(() -> QuestionTracker.saveUser(any(User.class)));
+        }
+    }
+
+    @Test
+    void testSubmitAnswerWrongWithNullUserDoesNotCrash() {
+        Question q1 = new Question(16, "E?", "e");
+        q1.setTags(Arrays.asList("tag4"));
+
+        QuestionSet set = new QuestionSet(105, "Null User Set", null);
+        set.addQuestion(q1);
+
+        SetSession session = new SetSession(set, null, false);
+        session.nextQuestion();
+
+        assertFalse(session.submitAnswer("wrong"));
+        assertFalse(session.getResults().get(16));
+    }
+
+    @Test
+    void testSubmitAnswerWrongWithNullTagsDoesNotSaveUser() {
+        User student = new User();
+        student.setId(706);
+        student.setUsername("student706");
+        student.setIsTeacher(false);
+
+        Question q1 = new Question(17, "F?", "f");
+        q1.setTags(null);
+
+        QuestionSet set = new QuestionSet(106, "Null Tags Set", null);
+        set.addQuestion(q1);
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(() -> QuestionTracker.saveUser(any(User.class))).thenAnswer(invocation -> null);
+
+            SetSession session = new SetSession(set, student, false);
+            session.nextQuestion();
+
+            assertFalse(session.submitAnswer("wrong"));
+            assertFalse(session.getResults().get(17));
+            assertEquals(0, student.getWrongQuestionData().size());
+
+            mocked.verify(() -> QuestionTracker.saveUser(any(User.class)), org.mockito.Mockito.never());
+        }
+    }
+
+    @Test
+    void testGetResultsReturnsDefensiveCopy() {
+        User student = new User();
+        student.setId(707);
+        student.setUsername("student707");
+        student.setIsTeacher(false);
+
+        Question q1 = new Question(18, "G?", "g");
+        q1.setTags(Arrays.asList("tag5"));
+
+        QuestionSet set = new QuestionSet(107, "Defensive Copy Set", null);
+        set.addQuestion(q1);
+
+        SetSession session = new SetSession(set, student, false);
+        session.nextQuestion();
+        session.submitAnswer("g");
+
+        var copy = session.getResults();
+        copy.put(999, false);
+
+        assertEquals(1, session.getResults().size());
+        assertFalse(session.getResults().containsKey(999));
+    }
 }

@@ -1,12 +1,12 @@
 [ {
   "id" : 1,
-  "username" : "Teacher1",
-  "password" : "TPassword1",
+  "username" : "test",
+  "password" : "test",
   "isTeacher" : true,
   "studySetAvg" : { },
-  "classrooms" : [ ],
-  "questionSetIds" : [ ],
-  "wrongQuestionData" : [ ]
+  "classrooms" : [ "Classroom Name", "newclass" ],
+  "questionSetIds" : [ 2, 3, 4, 5, 6, 7 ],
+  "wrongQuestionData" : [ [ "3" ], [ "6" ] ]
 }, {
   "id" : 2,
   "username" : "admin",
@@ -25,62 +25,4 @@
   "classrooms" : [ ],
   "questionSetIds" : [ ],
   "wrongQuestionData" : [ ]
-}, {
-  "id" : 4,
-  "username" : "bob",
-  "password" : "test",
-  "isTeacher" : false,
-  "studySetAvg" : {
-    "8" : 0.3333333333333333
-  },
-  "classrooms" : [ "bobclass" ],
-  "questionSetIds" : [ ],
-  "wrongQuestionData" : [ [ "6", "3" ], [ "3", "4" ], [ "6", "5" ] ]
-}, {
-  "id" : 5,
-  "username" : "bob2",
-  "password" : "test",
-  "isTeacher" : false,
-  "studySetAvg" : { },
-  "classrooms" : [ ],
-  "questionSetIds" : [ ],
-  "wrongQuestionData" : [ ]
-}, {
-  "id" : 6,
-  "username" : "bob3",
-  "password" : "test",
-  "isTeacher" : false,
-  "studySetAvg" : { },
-  "classrooms" : [ ],
-  "questionSetIds" : [ ],
-  "wrongQuestionData" : [ ]
-}, {
-  "id" : 7,
-  "username" : "bobteach",
-  "password" : "test",
-  "isTeacher" : true,
-  "studySetAvg" : { },
-  "classrooms" : [ "bobclass" ],
-  "questionSetIds" : [ 8, 3 ],
-  "wrongQuestionData" : [ ]
-}, {
-  "id" : 8,
-  "username" : "rayteach",
-  "password" : "joemama",
-  "isTeacher" : true,
-  "studySetAvg" : { },
-  "classrooms" : [ "rayclass" ],
-  "questionSetIds" : [ 10 ],
-  "wrongQuestionData" : [ ]
-}, {
-  "id" : 9,
-  "username" : "raystu",
-  "password" : "joemama",
-  "isTeacher" : false,
-  "studySetAvg" : {
-    "10" : 0.3333333333333333
-  },
-  "classrooms" : [ "rayclass" ],
-  "questionSetIds" : [ ],
-  "wrongQuestionData" : [ [ "hard", "stuff" ], [ "easy", "stuff" ], [ "6" ], [ "3" ], [ "9" ] ]
 } ]
