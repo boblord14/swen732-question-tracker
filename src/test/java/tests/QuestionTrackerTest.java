@@ -549,4 +549,314 @@ class QuestionTrackerTest {
         assertFalse(Files.exists(oldFile));
         assertFalse(Files.exists(oldDir));
     }
+
+    @Test
+    void testGetQuestionSetsForUserNullUser() {
+        user.QuestionSet[] result = QuestionTracker.getQuestionSetsForUser(null);
+
+        assertNotNull(result);
+        assertEquals(0, result.length);
+    }
+
+    @Test
+    void testGetQuestionSetsForUserNoIds() {
+        User user = new User(1, "student", "pass", false);
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{
+                    new user.QuestionSet(1, "Set1", "teacher")
+            });
+
+            user.QuestionSet[] result = QuestionTracker.getQuestionSetsForUser(user);
+
+            assertNotNull(result);
+            assertEquals(0, result.length);
+        }
+    }
+
+    @Test
+    void testGetQuestionSetsForUserFiltersOnlyOwnedSets() {
+        User user = new User(1, "student", "pass", false);
+        user.addQuestionSetId(2);
+
+        user.QuestionSet set1 = new user.QuestionSet(1, "Set1", "teacher");
+        user.QuestionSet set2 = new user.QuestionSet(2, "Set2", "teacher");
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{set1, null, set2});
+
+            user.QuestionSet[] result = QuestionTracker.getQuestionSetsForUser(user);
+
+            assertEquals(1, result.length);
+            assertEquals(2, result[0].getId());
+        }
+    }
+
+    @Test
+    void testCreateQuestionSetAssignsNextIdAndAddsIdToCreator() {
+        User creator = new User(10, "teacherA", "pass", true);
+        user.QuestionSet existing = new user.QuestionSet(7, "Existing", "teacherA");
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{existing});
+            mocked.when(() -> QuestionTracker.saveUser(any(User.class))).thenAnswer(invocation -> null);
+
+            user.QuestionSet created = QuestionTracker.createQuestionSet("New Set", creator);
+
+            assertNotNull(created);
+            assertEquals(8, created.getId());
+            assertEquals("New Set", created.getName());
+            assertTrue(creator.getQuestionSetIds().contains(8));
+
+            mocked.verify(() -> QuestionTracker.saveUser(any(User.class)));
+        }
+    }
+
+    @Test
+    void testGetQuestionSetByIdFound() {
+        user.QuestionSet set = new user.QuestionSet(5, "Target", "teacher");
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{set});
+
+            user.QuestionSet result = QuestionTracker.getQuestionSetById(5);
+
+            assertNotNull(result);
+            assertEquals("Target", result.getName());
+        }
+    }
+
+    @Test
+    void testGetQuestionSetByIdNotFound() {
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{
+                    new user.QuestionSet(1, "Other", "teacher")
+            });
+
+            user.QuestionSet result = QuestionTracker.getQuestionSetById(999);
+
+            assertNull(result);
+        }
+    }
+
+    @Test
+    void testAddQuestionToSetReturnsFalseWhenSetNotFound() {
+        user.QuestionSet set = new user.QuestionSet(1, "Set", "teacher");
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{set});
+
+            boolean result = QuestionTracker.addQuestionToSet(999, "Q", "A", null);
+
+            assertFalse(result);
+            assertEquals(0, set.getQuestions().size());
+        }
+    }
+
+    @Test
+    void testAddQuestionToSetUsesNextQuestionId() {
+        user.QuestionSet set = new user.QuestionSet(1, "Set", "teacher");
+        set.addQuestion(new user.Question(3, "Old", "A"));
+        set.addQuestion(new user.Question(8, "Older", "B"));
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{set});
+
+            boolean result = QuestionTracker.addQuestionToSet(1, "Newest", "C", java.util.List.of("tag"));
+
+            assertTrue(result);
+            assertEquals(3, set.getQuestions().size());
+            assertEquals(9, set.getQuestions().get(2).getId());
+        }
+    }
+
+    @Test
+    void testRemoveQuestionFromSetReturnsFalseWhenSetNotFound() {
+        user.QuestionSet set = new user.QuestionSet(1, "Set", "teacher");
+        set.addQuestion(new user.Question(1, "Q", "A"));
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{set});
+
+            boolean result = QuestionTracker.removeQuestionFromSet(999, 1);
+
+            assertFalse(result);
+            assertEquals(1, set.getQuestions().size());
+        }
+    }
+
+    @Test
+    void testEditQuestionInSetReturnsFalseWhenQuestionMissing() {
+        user.QuestionSet set = new user.QuestionSet(1, "Set", "creator");
+        set.addQuestion(new user.Question(10, "Old", "OldA"));
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{set});
+
+            boolean result = QuestionTracker.editQuestionInSet(1, 999, "New", "NewA", java.util.List.of("x"));
+
+            assertFalse(result);
+            assertEquals("Old", set.getQuestions().get(0).getText());
+        }
+    }
+
+    @Test
+    void testEditQuestionInSetUpdatesTagsOnlyWhenProvided() {
+        user.Question q = new user.Question(10, "Old Q", "Old A");
+        user.QuestionSet set = new user.QuestionSet(1, "set", "creator");
+        set.addQuestion(q);
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{set});
+
+            boolean result = QuestionTracker.editQuestionInSet(
+                    1,
+                    10,
+                    null,
+                    null,
+                    java.util.List.of("tag1", "tag2")
+            );
+
+            assertTrue(result);
+            assertEquals("Old Q", q.getText());
+            assertEquals("Old A", q.getAnswer());
+            assertEquals(java.util.List.of("tag1", "tag2"), q.getTags());
+        }
+    }
+
+    @Test
+    void testUpdateQuestionSetMetadataReturnsFalseForNullRequester() {
+        user.QuestionSet set = new user.QuestionSet(1, "Old", "creator");
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{set});
+
+            boolean result = QuestionTracker.updateQuestionSetMetadata(1, null, "New", java.util.List.of("tag"));
+
+            assertFalse(result);
+            assertEquals("Old", set.getName());
+        }
+    }
+
+    @Test
+    void testUpdateQuestionSetMetadataUpdatesTagsOnly() {
+        user.User creator = new user.User(1, "teacher", "pass", true);
+        user.QuestionSet set = new user.QuestionSet(1, "OldName", "teacher");
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getQuestionSets).thenReturn(new user.QuestionSet[]{set});
+
+            boolean result = QuestionTracker.updateQuestionSetMetadata(
+                    1,
+                    creator,
+                    null,
+                    java.util.List.of("tag1", "tag2")
+            );
+
+            assertTrue(result);
+            assertEquals("OldName", set.getName());
+            assertEquals(java.util.List.of("tag1", "tag2"), set.getTags());
+        }
+    }
+
+    @Test
+    void testJoinClassReturnsFalseForNullStudent() {
+        boolean result = QuestionTracker.joinClass(null, "1234");
+
+        assertFalse(result);
+    }
+
+    @Test
+    void testJoinClassReturnsFalseForBadCode() {
+        User student = new User(1, "student", "pass", false);
+        user.Classroom classroom = new user.Classroom("TestClass", "1234", new User(99, "teacher", "pass", true));
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getClasses).thenReturn(new user.Classroom[]{classroom});
+
+            boolean result = QuestionTracker.joinClass(student, "9999");
+
+            assertFalse(result);
+            assertFalse(classroom.getStudents().contains(student));
+        }
+    }
+
+    @Test
+    void testJoinClassReturnsFalseIfAlreadyJoined() {
+        User student = new User(1, "student", "pass", false);
+        user.Classroom classroom = new user.Classroom("TestClass", "1234", new User(99, "teacher", "pass", true));
+        classroom.addStudent(student);
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getClasses).thenReturn(new user.Classroom[]{classroom});
+
+            boolean result = QuestionTracker.joinClass(student, "1234");
+
+            assertFalse(result);
+        }
+    }
+
+    @Test
+    void testCreateClassReturnsNullForDuplicateCode() {
+        User teacher = new User(1, "teacher", "pass", true);
+        user.Classroom existing = new user.Classroom("Math", "1234", teacher);
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getClasses).thenReturn(new user.Classroom[]{existing});
+
+            user.Classroom result = QuestionTracker.createClass("Science", "1234", teacher);
+
+            assertNull(result);
+        }
+    }
+
+    @Test
+    void testCreateQuestionSetSessionSuccess() {
+        User user = new User(1, "student", "pass", false);
+        user.QuestionSet set = new user.QuestionSet(7, "Session Set", "teacher");
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(() -> QuestionTracker.getQuestionSetById(7)).thenReturn(set);
+
+            model.SetSession session = QuestionTracker.createQuestionSetSession(7, user);
+
+            assertNotNull(session);
+            assertEquals(7, session.getSetId());
+            assertFalse(session.getIsStudySet());
+        }
+    }
+
+    @Test
+    void testAssignStudySetToClassReturnsFalseWhenClassMissing() {
+        user.Classroom classroom = new user.Classroom("Math", "1234", new User(1, "teacher", "pass", true));
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getClasses).thenReturn(new user.Classroom[]{classroom});
+
+            boolean result = QuestionTracker.assignStudySetToClass("Science", 1);
+
+            assertFalse(result);
+        }
+    }
+
+    @Test
+    void testAssignStudySetToClassAddsRuntimeStudySetWhenFound() {
+        user.User teacher = new user.User(1, "teacher", "pass", true);
+        user.Classroom classroom = new user.Classroom("Math", "1234", teacher);
+        teacher.StudySet studySet = new teacher.StudySet(1, "Algebra", "teacher");
+
+        try (MockedStatic<QuestionTracker> mocked = mockStatic(QuestionTracker.class, CALLS_REAL_METHODS)) {
+            mocked.when(QuestionTracker::getClasses).thenReturn(new user.Classroom[]{classroom});
+
+            try (MockedStatic<model.StudySetMaker> mockedStudySetMaker = mockStatic(model.StudySetMaker.class)) {
+                mockedStudySetMaker.when(() -> model.StudySetMaker.getSetById(1)).thenReturn(studySet);
+
+                boolean result = QuestionTracker.assignStudySetToClass("Math", 1);
+
+                assertTrue(result);
+                assertTrue(classroom.getAssignedStudySetIds().contains(1));
+                assertTrue(classroom.getAssignedStudySets().contains(studySet));
+            }
+        }
+    }
 }
