@@ -13,6 +13,7 @@ public class App extends Application {
         Scene scene = new Scene(loader.load());
 
         stage.setTitle("Question Tracker");
+        scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }

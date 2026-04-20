@@ -1,5 +1,8 @@
 package app;
 
+import java.io.IOException;
+import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,9 +16,6 @@ import javafx.stage.Stage;
 import model.QuestionTracker;
 import user.QuestionSet;
 import user.User;
-
-import java.io.IOException;
-import java.util.List;
 
 public class QuestionSetListController {
     @FXML private VBox setListVBox;

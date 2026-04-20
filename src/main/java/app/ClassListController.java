@@ -1,21 +1,28 @@
 package app;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
-import javafx.geometry.Insets;
-import javafx.util.Pair;
-import java.util.Optional;
-import model.QuestionTracker;
-import user.User;
-
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.util.Pair;
+import model.QuestionTracker;
+import user.User;
 
 
 public class ClassListController {
@@ -49,10 +56,12 @@ public class ClassListController {
             Parent root = loader.load();
 
             MainController controller = loader.getController();
-            MainController.setUser(user);
+            controller.setUser(user);
 
             Stage stage = (Stage) classListBox.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+            stage.setScene(scene);
         } catch (IOException ex) {
             ex.printStackTrace();
         }

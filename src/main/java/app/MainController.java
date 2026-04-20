@@ -92,7 +92,9 @@ public class MainController {
             Parent root2 = loader2.load();
 
             Stage stage2 = (Stage) logoutButton.getScene().getWindow();
-            stage2.setScene(new Scene(root2));
+            Scene scene = new Scene(root2);
+            scene.getStylesheets().add(getClass().getResource(CSS_SHEET).toExternalForm());
+            stage2.setScene(scene);
         } catch (IOException exception) {
             exception.printStackTrace();
         }

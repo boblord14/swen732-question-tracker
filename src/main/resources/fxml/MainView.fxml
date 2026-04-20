@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="540" prefWidth="960" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="app.MainController">
+<StackPane prefHeight="540" prefWidth="960"
+           xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/25"
+           fx:controller="app.MainController">
     <children>
       <VBox alignment="TOP_CENTER" prefHeight="540.0" prefWidth="960.0" spacing="10.0">
          <children>
@@ -19,7 +20,7 @@
                   <Insets top="10.0" />
                </padding>
             </Label>
-            <Label fx:id="usernameLabel" alignment="TOP_CENTER" styleClass="title" />
+            <Label fx:id="usernameLabel" alignment="CENTER" styleClass="title" />
                <Button fx:id="questionSetsButton" onAction="#handleQuestionSets" styleClass="button ghost" text="Question Sets" />
                <Button fx:id="userStruggleButton" onAction="#handleViewStruggles" styleClass="button ghost" text="View Your Struggles" />
                <Button fx:id="classListButton" onAction="#handleLoad" text="Class List" />
@@ -27,4 +28,4 @@
          </children>
       </VBox>
     </children>
-</AnchorPane>
+</StackPane>
