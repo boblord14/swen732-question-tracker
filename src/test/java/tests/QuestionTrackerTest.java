@@ -1,13 +1,23 @@
 package tests;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.MockedStatic;
 
 import model.QuestionTracker;
 import user.User;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
 
 /**
  * Tests for logging in and utilizing the functionality of the system
@@ -399,5 +409,144 @@ class QuestionTrackerTest {
                 assertTrue(result);
             }
         }
+    }
+
+    @TempDir
+    Path tempDir;
+
+    @AfterEach
+    void cleanupGeneratedQuestionSetsFile() throws IOException {
+        Files.deleteIfExists(Path.of("src", "main", "questionSets.json"));
+    }
+
+    private user.QuestionSet[] invokeBackwardsCompatibility(File dir) throws Exception {
+        Method method = QuestionTracker.class.getDeclaredMethod("backwardsCompatabilityGetQuestionSets", File.class);
+        method.setAccessible(true);
+        return(user.QuestionSet[]) method.invoke(null, dir);
+    }
+
+    /**
+     * Tests backwards compatibility if the file doesn't exist
+     */
+    @Test
+    void testBackwardsCompatibilityGetQuestionSetsEmptyDirectory() throws Exception {
+        File dir = tempDir.toFile();
+
+        user.QuestionSet[] result = invokeBackwardsCompatibility(dir);
+
+        assertNotNull(result);
+        assertEquals(0, result.length);
+    }
+
+    /**
+     *  Tests loading questions from json files
+     */
+    @Test
+    void testBackwardsCompatibilityGetQuestionSetsLoadsValidJsonFiles() throws Exception {
+        File dir = tempDir.toFile();
+
+        String json1 = """
+                {
+                  "id": 1,
+                  "name": "Set One",
+                  "creator": "teacher1",
+                  "questions": [],
+                  "tags": []
+                }
+                """;
+
+        String json2 = """
+                {
+                  "id": 2,
+                  "name": "Set Two",
+                  "creator": "teacher2",
+                  "questions": [],
+                  "tags": []
+                }
+                """;
+
+        Files.writeString(tempDir.resolve("set1.json"), json1);
+        Files.writeString(tempDir.resolve("set2.json"), json2);
+
+        user.QuestionSet[] result = invokeBackwardsCompatibility(dir);
+
+        assertNotNull(result);
+        assertEquals(2, result.length);
+
+        boolean found1 = false;
+        boolean found2 = false;
+
+        for (user.QuestionSet set : result) {
+            if (set.getId() == 1 &&
+                    "Set One".equals(set.getName()) &&
+                    "teacher1".equals(set.getCreator())) {
+                found1 = true;
+            }
+            if (set.getId() == 2 &&
+                    "Set Two".equals(set.getName()) &&
+                    "teacher2".equals(set.getCreator())) {
+                found2 = true;
+            }
+        }
+
+        assertTrue(found1);
+        assertTrue(found2);
+    }
+
+    /**
+     * Tests if invalid json formats will be skipped
+     */
+    @Test
+    void testBackwardsCompatibilityGetQuestionSetsSkipsMalformedJson() throws Exception {
+        File dir = tempDir.toFile();
+
+        String validJson = """
+                {
+                  "id": 10,
+                  "name": "Valid Set",
+                  "creator": "teacher1",
+                  "questions": [],
+                  "tags": []
+                }
+                """;
+
+        String invalidJson = "{ not valid json }";
+
+        Files.writeString(tempDir.resolve("valid.json"), validJson);
+        Files.writeString(tempDir.resolve("broken.json"), invalidJson);
+
+        user.QuestionSet[] result = invokeBackwardsCompatibility(dir);
+
+        assertNotNull(result);
+        assertEquals(1, result.length);
+        assertEquals(10, result[0].getId());
+        assertEquals("Valid Set", result[0].getName());
+    }
+
+    /**
+     * Makes sure backwards compatibility works properly and removes old files
+     */
+    @Test
+    void testBackwardsCompatibilityGetQuestionSetsDeletesOldFilesAndDirectory() throws Exception {
+        Path oldDir = Files.createDirectory(tempDir.resolve("oldQuestionSets"));
+
+        String json = """
+                {
+                  "id": 5,
+                  "name": "Cleanup Set",
+                  "creator": "teacherX",
+                  "questions": [],
+                  "tags": []
+                }
+                """;
+
+        Path oldFile = oldDir.resolve("cleanup.json");
+        Files.writeString(oldFile, json);
+
+        user.QuestionSet[] result = invokeBackwardsCompatibility(oldDir.toFile());
+
+        assertEquals(1, result.length);
+        assertFalse(Files.exists(oldFile));
+        assertFalse(Files.exists(oldDir));
     }
 }
