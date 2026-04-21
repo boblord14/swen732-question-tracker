@@ -104,21 +104,27 @@ public class UserPrediction {
      */
     private static Map<String, Double> computeStruggleVector(RealMatrix struggleMatrix, String[] tagStrings){
         SingularValueDecomposition svd = new SingularValueDecomposition(struggleMatrix);
+        double[] values = svd.getSingularValues();
+        RealMatrix u = svd.getU();
 
-        double[] tagData = svd.getU().getColumn(0);
+        int k = Math.min(tagStrings.length, values.length);
+        double[] tagData = new double[tagStrings.length];
 
-        double tagDataSum = 0;
-        for (int i = 0; i < tagData.length; i++) {
-            tagData[i] = Math.abs(tagData[i]); //svd can do negatives sometimes, dont want
-            if (tagData[i] < 1e-9) tagData[i] = 0.0; //clean up weirdly small values
-            tagDataSum += tagData[i];
+        for (int component = 0; component < k; component++) {
+            double[] column = u.getColumn(component);
+            double weight = values[component];
+            for (int i = 0; i < tagData.length; i++) {
+                tagData[i] += Math.abs(column[i]) * weight;
+            }
         }
 
-        Map<String, Double> userStruggleVector = new HashMap<>();
-        for (int i = 0; i < tagData.length; i++) {
-            userStruggleVector.put(tagStrings[i], tagDataSum > 0 ? tagData[i] / tagDataSum : 0.0); //add but prevent divide by 0
+        double sum = Arrays.stream(tagData).sum();
+        Map<String, Double> result = new HashMap<>();
+        for (int i = 0; i < tagStrings.length; i++) {
+            tagData[i] = tagData[i] < 1e-9 ? 0.0 : tagData[i]; // clean up small values
+            result.put(tagStrings[i], sum > 0 ? tagData[i] / sum : 0.0); // prevent divide by 0
         }
-        return userStruggleVector;
+        return result;
     }
 
     /**

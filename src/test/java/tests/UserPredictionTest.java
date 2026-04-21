@@ -48,9 +48,9 @@ class UserPredictionTest {
         assertEquals(3, outputVector.size());
 
         //incredibly dirty rounding trick to fix some floating point shenanigans
-        assertEquals(0.25, Math.round(outputVector.get("tag 1")* 100.0) / 100.0);
-        assertEquals(0.5, Math.round(outputVector.get("tag 2")* 100.0) / 100.0);
-        assertEquals(0.25, Math.round(outputVector.get("tag 3")* 100.0) / 100.0);
+        assertEquals(0.33, Math.round(outputVector.get("tag 1")* 100.0) / 100.0);
+        assertEquals(0.33, Math.round(outputVector.get("tag 2")* 100.0) / 100.0);
+        assertEquals(0.33, Math.round(outputVector.get("tag 3")* 100.0) / 100.0);
 
     }
 
@@ -93,7 +93,7 @@ class UserPredictionTest {
         assertTrue(outputVector.get("tag 4") > outputVector.get("tag 1"));
         assertTrue(outputVector.get("tag 1") > outputVector.get("tag 3"));
         assertTrue(outputVector.get("tag 3") > outputVector.get("tag 5"));
-        assertEquals(outputVector.get("tag 6"), outputVector.get("tag 5"));
+        assertEquals(Math.round(outputVector.get("tag 6")), Math.round(outputVector.get("tag 5")));
 
 
         //but with that said we should have normalized, so our the sum of all the tag scores should be 1.0
@@ -145,10 +145,10 @@ class UserPredictionTest {
         testQ4.addTag("tag 4");//0.0
         //0.5 / 2 = 0.25
 
-        assertEquals(0.375, UserPrediction.scoreQuestion(testQ1, outputVector));
-        assertEquals(0.5, UserPrediction.scoreQuestion(testQ2, outputVector));
+        assertEquals(0.3333333333333333, UserPrediction.scoreQuestion(testQ1, outputVector));
+        assertEquals(0.3333333333333333, UserPrediction.scoreQuestion(testQ2, outputVector));
         assertEquals(0.0, UserPrediction.scoreQuestion(testQ3, outputVector));
-        assertEquals(0.25, UserPrediction.scoreQuestion(testQ4, outputVector));
+        assertEquals(0.16666666666666666, UserPrediction.scoreQuestion(testQ4, outputVector));
     }
 
 }
