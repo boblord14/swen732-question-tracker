@@ -55,7 +55,7 @@ public class QuestionSetListController {
 
     private void loadSets() {
         setListVBox.getChildren().clear();
-        List<QuestionSet> sets = java.util.Arrays.asList(QuestionTracker.getQuestionSetsForUser(user));
+        List<QuestionSet> sets = java.util.Arrays.asList(QuestionTracker.getQuestionSets());
         for (QuestionSet s : sets) {
             HBox row = new HBox(8);
             Label lbl = new Label(s.getName());

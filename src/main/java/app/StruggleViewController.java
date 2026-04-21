@@ -173,8 +173,9 @@ public class StruggleViewController {
         practiceSet.setQuestions(recommended);
 
         SetSession session = new SetSession(practiceSet, user, false);
+        Stage stage = (Stage) titleLabel.getScene().getWindow();
 
-        goToSession(session, () -> goToOrigin());
+        goToSession(session, () -> goToOrigin(stage));
     }
 
     private void generateTeacherStudySet() {
@@ -197,6 +198,8 @@ public class StruggleViewController {
             return;
         }
 
+        StudySetMaker.createSet(recommended, user, setName, "Struggle Practice");
+
         new Alert(Alert.AlertType.INFORMATION,
                 "\"" + setName + "\" created and saved to your account. You can assign it to your class in the class window",
                 ButtonType.OK).showAndWait();
@@ -210,13 +213,17 @@ public class StruggleViewController {
     }
 
     private void goToOrigin() {
+        Stage stage = (Stage) titleLabel.getScene().getWindow();
+        goToOrigin(stage);
+    }
+
+    private void goToOrigin(Stage stage) {
         try {
             if(isTeacherMode) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ClassView.fxml"));
                 Parent root = loader.load();
                 ClassViewController ctrl = loader.getController();
                 ctrl.setData(classroomName, user);
-                Stage stage = (Stage) titleLabel.getScene().getWindow();
                 Scene scene = new Scene(root);
                 scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
                 stage.setScene(scene);
@@ -227,7 +234,6 @@ public class StruggleViewController {
                 MainController controller = loader.getController();
                 controller.setUser(user);
 
-                Stage stage = (Stage) titleLabel.getScene().getWindow();
                 Scene scene = new Scene(root);
                 scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
                 stage.setScene(scene);

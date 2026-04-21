@@ -61,25 +61,36 @@ public class UserPrediction {
      * @return a map of (Tag, struggleScore) where the higher a score is for a tag, the more struggle the class has with it
      */
     public static Map<String, Double> generateUserStruggleVector(List<User> users) {
-        List<UserPrediction> userData = users.stream()
-                .map(UserPrediction::new)
+        List<List<String>> userData = users.stream()
+                .flatMap(u -> u.getWrongQuestionData().stream())
                 .collect(Collectors.toList());
 
         String[] fullTagList = userData.stream()
-                .flatMap(user -> Arrays.stream(user.tags))
+                .flatMap(List::stream)
                 .distinct()
                 .toArray(String[]::new);
 
         double[][] fullPredictionMatrix = new double[fullTagList.length][userData.size()];
-        for (int i = 0; i < userData.size(); i++) {
-            Map<String, Double> userVector = userData.get(i).generateUserStruggleVector();
-            for  (int j = 0; j < fullTagList.length; j++) {
-                fullPredictionMatrix[j][i] = userVector.getOrDefault(fullTagList[j], 0.0);
+        for (int i = 0; i < fullTagList.length; i++) {
+            for (int j = 0; j < userData.size(); j++) {
+                fullPredictionMatrix[i][j] = userData.get(j).contains(fullTagList[i]) ? 1.0 : 0.0;
             }
         }
 
-        RealMatrix compositeUserMatrix = new Array2DRowRealMatrix(fullPredictionMatrix);
-        return computeStruggleVector(compositeUserMatrix, fullTagList);
+        int col = 0;
+        for (User u : users) {
+            int wrongCount = u.getWrongQuestionData().size();
+            if (wrongCount == 0) continue;
+            for (int c = col; c < col + wrongCount; c++) {
+                for (int i = 0; i < fullTagList.length; i++) {
+                    fullPredictionMatrix[i][c] /= wrongCount;
+                }
+            }
+            col += wrongCount;
+        }
+
+        RealMatrix compositeMatrix = new Array2DRowRealMatrix(fullPredictionMatrix);
+        return computeStruggleVector(compositeMatrix, fullTagList);
     }
 
     /**
@@ -99,7 +110,7 @@ public class UserPrediction {
         double tagDataSum = 0;
         for (int i = 0; i < tagData.length; i++) {
             tagData[i] = Math.abs(tagData[i]); //svd can do negatives sometimes, dont want
-            if (tagData[i] < 0.1) tagData[i] = 0.0; //clean up weirdly small values
+            if (tagData[i] < 1e-9) tagData[i] = 0.0; //clean up weirdly small values
             tagDataSum += tagData[i];
         }
 

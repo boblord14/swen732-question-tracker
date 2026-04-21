@@ -92,10 +92,9 @@ class UserPredictionTest {
         // verify that the things that are supposed to be bigger, are actually bigger
         assertTrue(outputVector.get("tag 4") > outputVector.get("tag 1"));
         assertTrue(outputVector.get("tag 1") > outputVector.get("tag 3"));
-        assertTrue(outputVector.get("tag 3") > 0.0);
+        assertTrue(outputVector.get("tag 3") > outputVector.get("tag 5"));
+        assertEquals(outputVector.get("tag 6"), outputVector.get("tag 5"));
 
-        assertEquals(0.0, outputVector.get("tag 5"));
-        assertEquals(0.0, outputVector.get("tag 6"));
 
         //but with that said we should have normalized, so our the sum of all the tag scores should be 1.0
         double sum = outputVector.values().stream().mapToDouble(d -> d).sum();

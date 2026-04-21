@@ -187,9 +187,11 @@ public class SearchService {
 
         return loadAllQuestions().stream()
                 .filter(q -> q.getTags() != null && !q.getTags().isEmpty())
-                .sorted(Comparator.comparingDouble(
-                        (Question q) -> UserPrediction.scoreQuestion(q, struggleVector)
-                ).reversed())
+                .distinct()
+                .map(q -> Map.entry(q, UserPrediction.scoreQuestion(q, struggleVector)))
+                .filter(e -> e.getValue() > 0)
+                .sorted(Map.Entry.<Question, Double>comparingByValue().reversed())
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
 
@@ -301,14 +303,16 @@ public class SearchService {
 
     /**
      * Recommends questions for a given struggle vector w/ tags - highest scoring questions come first
+     * Ignore scores being equal to 0. Not relevant.
      */
     public List<Question> recommendQuestionsGivenVector(Map<String, Double> vector) {
-
         return loadAllQuestions().stream()
                 .filter(q -> q.getTags() != null && !q.getTags().isEmpty())
-                .sorted(Comparator.comparingDouble(
-                        (Question q) -> UserPrediction.scoreQuestion(q, vector)
-                ).reversed())
+                .distinct()
+                .map(q -> Map.entry(q, UserPrediction.scoreQuestion(q, vector)))
+                .filter(e -> e.getValue() > 0)
+                .sorted(Map.Entry.<Question, Double>comparingByValue().reversed())
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
 

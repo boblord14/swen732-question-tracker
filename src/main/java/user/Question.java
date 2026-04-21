@@ -2,7 +2,9 @@ package user;
 
 import java.util.ArrayList;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class Question {
     private int id;
@@ -50,4 +52,17 @@ public class Question {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Question q)) return false;
+        return Objects.equals(text, q.text)
+                && Objects.equals(answer, q.answer)
+                && new HashSet<>(tags).equals(new HashSet<>(q.tags));
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(text, answer, new HashSet<>(tags));
+    }
+
+}
