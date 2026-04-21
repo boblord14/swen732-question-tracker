@@ -201,7 +201,7 @@ public class StruggleViewController {
         StudySetMaker.createSet(recommended, user, setName, "Struggle Practice");
 
         new Alert(Alert.AlertType.INFORMATION,
-                "\"" + setName + "\" created and saved to your account. You can assign it to your class in the class window",
+                "\"" + setName + "\" created and saved to your account. \nYou can assign it to your class in the class window",
                 ButtonType.OK).showAndWait();
 
         goToOrigin();
