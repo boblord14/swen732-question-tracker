@@ -138,4 +138,11 @@
             </resource>
         </resources>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/boblord14/swen732-question-tracker</url>
+        </repository>
+    </distributionManagement>
 </project>
